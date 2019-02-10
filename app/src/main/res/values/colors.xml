@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#d32d27</color>
+    <color name="colorPrimaryDark">#af0809</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="background_Color">#f4f1f1</color>
+    <!-- progress bar config -->
+    <color name="progressBarColor">#32caca</color>
+    <color name="background_Progress_Bar_Color">#c3caca</color>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_Home"
+            android:icon="@drawable/home_icon"
+            android:title="@string/home_Item" />
+        <item
+            android:id="@+id/nav_Scan"
+            android:icon="@drawable/search_icon"
+            android:title="@string/scan_Item" />
+
+    </group>
+
+    <group android:id="@+id/grp1" android:checkableBehavior="single" >
+
+        <item
+            android:id="@+id/nav_Share"
+            android:icon="@drawable/share_icon"
+            android:title="@string/share_Item" />
+        <item
+            android:id="@+id/nav_Rate_Us"
+            android:icon="@drawable/rate_icon"
+            android:title="@string/rate_Us_Item" />
+
+        <item
+            android:id="@+id/nav_Contact_Me"
+            android:icon="@drawable/contact_icon"
+            android:title="@string/contact_Item" />
+
+    </group>
+
+</menu>
