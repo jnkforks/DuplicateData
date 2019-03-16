@@ -1,5 +1,6 @@
 package com.example.sudoajay.duplication_data;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.sudoajay.duplication_data.Main_Fragments.Home;
 import com.example.sudoajay.duplication_data.Main_Fragments.Scan;
@@ -64,6 +66,12 @@ public class Main_Navigation extends AppCompatActivity
 
     }
 
+    // on click listener
+    public  void OnClick(View v){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            home.OnClick(v);
+        }
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

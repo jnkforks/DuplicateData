@@ -15,4 +15,16 @@
     <string name="rate_Us_Item">Rate-Us</string>
     <string name="contact_Item">Contact</string>
 
+
+    <!--Main Home Screen-->
+    <string name="text_Internal_Storage">Internal Storage</string>
+    <string name="text_Used_Space">Used Space</string>
+    <string name="text_Used_Space_Size">00.0 GB / 00.0 GB</string>
+    <string name="Used_Space_Size">15.1 GB</string>
+    <string name="text_Used">Used</string>
+    <string name="text_Free">Free</string>
+    <string name="rectangle_Used_Size">63.0%  Used</string>
+    <string name="rectangle_Free_Size">37.0%  Free</string>
+
+
 </resources>
