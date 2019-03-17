@@ -12,10 +12,9 @@
 	<dimen name="nav_header_height">176dp</dimen>
 	<dimen name="divider_margin_left">20dp</dimen>
 	<dimen name="divider_margin_right">15dp</dimen>
-
-	<!--Home SCreen-->
 	<dimen name="textViewUsedSpaceSize_margin_left">40dp</dimen>
 	<dimen name="textViewUsedSpaceSize_margin_top">35dp</dimen>
 	<dimen name="textViewUsedSpaced_margin_left">10dp</dimen>
 	<dimen name="textViewInternal_margin_left">10dp</dimen>
+	<dimen name="constraint_Layout_margin_top">5dp</dimen>
 </resources>

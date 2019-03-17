@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sudoajay.duplication_data.Main_Navigation;
@@ -31,6 +32,8 @@ public class Home extends Fragment {
     private View layout;
     private CircularProgressBar circularProgressBar;
     private final int animationDuration = 2000;
+    private TextView textViewInternal2,textViewInternal3;
+
     public Home() {
         // Required empty public constructor
     }
@@ -61,6 +64,8 @@ public class Home extends Fragment {
     // Reference and Create Object
     private void Reference() {
 
+        textViewInternal2 = layout.findViewById(R.id.textViewInternal2);
+        textViewInternal3 = layout.findViewById(R.id.textViewInternal3);
          circularProgressBar = layout.findViewById(R.id.circularProgressBarInternal);
     }
 
@@ -69,16 +74,15 @@ public class Home extends Fragment {
     public void OnClick(View v){
         switch (v.getId()){
             case R.id.cardViewInternal3:
-                Log.d( "OnClick: "," Color - " + circularProgressBar.getColor() +
-                        " bk color - "+ circularProgressBar.getBackgroundColor());
                 if(circularProgressBar.getColor() == -10044566){
-                    Toast.makeText(getContext(),"here",Toast.LENGTH_LONG).show();
                     circularProgressBar.setBackgroundColor(ContextCompat.getColor
                             (Objects.requireNonNull(getContext()),R.color.progressBarColor));
                     circularProgressBar.setColor(ContextCompat.getColor
                             (Objects.requireNonNull(getContext()),R.color.background_Progress_Bar_Color));
-                    circularProgressBar.setProgressWithAnimation(0, 0); // Default duration = 1500ms
-                    circularProgressBar.setProgressWithAnimation(35, animationDuration); // Default duration = 1500ms
+                    circularProgressBar.setProgressWithAnimation(35, 0); // Default duration = 1500ms
+
+                    textViewInternal2.setText("9.7 GB");
+                    textViewInternal3.setText("Free");
 
                 }else {
                     circularProgressBar.setBackgroundColor(ContextCompat.getColor
@@ -86,8 +90,11 @@ public class Home extends Fragment {
                     circularProgressBar.setColor(ContextCompat.getColor
                             (Objects.requireNonNull(getContext()),R.color.progressBarColor));
 
-                    circularProgressBar.setProgressWithAnimation(0, 0); // Default duration = 1500ms
-                    circularProgressBar.setProgressWithAnimation(65, animationDuration); // Default duration = 1500ms
+                    circularProgressBar.setProgressWithAnimation(65, 0); // Default duration = 1500ms
+
+                    textViewInternal2.setText("14.3 GB");
+                    textViewInternal3.setText("Used");
+
                 }
                 break;
         }

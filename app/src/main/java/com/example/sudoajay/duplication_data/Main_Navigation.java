@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.sudoajay.duplication_data.Main_Fragments.Home;
 import com.example.sudoajay.duplication_data.Main_Fragments.Scan;
@@ -59,6 +60,7 @@ public class Main_Navigation extends AppCompatActivity
         toolbar =  findViewById(R.id.toolbar);
         drawer =  findViewById(R.id.drawer_layout);
         navigationView =  findViewById(R.id.nav_view);
+
 
       // create object
         home = new Home();
