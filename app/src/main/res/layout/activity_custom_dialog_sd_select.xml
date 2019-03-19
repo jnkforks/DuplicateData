@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/SdCardTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/SdCardTextView_Margin_Top"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif"
+        android:paddingStart="10dp"
+        android:text="@string/SdCardTextView"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:typeface="normal"
+        tools:ignore="RtlSymmetry" />
+
+
+    <TextView
+        android:id="@+id/SdCardTextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:alpha="0.6"
+        android:fontFamily="sans-serif"
+        android:lineSpacingExtra="0sp"
+        android:paddingLeft="@dimen/SdCardTextView1_Padding_Left_Right"
+        android:paddingTop="@dimen/SdCardTextView1_Padding_Bottom_Top"
+        android:paddingRight="@dimen/SdCardTextView1_Padding_Left_Right"
+        android:paddingBottom="@dimen/SdCardTextView1_Padding_Bottom_Top"
+        android:text="@string/SdCardTextView1"
+        android:textColor="#000000"
+        android:textSize="15sp"
+        android:typeface="normal" />
+
+    <ImageView
+        android:id="@+id/step_Image_View"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="@dimen/step_Image_View_Margin_Bottom_Top"
+        android:layout_marginBottom="@dimen/step_Image_View_Margin_Bottom_Top"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/steps" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="@dimen/step_Image_View_Margin_Bottom_Top"
+        android:layout_marginBottom="@dimen/step_Image_View_Margin_Bottom_Top"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_custom_dialog_permission_TextView3_Margin_Left"
+            android:visibility="invisible"
+            tools:ignore="NestedWeights" />
+
+        <Button
+            android:id="@+id/see_More_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:stateListAnimator="@null"
+            android:text="@string/see_More_Button"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            tools:ignore="NestedWeights" />
+
+        <Button
+            android:id="@+id/continue_Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:stateListAnimator="@null"
+            android:text="@string/continue_Button"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+</LinearLayout>

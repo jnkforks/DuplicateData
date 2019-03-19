@@ -1,24 +1,30 @@
 package com.example.sudoajay.duplication_data;
 
-import android.os.Build;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import com.example.sudoajay.duplication_data.Main_Fragments.Home;
-import com.example.sudoajay.duplication_data.Main_Fragments.Scan;
+import com.example.sudoajay.duplication_data.MainFragments.Home;
+import com.example.sudoajay.duplication_data.MainFragments.Scan;
+import com.example.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
+import com.example.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
+import com.example.sudoajay.duplication_data.SdCard.SdCardPath;
 
-public class Main_Navigation extends AppCompatActivity
+import java.io.File;
+
+public class MainNavigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     // global variable
@@ -28,10 +34,13 @@ public class Main_Navigation extends AppCompatActivity
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private NavigationView navigationView;
+    private AndroidSdCardPermission androidSdCardPermission;
+    private AndroidExternalStoragePermission androidExternalStoragePermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main_navigation);
 
         // Reference and Create Object
@@ -51,29 +60,73 @@ public class Main_Navigation extends AppCompatActivity
         navigationView.getMenu().getItem(0).setChecked(true);
         onNavigationItemSelected(navigationView.getMenu().getItem(0));
 
+        // check ExternalStorage Permission
+        androidExternalStoragePermission = new AndroidExternalStoragePermission(MainNavigation.this,
+                MainNavigation.this);
+        androidExternalStoragePermission.call_Thread();
+
+        // check SDCard Storage Permission
+        androidSdCardPermission = new AndroidSdCardPermission(MainNavigation.this, MainNavigation.this);
+        androidSdCardPermission.call_Thread();
     }
 
     // Reference and Create Object
     private void Reference() {
 
-      //reference
-        toolbar =  findViewById(R.id.toolbar);
-        drawer =  findViewById(R.id.drawer_layout);
-        navigationView =  findViewById(R.id.nav_view);
+        //reference
+        toolbar = findViewById(R.id.toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
 
 
-      // create object
+        // create object
         home = new Home();
         scan = new Scan();
 
     }
 
     // on click listener
-    public  void OnClick(View v){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            home.OnClick(v);
+    public void OnClick(View v) {
+        home.OnClick(v);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+
+        // local variable
+        Uri sd_Card_URL;
+        String sd_Card_Path_URL, string_URI = null;
+
+        if (resultCode != RESULT_OK)
+            return;
+        sd_Card_URL = resultData.getData();
+        Log.d( "onActivityResult",sd_Card_URL.toString()+"");
+        grantUriPermission(getPackageName(), sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, MainNavigation.this);
+        Log.d( "onActivityResult",sd_Card_Path_URL+"");
+        if (new File(sd_Card_Path_URL).exists())
+            string_URI = Split_The_URI(sd_Card_URL.toString());
+        Log.d( "onActivityResult",string_URI+"");
+        androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
+        androidSdCardPermission.setString_URI(string_URI);
+
+        File file = new File(sd_Card_Path_URL);
+        if (!isSamePath(sd_Card_Path_URL) && file.exists()) {
+            sd_Card_Path_URL = Split_The_URI(sd_Card_URL.toString());
+            sd_Card_URL = Uri.parse(sd_Card_Path_URL);
+            Log.d( "onActivityResult",sd_Card_URL.toString()+ " ----  " +sd_Card_Path_URL +"");
         }
     }
+
+    public boolean isSamePath(String sd_Card_Path_URL) {
+        return androidExternalStoragePermission.getExternal_Path().equals(sd_Card_Path_URL);
+    }
+
+    public String Split_The_URI(String url) {
+        String save[] = url.split("%3A");
+        return save[0] + "%3A";
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -114,11 +167,11 @@ public class Main_Navigation extends AppCompatActivity
         if (id == R.id.nav_Home) {
             // Handle the Home Action
             setTitle("Home");
-            fragment = home.createInstance(Main_Navigation.this);
+            fragment = home.createInstance(MainNavigation.this);
         } else if (id == R.id.nav_Scan) {
             // Handle the Scan Action
             setTitle("Scan");
-            fragment = scan.createInstance(Main_Navigation.this);
+            fragment = scan.createInstance(MainNavigation.this);
         } else if (id == R.id.nav_Share) {
 
         } else if (id == R.id.nav_Rate_Us) {
@@ -128,7 +181,7 @@ public class Main_Navigation extends AppCompatActivity
         }
         Replace_Fragments();
 
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

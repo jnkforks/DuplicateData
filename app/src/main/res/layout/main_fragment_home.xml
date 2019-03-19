@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -110,7 +111,7 @@
                     android:paddingBottom="10dp"
                     android:text="@string/text_Used_Space_Size"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="28sp"
+                    android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.131"
@@ -181,6 +182,7 @@
                         android:onClick="OnClick"
                         android:text="@string/text_Used"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:fontFamily="sans-serif"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -208,10 +210,13 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/rectangle_Used_Size"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/myRectangleViewInternal1"
                         app:layout_constraintTop_toBottomOf="@+id/circularProgressBarInternal"
-                        app:layout_constraintVertical_bias="0.223" />
+                        app:layout_constraintVertical_bias="0.223"
+                        tools:ignore="RtlHardcoded" />
 
                     <View
                         android:id="@+id/dividerInternal"
@@ -227,7 +232,8 @@
                         app:layout_constraintHorizontal_bias="0.542"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/circularProgressBarInternal"
-                        app:layout_constraintVertical_bias="0.57" />
+                        app:layout_constraintVertical_bias="0.57"
+                        tools:ignore="RtlHardcoded" />
 
                     <View
                         android:id="@+id/myRectangleViewInternal2"
@@ -245,9 +251,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/rectangle_Free_Size"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/myRectangleViewInternal2"
                         app:layout_constraintTop_toBottomOf="@+id/myRectangleViewInternal1"
@@ -338,7 +345,8 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.025" />
+                    app:layout_constraintVertical_bias="0.025"
+                    tools:ignore="RtlHardcoded" />
 
                 <TextView
                     android:id="@+id/textViewUsedSpaceSizeExternal"
@@ -350,13 +358,14 @@
                     android:paddingBottom="10dp"
                     android:text="@string/text_Used_Space_Size"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="28sp"
+                    android:textSize="24sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.131"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.333" />
+                    app:layout_constraintVertical_bias="0.333"
+                    tools:ignore="RtlHardcoded" />
 
             </android.support.v7.widget.CardView>
 
@@ -421,6 +430,7 @@
                         android:onClick="OnClick"
                         android:text="@string/text_Used"
                         android:textSize="18sp"
+                        android:textStyle="bold"
                         app:fontFamily="sans-serif"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -445,9 +455,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/rectangle_Used_Size"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/myRectangleViewExternal1"
                         app:layout_constraintTop_toBottomOf="@+id/circularProgressBarExternal"
@@ -468,7 +479,8 @@
                         app:layout_constraintHorizontal_bias="0.542"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/circularProgressBarExternal"
-                        app:layout_constraintVertical_bias="0.57" />
+                        app:layout_constraintVertical_bias="0.57"
+                        tools:ignore="RtlHardcoded" />
 
                     <View
                         android:id="@+id/myRectangleViewExternal2"
@@ -487,9 +499,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/rectangle_Free_Size"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/myRectangleViewExternal2"
                         app:layout_constraintTop_toBottomOf="@+id/myRectangleViewExternal1"

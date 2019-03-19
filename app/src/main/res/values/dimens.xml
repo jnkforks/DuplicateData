@@ -16,5 +16,10 @@
 	<dimen name="textViewUsedSpaceSize_margin_top">35dp</dimen>
 	<dimen name="textViewUsedSpaced_margin_left">10dp</dimen>
 	<dimen name="textViewInternal_margin_left">10dp</dimen>
-	<dimen name="constraint_Layout_margin_top">5dp</dimen>
+	<dimen name="constraint_Layout_margin_top">2dp</dimen>
+	<dimen name="activity_custom_dialog_permission_TextView3_Margin_Left">120dp</dimen>
+	<dimen name="SdCardTextView_Margin_Top">5dp</dimen>
+	<dimen name="SdCardTextView1_Padding_Left_Right">10dp</dimen>
+	<dimen name="SdCardTextView1_Padding_Bottom_Top">10dp</dimen>
+	<dimen name="step_Image_View_Margin_Bottom_Top">10dp</dimen>
 </resources>

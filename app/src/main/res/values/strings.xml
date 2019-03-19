@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Duplication_Data</string>
+    <string name="app_name">Duplication Data</string>
     <string name="title_activity_main__navigation">Main_Navigation</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -28,4 +28,23 @@
     <string name="rectangle_Free_Size">37.0%  Free</string>
 
 
+    <!--custom dialog Permission-->
+    <string name="activity_custom_dialog_permission_TextView1">App Permission</string>
+    <string name="activity_custom_dialog_permission_TextView2">In Android 6+ Apps will ask for
+        permission once you start using them.</string>
+    <string name="see_More_Button">See More</string>
+    <string name="continue_Button">Continue</string>
+
+
+    <!--SharedPreference Heading-->
+    <string name="MY_PREFS_NAME">@string/app_name</string>
+
+    <!--Sd Card Path SharedPreference-->
+    <string name="sdCardPath">Sd Card Path</string>
+    <string name="stringUri">String URI</string>
+
+    <!--Custom Dialog SD Card Permission-->
+    <string name="SdCardTextView">Select Sd Card</string>
+    <string name="SdCardTextView1">Please Choose Sd Card
+        To Grant Permission for Write or Remove In It....(Root Directory For Sd Card )</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.sudoajay.duplication_data.Main_Fragments;
+package com.example.sudoajay.duplication_data.MainFragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.sudoajay.duplication_data.Main_Navigation;
+import com.example.sudoajay.duplication_data.MainNavigation;
 import com.example.sudoajay.duplication_data.R;
 
 
@@ -16,14 +16,14 @@ import com.example.sudoajay.duplication_data.R;
 public class Scan extends Fragment {
 
     // global variable
-    private Main_Navigation main_navigation;
+    private MainNavigation main_navigation;
     private View layout;
 
     public Scan() {
         // Required empty public constructor
     }
 
-    public Scan createInstance(Main_Navigation main_navigation){
+    public Scan createInstance(MainNavigation main_navigation){
         this.main_navigation = main_navigation;
         return this;
     }
