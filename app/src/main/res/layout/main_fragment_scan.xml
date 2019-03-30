@@ -1,6 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+
+
+    <Button
+        android:id="@+id/file_Size_Text"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="219dp"
+        android:layout_height="100dp"
+        android:background="@drawable/activity_my_blank_button"
+        android:drawableStart="@drawable/multiple_data"
+        android:enabled="false"
+        android:fontFamily="sans-serif-smallcaps"
+        android:padding="@dimen/file_Size_Text_PaddingAll"
+        android:text="@string/file_Size_Text"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        android:onClick="OnClick"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.15" />
+
+
+    <ImageView
+        android:id="@+id/internal_Image_View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/external_Image_View"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.486"
+        app:srcCompat="@drawable/internal_storage_icon" />
+
+    <ImageView
+        android:id="@+id/external_Image_View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="OnClick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/internal_Image_View"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.486"
+        app:srcCompat="@drawable/sd_card_icon" />
+
+    <TextView
+        android:id="@+id/internal_Text_View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="serif"
+        android:text="@string/internal_Text_View"
+        android:onClick="OnClick"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/external_Text_View"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/internal_Image_View" />
+
+    <TextView
+        android:id="@+id/external_Text_View"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="serif"
+        android:text="@string/external_Text_View"
+        android:textColor="#000000"
+        android:onClick="OnClick"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/internal_Text_View"
+        app:layout_constraintTop_toBottomOf="@+id/external_Image_View" />
+
+    <ImageView
+        android:id="@+id/internal_Check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/internal_Check_Margin_Left"
+        app:layout_constraintBottom_toTopOf="@+id/internal_Text_View"
+        app:layout_constraintEnd_toEndOf="@+id/internal_Image_View"
+        app:layout_constraintTop_toTopOf="@+id/internal_Image_View"
+        app:layout_constraintVertical_bias="0.936"
+        app:srcCompat="@drawable/tick_icon" />
+
+    <ImageView
+        android:id="@+id/external_Check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/external_Check_Margin_left"
+        app:layout_constraintBottom_toTopOf="@+id/external_Text_View"
+        app:layout_constraintEnd_toEndOf="@+id/external_Image_View"
+        app:layout_constraintTop_toTopOf="@+id/external_Image_View"
+        app:layout_constraintVertical_bias="0.933"
+        app:srcCompat="@drawable/tick_icon" />
+
+    <Button
+        android:id="@+id/scan_Button"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:alpha="1"
+        android:background="@drawable/activity_my_scan_button"
+        android:drawableStart="@drawable/scan_icon"
+        android:fontFamily="sans-serif-smallcaps"
+        android:paddingStart="@dimen/scan_Button_Padding_Start"
+        android:paddingEnd="@dimen/scan_Button_Padding_end"
+        android:text="@string/scan_Button_Text"
+        android:textAllCaps="false"
+        android:onClick="OnClick"
+        android:textColor="#000000"
+        android:textSize="28sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
 
 </android.support.constraint.ConstraintLayout>

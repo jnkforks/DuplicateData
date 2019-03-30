@@ -35,14 +35,16 @@ public class AndroidSdCardPermission {
 
 
     public void call_Thread() {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        if(!isSdStorageWritable()) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
 
-                Call_Custom_Dailog_Changes();
-            }
-        }, 1800);
+                    Call_Custom_Dailog_Changes();
+                }
+            }, 1800);
+        }
     }
 
     public void Storage_Access_FrameWork() {
@@ -67,8 +69,8 @@ public class AndroidSdCardPermission {
         }
     }
 
-    public boolean isGetting() {
-        return (sd_Card_Path_URL.equals(Environment.getExternalStorageDirectory().getAbsolutePath())) ||
+    public boolean isSdStorageWritable() {
+        return !(sd_Card_Path_URL.equals(Environment.getExternalStorageDirectory().getAbsolutePath())) ||
                 (!new File(sd_Card_Path_URL).exists());
     }
 

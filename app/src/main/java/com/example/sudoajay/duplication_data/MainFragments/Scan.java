@@ -47,6 +47,11 @@ public class Scan extends Fragment {
 
     }
 
+    public void OnClick(View v){
+        switch (v.getId()){
+            case R
+        }
+    }
 
 }
 

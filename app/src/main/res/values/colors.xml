@@ -12,4 +12,7 @@
     <color name="toastBackgroundColor">@android:color/black</color>
     <color name="toastTextColor">#D6D1D1</color>
 
+    <color name="xml_Dim_Black_Color">#000</color>
+    <color name="activity_my_scan_button_color">#109f49</color>
+
 </resources>

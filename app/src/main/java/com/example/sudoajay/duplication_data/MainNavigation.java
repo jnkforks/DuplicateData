@@ -55,10 +55,14 @@ public class MainNavigation extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
+//        // default Home
+//        setTitle("Home");
+//        navigationView.getMenu().getItem(0).setChecked(true);
+//        onNavigationItemSelected(navigationView.getMenu().getItem(0));
         // default Home
-        setTitle("Home");
-        navigationView.getMenu().getItem(0).setChecked(true);
-        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        setTitle("Scan");
+        navigationView.getMenu().getItem(1).setChecked(true);
+        onNavigationItemSelected(navigationView.getMenu().getItem(1));
 
         // check ExternalStorage Permission
         androidExternalStoragePermission = new AndroidExternalStoragePermission(MainNavigation.this,
@@ -88,6 +92,7 @@ public class MainNavigation extends AppCompatActivity
     // on click listener
     public void OnClick(View v) {
         home.OnClick(v);
+        scan.OnClick(v);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {

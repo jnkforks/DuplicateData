@@ -47,4 +47,11 @@
     <string name="SdCardTextView">Select Sd Card</string>
     <string name="SdCardTextView1">Please Choose Sd Card
         To Grant Permission for Write or Remove In It....(Root Directory For Sd Card )</string>
+    
+    
+    <!-- Scan Activity-->
+    <string name="file_Size_Text">Data Size - 0 MB</string>
+    <string name="scan_Button_Text">Scan</string>
+    <string name="internal_Text_View">Internal</string>
+    <string name="external_Text_View">External</string>
 </resources>
