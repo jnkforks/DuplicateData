@@ -64,12 +64,12 @@ public class MainNavigation extends AppCompatActivity
         navigationView.getMenu().getItem(1).setChecked(true);
         onNavigationItemSelected(navigationView.getMenu().getItem(1));
 
-        // check ExternalStorage Permission
+//        // check ExternalStorage Permission
         androidExternalStoragePermission = new AndroidExternalStoragePermission(MainNavigation.this,
                 MainNavigation.this);
         androidExternalStoragePermission.call_Thread();
-
-        // check SDCard Storage Permission
+//
+//        // check SDCard Storage Permission
         androidSdCardPermission = new AndroidSdCardPermission(MainNavigation.this, MainNavigation.this);
         androidSdCardPermission.call_Thread();
     }
@@ -104,14 +104,11 @@ public class MainNavigation extends AppCompatActivity
         if (resultCode != RESULT_OK)
             return;
         sd_Card_URL = resultData.getData();
-        Log.d( "onActivityResult",sd_Card_URL.toString()+"");
         grantUriPermission(getPackageName(), sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, MainNavigation.this);
-        Log.d( "onActivityResult",sd_Card_Path_URL+"");
         if (new File(sd_Card_Path_URL).exists())
             string_URI = Split_The_URI(sd_Card_URL.toString());
-        Log.d( "onActivityResult",string_URI+"");
         androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
         androidSdCardPermission.setString_URI(string_URI);
 
@@ -119,7 +116,6 @@ public class MainNavigation extends AppCompatActivity
         if (!isSamePath(sd_Card_Path_URL) && file.exists()) {
             sd_Card_Path_URL = Split_The_URI(sd_Card_URL.toString());
             sd_Card_URL = Uri.parse(sd_Card_Path_URL);
-            Log.d( "onActivityResult",sd_Card_URL.toString()+ " ----  " +sd_Card_Path_URL +"");
         }
     }
 

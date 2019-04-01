@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
+import com.example.sudoajay.duplication_data.MainFragments.Scan;
 import com.example.sudoajay.duplication_data.MainNavigation;
 import com.example.sudoajay.duplication_data.SdCard.SdCardDialog;
 import com.example.sudoajay.duplication_data.Toast.CustomToast;
@@ -19,6 +21,7 @@ public class AndroidSdCardPermission {
     private Context context;
     private String sd_Card_Path_URL = "", string_URI;
     private MainNavigation mainNavigation;
+    private Scan scan;
     private SdCardPathSharedPreference sdCardPathSharedPreference;
 
 
@@ -28,6 +31,13 @@ public class AndroidSdCardPermission {
         Grab();
     }
 
+    public AndroidSdCardPermission(Context context, Scan scan) {
+        this.context = context;
+        this.scan = scan;
+        Grab();
+    }
+
+
     public AndroidSdCardPermission(Context context) {
         this.context = context;
         Grab();
@@ -35,7 +45,8 @@ public class AndroidSdCardPermission {
 
 
     public void call_Thread() {
-        if(!isSdStorageWritable()) {
+        if (!isSdStorageWritable()) {
+            Toast.makeText(context, "yes", Toast.LENGTH_LONG).show();
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -53,6 +64,8 @@ public class AndroidSdCardPermission {
             int REQUEST_CODE_OPEN_DOCUMENT_TREE = 42;
             if (mainNavigation != null)
                 mainNavigation.startActivityForResult(intent, REQUEST_CODE_OPEN_DOCUMENT_TREE);
+            if (scan != null)
+                scan.startActivityForResult(intent, REQUEST_CODE_OPEN_DOCUMENT_TREE);
 
         } catch (Exception e) {
             CustomToast.ToastIt(context, "There is Error Please Report It");
@@ -70,8 +83,8 @@ public class AndroidSdCardPermission {
     }
 
     public boolean isSdStorageWritable() {
-        return !(sd_Card_Path_URL.equals(Environment.getExternalStorageDirectory().getAbsolutePath())) ||
-                (!new File(sd_Card_Path_URL).exists());
+        return ((!sd_Card_Path_URL.equals(Environment.getExternalStorageDirectory().getAbsolutePath())) &&
+                (new File(sd_Card_Path_URL).exists()));
     }
 
     public void Grab() {
@@ -85,10 +98,6 @@ public class AndroidSdCardPermission {
 
 
         }
-    }
-
-    public String getString_URI() {
-        return string_URI;
     }
 
     public String getSd_Card_Path_URL() {

@@ -23,7 +23,7 @@ public class StorageInfo {
     public StorageInfo(String sd_Card_Path_URL ){
         this.sd_Card_Path_URL = sd_Card_Path_URL;
 
-        getAvailableInternalMemorySize();
+        getAvailableInternalMemorySize(); 
         getAvailableExternalMemorySize();
     }
 
