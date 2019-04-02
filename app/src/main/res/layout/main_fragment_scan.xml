@@ -139,9 +139,16 @@
 
     <com.sudoajay.lodinganimation.LoadingAnimation
         android:id="@+id/loadingAnimation"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="#fff"
+        app:la_set_alpha="700"
+        app:la_set_color="@android:color/black"
+        app:la_set_reduce_alpha="18"
+        app:la_set_angle_point="0"
+        app:la_set_main_radius="80"
+        app:la_set_other_radius="20"
+        app:la_set_reduce_other_radius="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

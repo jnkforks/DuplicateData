@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -81,7 +83,7 @@ public class Scan extends Fragment {
         file_Size_Text = layout.findViewById(R.id.file_Size_Text);
 
 
-        // create object\
+        // create object
         androidExternalStoragePermission = new AndroidExternalStoragePermission(getContext(), getActivity());
 
         androidSdCardPermission = new AndroidSdCardPermission(getContext(), Scan.this);
@@ -101,7 +103,7 @@ public class Scan extends Fragment {
                     Toast_It("You Supposed To Select Something");
                 else {
                     // if something check
-
+                    
                 }
                 break;
 
@@ -184,6 +186,18 @@ public class Scan extends Fragment {
 
     }
 
+
+    private void forceWrapContent(View v) {
+        // Start with the provided view
+        View current = v;
+        DisplayMetrics dm = new DisplayMetrics();
+        Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+        // Travel up the tree until fail, modifying the LayoutParams
+
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         String string_URI = null;
         if (resultCode != Activity.RESULT_OK)
@@ -196,12 +210,6 @@ public class Scan extends Fragment {
             string_URI = Split_The_URI(sd_Card_URL.toString());
         androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
         androidSdCardPermission.setString_URI(string_URI);
-
-//        File file = new File(sd_Card_Path_URL);
-//        if (!isSamePath(sd_Card_Path_URL) && file.exists()) {
-//            sd_Card_Path_URL = Split_The_URI(sd_Card_URL.toString());
-//            sd_Card_URL = Uri.parse(sd_Card_Path_URL);
-//        }
     }
 
 
