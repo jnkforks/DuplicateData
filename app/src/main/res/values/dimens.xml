@@ -27,4 +27,8 @@
     <dimen name="external_Check_Margin_left">10dp</dimen>
     <dimen name="scan_Button_Padding_end">100dp</dimen>
     <dimen name="scan_Button_Padding_Start">100dp</dimen>
+    <dimen name="share_ImageView_Margin_Right">20dp</dimen>
+    <dimen name="refresh_ImageView_Margin_Right">10dp</dimen>
+    <dimen name="toolbar_Tittle_Margin_Start">8dp</dimen>
+
 </resources>

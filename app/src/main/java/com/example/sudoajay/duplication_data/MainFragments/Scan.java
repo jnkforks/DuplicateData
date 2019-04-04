@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
 import com.example.sudoajay.duplication_data.MainNavigation;
 import com.example.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
 import com.example.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
@@ -103,7 +104,8 @@ public class Scan extends Fragment {
                     Toast_It("You Supposed To Select Something");
                 else {
                     // if something check
-                    
+                    Intent intent = new Intent(getActivity(), ShowDuplicate.class);
+                    startActivity(intent);
                 }
                 break;
 
@@ -186,17 +188,6 @@ public class Scan extends Fragment {
 
     }
 
-
-    private void forceWrapContent(View v) {
-        // Start with the provided view
-        View current = v;
-        DisplayMetrics dm = new DisplayMetrics();
-        Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;
-        int height = dm.heightPixels;
-        // Travel up the tree until fail, modifying the LayoutParams
-
-    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         String string_URI = null;

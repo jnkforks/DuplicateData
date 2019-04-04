@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.sudoajay.duplication_data">
-
-    <!--Permission are taken by user-->
+    <!-- Permission are taken by user -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -16,7 +15,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <!--Main Launcher Class-->
+        <!-- Main Launcher Class -->
         <activity
             android:name=".MainNavigation"
             android:label="@string/title_activity_main__navigation"
@@ -27,11 +26,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DuplicationData.ShowDuplicate"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <!---->
     </application>
 
 </manifest>
