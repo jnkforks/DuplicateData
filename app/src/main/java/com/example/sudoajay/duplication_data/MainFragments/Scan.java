@@ -2,9 +2,12 @@ package com.example.sudoajay.duplication_data.MainFragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -17,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sudoajay.duplication_data.DuplicationData.ScanDuplicateData;
 import com.example.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
 import com.example.sudoajay.duplication_data.MainNavigation;
 import com.example.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
@@ -27,6 +31,8 @@ import com.example.sudoajay.duplication_data.StorageStats.StorageInfo;
 
 import java.io.File;
 import java.util.Objects;
+
+import dmax.dialog.SpotsDialog;
 
 
 /**
@@ -56,7 +62,7 @@ public class Scan extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
@@ -87,7 +93,7 @@ public class Scan extends Fragment {
         // create object
         androidExternalStoragePermission = new AndroidExternalStoragePermission(getContext(), getActivity());
 
-        androidSdCardPermission = new AndroidSdCardPermission(getContext(), Scan.this);
+        androidSdCardPermission = new AndroidSdCardPermission(getContext(), Scan.this,getActivity());
 
         storageInfo = new StorageInfo(androidSdCardPermission.getSd_Card_Path_URL());
 
@@ -103,9 +109,12 @@ public class Scan extends Fragment {
                         external_Check.getVisibility() == View.GONE)
                     Toast_It("You Supposed To Select Something");
                 else {
-                    // if something check
-                    Intent intent = new Intent(getActivity(), ShowDuplicate.class);
-                    startActivity(intent);
+                    try {
+                        MultiThreadingTask multiThreadingTask = new MultiThreadingTask();
+                        multiThreadingTask.execute();
+                    }catch (Exception ignored){
+                    }
+
                 }
                 break;
 
@@ -121,6 +130,7 @@ public class Scan extends Fragment {
                         internal_Check.setVisibility(View.VISIBLE);
                         totalSizeLong += storageInfo.getInternal_Total_Size();
                     } else {
+
                         androidExternalStoragePermission.call_Thread();
                     }
                 } else {
@@ -142,6 +152,7 @@ public class Scan extends Fragment {
 
                         totalSizeLong += storageInfo.getExternal_Total_Size();
                     } else {
+                        Toast_It("Select the SD Card");
                         androidSdCardPermission.call_Thread();
                     }
                 } else {
@@ -152,7 +163,7 @@ public class Scan extends Fragment {
         }
 
         file_Size_Text.setText(getResources().getString(R.string.file_Size_Text).substring(0, 12) +
-                storageInfo.Convert_It(totalSizeLong));
+                StorageInfo.Convert_It(totalSizeLong));
     }
 
     @SuppressLint("SetTextI18n")
@@ -170,7 +181,7 @@ public class Scan extends Fragment {
             totalSizeLong += storageInfo.getExternal_Total_Size();
         }
         file_Size_Text.setText(getResources().getString(R.string.file_Size_Text).substring(0, 12) +
-                storageInfo.Convert_It(totalSizeLong));
+                StorageInfo.Convert_It(totalSizeLong));
     }
 
     public void Toast_It(String message) {
@@ -207,6 +218,54 @@ public class Scan extends Fragment {
     public String Split_The_URI(String url) {
         String save[] = url.split("%3A");
         return save[0] + "%3A";
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public class MultiThreadingTask extends AsyncTask<String, String, String> {
+
+        private   AlertDialog alertDialog;
+        private ScanDuplicateData scanDuplicateData ;
+
+        @Override
+        protected void onPreExecute() {
+            alertDialog = new SpotsDialog.Builder()
+                    .setContext(main_navigation)
+                    .setMessage("Scanning...")
+                    .setCancelable(false)
+                    .setTheme(R.style.Custom)
+                    .build();
+
+            alertDialog.show();
+
+            // create object
+            scanDuplicateData= new ScanDuplicateData(getContext());
+
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(String... strings) {
+            scanDuplicateData.Duplication(androidExternalStoragePermission.getExternal_Path(),
+                    androidSdCardPermission.getSd_Card_Path_URL(),
+                    internal_Check.getVisibility(), external_Check.getVisibility());
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(String... values) {
+
+            super.onProgressUpdate(values);
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            alertDialog.dismiss();
+
+            Intent intent = new Intent(main_navigation, ShowDuplicate.class);
+            intent.putExtra("Duplication_Class_Data" , scanDuplicateData.getList());
+            startActivity(intent);
+            super.onPostExecute(s);
+
+
+        }
+
     }
 }
 

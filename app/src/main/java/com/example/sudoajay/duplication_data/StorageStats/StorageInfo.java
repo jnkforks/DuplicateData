@@ -108,7 +108,7 @@ public class StorageInfo {
         return usedExternalPercent = GetDecimal2Round((((double)(external_Total_Size-external_Available_Size)*100)/external_Total_Size));
     }
 
-    public  String Convert_It(long size) {
+    public static   String Convert_It(long size) {
         if (size > (1024 * 1024 * 1024)) {
             // GB
             return GetDecimal2Round((double) size / (1024 * 1024 * 1024)) + " GB";
@@ -124,34 +124,34 @@ public class StorageInfo {
     }
 
 
-    public long getFileSizeInBytes(String fileName) {
-        long ret = 0;
-        try {
-        File f = new File(fileName);
+//    public long getFileSizeInBytes(String fileName) {
+//        long ret = 0;
+//        try {
+//        File f = new File(fileName);
+//
+//            if (f.exists()) {
+//                if (f.isFile()) {
+//                    return f.length();
+//                } else if (f.isDirectory()) {
+//                    File[] contents = f.listFiles();
+//                    for (int i = 0; i < contents.length; i++) {
+//                        if (contents[i].exists()) {
+//                            if (contents[i].isFile()) {
+//                                ret += contents[i].length();
+//                            } else if (contents[i].isDirectory())
+//                                ret += getFileSizeInBytes(contents[i].getPath());
+//                        }
+//                    }
+//                }
+//            } else {
+//                ret = 0;
+//            }
+//        }catch (Exception ignored){
+//        }
+//        return ret;
+//    }
 
-            if (f.exists()) {
-                if (f.isFile()) {
-                    return f.length();
-                } else if (f.isDirectory()) {
-                    File[] contents = f.listFiles();
-                    for (int i = 0; i < contents.length; i++) {
-                        if (contents[i].exists()) {
-                            if (contents[i].isFile()) {
-                                ret += contents[i].length();
-                            } else if (contents[i].isDirectory())
-                                ret += getFileSizeInBytes(contents[i].getPath());
-                        }
-                    }
-                }
-            } else {
-                ret = 0;
-            }
-        }catch (Exception ignored){
-        }
-        return ret;
-    }
-
-    public String GetDecimal2Round(double time){
+    public static  String GetDecimal2Round(double time){
         DecimalFormat df = new DecimalFormat("#.#");
         return Double.valueOf(df.format(time)).toString();
     }

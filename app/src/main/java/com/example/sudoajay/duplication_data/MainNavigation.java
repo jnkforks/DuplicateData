@@ -70,8 +70,8 @@ public class MainNavigation extends AppCompatActivity
         androidExternalStoragePermission.call_Thread();
 //
 //        // check SDCard Storage Permission
-        androidSdCardPermission = new AndroidSdCardPermission(MainNavigation.this, MainNavigation.this);
-        androidSdCardPermission.call_Thread();
+        androidSdCardPermission = new AndroidSdCardPermission(getApplicationContext(), MainNavigation.this,MainNavigation.this);
+//        androidSdCardPermission.call_Thread();
     }
 
     // Reference and Create Object

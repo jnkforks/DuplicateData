@@ -30,5 +30,9 @@
     <dimen name="share_ImageView_Margin_Right">20dp</dimen>
     <dimen name="refresh_ImageView_Margin_Right">10dp</dimen>
     <dimen name="toolbar_Tittle_Margin_Start">8dp</dimen>
+    <dimen name="activity_duplicate_list_view_margin_top">2dp</dimen>
+    <dimen name="arrow_Image_View_margin_start">5dp</dimen>
+    <dimen name="count_Text_View_margin_end">10dp</dimen>
+    <dimen name="under_list_cover_Image_View_layout_width">110dp</dimen>
 
 </resources>

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.example.sudoajay.duplication_data.R;
@@ -44,7 +45,7 @@ public class SdCardDialog extends DialogFragment {
             continue_Button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    Toast.makeText(getContext(), "yes", Toast.LENGTH_LONG).show();
                     android_sdCard_permission.Storage_Access_FrameWork();
 
                     dismiss();

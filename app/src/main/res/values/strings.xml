@@ -57,4 +57,10 @@
 
     <!-- Duplicate Data-->
     <string name="showDuplicateTitle">Duplicate Data</string>
+    <string name="no_duplicate_found">No Duplicate Found :)</string>
+    <string name="delete_Duplicate_Button_text">Delete ( 00 KB)</string>
+    <string name="under_list_view_name_text">No Name</string>
+
+    <!--share-->
+    <string name="shareText">Check This App WhatsApp Media Mover (Easy Way To Move Your WhatsApp Data To Sd Card</string>
 </resources>

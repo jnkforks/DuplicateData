@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#ff009688</color>
     <color name="colorPrimaryDark">#ff00796b</color>
-    <color name="colorAccent">#ff009688</color>
+    <color name="colorAccent">#009688</color>
     <color name="background_Color">#E6DFDF</color>
     <!-- progress bar config -->
     <color name="progressBarColor">#2F7A32</color>
