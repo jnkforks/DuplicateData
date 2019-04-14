@@ -103,6 +103,7 @@ public class Scan extends Fragment {
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.scan_Button:
+            case R.id.scan_Button1:
 
                 // if nothing check
                 if(internal_Check.getVisibility() == View.GONE &&

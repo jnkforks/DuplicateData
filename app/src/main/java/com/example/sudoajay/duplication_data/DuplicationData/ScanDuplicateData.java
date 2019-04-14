@@ -51,13 +51,10 @@ public class ScanDuplicateData {
         if(external_Visible == View.VISIBLE){
             if (FileExist(sd_Card_dir))Get_All_Path(new File(sd_Card_dir));
         }
-        Log.d( "Duplication",getAllData.size()+"");
         // check for length in file_icon
         DuplicatedFilesUsingLength();
-        Log.d( "Duplication",getAllData.size()+"");
         // check for mime type
         DuplicateFileType();
-        Log.d( "Duplication",getAllData.size()+"");
 
         // check for hash using "SHA-512"
         DuplicatedFilesUsingHashTable(lists);
@@ -68,10 +65,6 @@ public class ScanDuplicateData {
 
             }
 
-        }
-
-        for(String send: dataStore){
-            Log.d( "Duplication",send+"");
         }
     }
 
@@ -127,7 +120,7 @@ public class ScanDuplicateData {
         }
         return mimeType;
     }
-    public void DuplicatedFilesUsingHashTable(Map<String, List<String>> lists) {
+    private void DuplicatedFilesUsingHashTable(Map<String, List<String>> lists) {
         for (File child : getAllData) {
             try {
                 FileInputStream fileInput = new FileInputStream(child);
@@ -147,7 +140,7 @@ public class ScanDuplicateData {
             }
         }
     }
-    public void Get_All_Path(File directory  ){
+    private void Get_All_Path(File directory  ){
         for (File child : directory.listFiles()) {
             if (child.isDirectory()) {
                 Get_All_Path(child);

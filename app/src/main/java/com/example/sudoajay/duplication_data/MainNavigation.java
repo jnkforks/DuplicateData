@@ -1,8 +1,10 @@
 package com.example.sudoajay.duplication_data;
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess;
+import com.example.sudoajay.duplication_data.Delete.DeleteData;
 import com.example.sudoajay.duplication_data.MainFragments.Home;
 import com.example.sudoajay.duplication_data.MainFragments.Scan;
 import com.example.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
@@ -23,6 +27,12 @@ import com.example.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.example.sudoajay.duplication_data.SdCard.SdCardPath;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 public class MainNavigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,6 +82,7 @@ public class MainNavigation extends AppCompatActivity
 //        // check SDCard Storage Permission
         androidSdCardPermission = new AndroidSdCardPermission(getApplicationContext(), MainNavigation.this,MainNavigation.this);
 //        androidSdCardPermission.call_Thread();
+
     }
 
     // Reference and Create Object
@@ -195,5 +206,31 @@ public class MainNavigation extends AppCompatActivity
             ft.replace(R.id.frame_Layout, fragment);
             ft.commit();
         }
+    }
+
+    private void BackgroundTask() {
+
+        // this task for Background Show Size
+        OneTimeWorkRequest morning_Work =
+                new OneTimeWorkRequest.Builder(WorkMangerProcess.class).addTag("Scan Duplication").setInitialDelay(2
+                        , TimeUnit.DAYS).build();
+
+
+        WorkManager.getInstance().enqueueUniqueWork("Scan Duplication", ExistingWorkPolicy.KEEP, morning_Work);
+
+        WorkManager.getInstance().getWorkInfoByIdLiveData(morning_Work.getId())
+                .observe(this, new Observer<WorkInfo>() {
+                    @Override
+                    public void onChanged(@Nullable WorkInfo workInfo) {
+                        // Do something with the status
+                        if (workInfo != null && workInfo.getState().isFinished()) {
+
+
+                            // Recursive
+                            BackgroundTask();
+                        }
+                    }
+                });
+
     }
 }

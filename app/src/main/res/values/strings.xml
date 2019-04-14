@@ -63,4 +63,17 @@
 
     <!--share-->
     <string name="shareText">Check This App WhatsApp Media Mover (Easy Way To Move Your WhatsApp Data To Sd Card</string>
+    <string name="custom_dialog_no">No</string>
+    <string name="custom_dialog_yes">Yes</string>
+    <string name="custom_notification_text">Please Allow Notification soo we can show your Transfer Status.</string>
+    <string name="custom_notification_permission_heading">Notification Permission</string>
+
+
+
+    <!--Notfication CHannel Name-->
+    <string name="transfer_Done_title">Transfer Done</string>
+    <string name="transfer_Done_Id">Transfer Done Id </string>
+    <string name="duplicate_title">Duplicate</string>
+    <string name="duplicate_Id">Duplicate Id </string>
+
 </resources>

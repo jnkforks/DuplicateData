@@ -15,4 +15,6 @@
     <color name="xml_Dim_Black_Color">#000</color>
     <color name="activity_my_scan_button_color">#109f49</color>
 
+    <color name="notificationColor">#28b4ff</color>
+
 </resources>

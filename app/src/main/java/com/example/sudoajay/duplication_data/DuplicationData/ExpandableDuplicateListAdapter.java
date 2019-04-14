@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,30 +16,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.sudoajay.duplication_data.R;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 
-public class Expandable_Duplicate_List_Adapter extends BaseExpandableListAdapter {
+public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> list_Header;
     private HashMap<String, List<String>> list_Header_Child;
     private List<Integer> arrow_Image_Resource;
-
-    public Expandable_Duplicate_List_Adapter(Context context, List<String> list_Header, HashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource) {
+    private HashMap<Integer , List<Boolean>> checkBoxArray;
+    public ExpandableDuplicateListAdapter(Context context, List<String> list_Header, HashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource,
+                                          final HashMap<Integer , List<Boolean>> checkBoxArray) {
         this.context = context;
         this.list_Header = list_Header;
         this.list_Header_Child = list_Header_Child;
         this.arrow_Image_Resource = arrow_Image_Resource;
+        this.checkBoxArray=checkBoxArray;
     }
 
     @Override
@@ -106,7 +112,7 @@ public class Expandable_Duplicate_List_Adapter extends BaseExpandableListAdapter
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
 
         final String headerTitle = (String) getChild(groupPosition, childPosition);
@@ -119,49 +125,27 @@ public class Expandable_Duplicate_List_Adapter extends BaseExpandableListAdapter
         final TextView nameTextView = convertView.findViewById(R.id.nameTextView);
         final ImageView coverImageView = convertView.findViewById(R.id.coverImageView);
         final TextView pathTextView = convertView.findViewById(R.id.pathTextView);
-//        final ImageView checkImageView = convertView.findViewById(R.id.checkImageView);
+        final CheckBox checkBoxView = convertView.findViewById(R.id.checkBoxView);
 
         File file = new File(headerTitle);
         pathTextView.setText(headerTitle);
         nameTextView.setText(file.getName());
         Check_For_Extension(headerTitle, coverImageView);
 
-//        // long press
-//        checkImageView.setOnLongClickListener(new LongPress(nameTextView, pathTextView, coverImageView, checkImageView));
-//        pathTextView.setOnLongClickListener(new LongPress(nameTextView, pathTextView, coverImageView, checkImageView));
-//        nameTextView.setOnLongClickListener(new LongPress(nameTextView, pathTextView, coverImageView, checkImageView));
-       // coverImageView.setOnLongClickListener(new LongPress(nameTextView, pathTextView, coverImageView, checkImageView));
+        checkBoxView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!checkBoxView.isChecked()) {
+                    checkBoxView.setChecked(false);
+                    Objects.requireNonNull(checkBoxArray.get(groupPosition)).set(childPosition, false);
 
-//            check_Image_View.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if(check_Image_View.getAlpha() == 1f){
-//                        check_Image_View.setAlpha(0f);
-//                        name_Text_View.setAlpha(1f);
-//                        cover_Image_View.setAlpha(1.f);
-//                        path_Text_View.setAlpha(1f);
-//                    }else{
-//                        check_Image_View.setAlpha(1f);
-//                        name_Text_View.setAlpha(0.5f);
-//                        cover_Image_View.setAlpha(0.5f);
-//                        path_Text_View.setAlpha(0.5f);
-//                    }
-//                    Toast.makeText(context,check_Image_View.getVisibility()+" ",Toast.LENGTH_LONG).show();
-//                }
-//            });
-
-
-//            if(childPosition == 0){
-//                check_Image_View.setVisibility(View.INVISIBLE);
-//                name_Text_View.setAlpha(1f);
-//                cover_Image_View.setAlpha(1.0f);
-//                name_Text_View.setAlpha(1f);
-//            }else {
-//                check_Image_View.setVisibility(View.VISIBLE);
-//                name_Text_View.setAlpha(0.5f);
-//                cover_Image_View.setAlpha(0.5f);
-//                name_Text_View.setAlpha(0.5f);
-//            }
+                }else {
+                    checkBoxView.setChecked(true);
+                    Objects.requireNonNull(checkBoxArray.get(groupPosition)).set(childPosition, true);
+                }
+            }
+        });
+        checkBoxView.setChecked(Objects.requireNonNull(checkBoxArray.get(groupPosition)).get(childPosition));
         return convertView;
 
     }
@@ -312,35 +296,11 @@ public class Expandable_Duplicate_List_Adapter extends BaseExpandableListAdapter
         return resizedBitmap;
     }
 
-    public class LongPress implements View.OnLongClickListener {
-        private ImageView coverImageView, checkImageView;
-        private TextView namTextView, pathTextView;
-
-        public LongPress(final TextView nameTextView, final TextView pathTextView,
-                         final ImageView coverImageView, final ImageView checkImageView) {
-            this.namTextView = nameTextView;
-            this.coverImageView = coverImageView;
-            this.pathTextView = pathTextView;
-            this.checkImageView = checkImageView;
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-
-
-            if (checkImageView.getAlpha() == 1f) {
-                checkImageView.setAlpha(0f);
-                namTextView.setAlpha(1f);
-                coverImageView.setAlpha(1.f);
-                pathTextView.setAlpha(1f);
-            } else {
-                checkImageView.setAlpha(1f);
-                namTextView.setAlpha(0.5f);
-                coverImageView.setAlpha(0.5f);
-                pathTextView.setAlpha(0.5f);
-            }
-            return false;
-        }
+    public HashMap<Integer, List<Boolean>> getCheckBoxArray() {
+        return checkBoxArray;
     }
 
+    public void setCheckBoxArray(HashMap<Integer, List<Boolean>> checkBoxArray) {
+        this.checkBoxArray = checkBoxArray;
+    }
 }

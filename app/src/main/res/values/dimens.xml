@@ -25,8 +25,6 @@
     <dimen name="file_Size_Text_PaddingAll">10dp</dimen>
     <dimen name="internal_Check_Margin_Left">12dp</dimen>
     <dimen name="external_Check_Margin_left">10dp</dimen>
-    <dimen name="scan_Button_Padding_end">100dp</dimen>
-    <dimen name="scan_Button_Padding_Start">100dp</dimen>
     <dimen name="share_ImageView_Margin_Right">20dp</dimen>
     <dimen name="refresh_ImageView_Margin_Right">10dp</dimen>
     <dimen name="toolbar_Tittle_Margin_Start">8dp</dimen>
@@ -34,5 +32,6 @@
     <dimen name="arrow_Image_View_margin_start">5dp</dimen>
     <dimen name="count_Text_View_margin_end">10dp</dimen>
     <dimen name="under_list_cover_Image_View_layout_width">110dp</dimen>
+    <dimen name="scan_button_layout_width">120dp</dimen>
 
 </resources>
