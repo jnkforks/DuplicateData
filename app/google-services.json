@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "900369200320",
+    "firebase_url": "https://duplicatedata-beaf6.firebaseio.com",
+    "project_id": "duplicatedata-beaf6",
+    "storage_bucket": "duplicatedata-beaf6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900369200320:android:852690e89ec8eebf",
+        "android_client_info": {
+          "package_name": "com.sudoajay.duplication_data"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "900369200320-g1ivp81sclm6gfeq3e6g5eb9s6k5bce9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwraIfKo_S7RGp2mvoD6jfW5iraXOMZ5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "900369200320-g1ivp81sclm6gfeq3e6g5eb9s6k5bce9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
