@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,6 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+
 import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess;
 import com.sudoajay.duplication_data.MainFragments.Home;
 import com.sudoajay.duplication_data.MainFragments.Scan;
@@ -25,12 +31,8 @@ import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.SdCard.SdCardPath;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 public class MainNavigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -62,7 +64,7 @@ public class MainNavigation extends AppCompatActivity
 
         // Reference and Create Object
         Reference();
-
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -90,9 +92,6 @@ public class MainNavigation extends AppCompatActivity
                 MainNavigation.this);
         androidExternalStoragePermission.call_Thread();
 
-        // check SDCard Storage Permission
-        androidSdCardPermission = new AndroidSdCardPermission(getApplicationContext(), MainNavigation.this, MainNavigation.this);
-        androidSdCardPermission.call_Thread();
 
         // call Background
         BackgroundTask();
@@ -112,13 +111,46 @@ public class MainNavigation extends AppCompatActivity
         home = new Home();
         scan = new Scan();
 
+        // check SDCard Storage Permission
+        androidSdCardPermission = new AndroidSdCardPermission(getApplicationContext(), MainNavigation.this, MainNavigation.this);
+
+
     }
 
     // on click listener
     public void OnClick(View v) {
-        home.OnClick(v);
-        scan.OnClick(v);
+
+        switch (v.getId()) {
+            case R.id.duplicateDataImageView:
+            case R.id.duplicateDataTextView:
+                // default Home
+                setTitle("Home");
+                navigationView.getMenu().getItem(0).setChecked(true);
+                onNavigationItemSelected(navigationView.getMenu().getItem(0));
+                break;
+        }
+
+        if (getVisibleFragment().equals(home)) {
+            home.OnClick(v);
+        } else if (getVisibleFragment().equals(scan)) {
+            scan.OnClick(v);
+        }
+
+
     }
+
+    public Fragment getVisibleFragment() {
+        FragmentManager fragmentManager = MainNavigation.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if ((fragment != null && fragment.isVisible())) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment.isVisible())
+                    return fragment;
+            }
+        }
+        return null;
+    }
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
 
@@ -226,8 +258,8 @@ public class MainNavigation extends AppCompatActivity
 
         // this task for Background Show Size
         OneTimeWorkRequest morning_Work =
-                new OneTimeWorkRequest.Builder(WorkMangerProcess.class).addTag("Scan Duplication").setInitialDelay(15
-                        , TimeUnit.MINUTES).build();
+                new OneTimeWorkRequest.Builder(WorkMangerProcess.class).addTag("Scan Duplication").setInitialDelay(2
+                        , TimeUnit.DAYS).build();
 
 
         WorkManager.getInstance().enqueueUniqueWork("Scan Duplication", ExistingWorkPolicy.KEEP, morning_Work);
@@ -238,8 +270,6 @@ public class MainNavigation extends AppCompatActivity
                     public void onChanged(@Nullable WorkInfo workInfo) {
                         // Do something with the status
                         if (workInfo != null && workInfo.getState().isFinished()) {
-
-
                             // Recursive
                             BackgroundTask();
                         }

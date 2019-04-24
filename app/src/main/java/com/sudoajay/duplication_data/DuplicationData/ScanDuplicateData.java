@@ -25,29 +25,30 @@ public class ScanDuplicateData {
     private ArrayList<String> dataStore = new ArrayList<>();
     private static Context context;
 
-    public ScanDuplicateData(final Context context){
+    public ScanDuplicateData(final Context context) {
         ScanDuplicateData.context = context;
     }
 
     private static MessageDigest messageDigest;
+
     static {
         try {
             messageDigest = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
-            CustomToast.ToastIt(context,"cannot initialize SHA-512 hash function");
+            CustomToast.ToastIt(context, "cannot initialize SHA-512 hash function");
         }
     }
 
-    public void Duplication(String external_dir , String sd_Card_dir, int internal_Visible , int external_Visible ){
+    public void Duplication(String external_dir, String sd_Card_dir, int internal_Visible, int external_Visible) {
 
 
         Map<String, List<String>> lists = new HashMap<>();
 
-        if(internal_Visible == View.VISIBLE) {
+        if (internal_Visible == View.VISIBLE) {
             if (FileExist(external_dir)) Get_All_Path(new File(external_dir));
         }
-        if(external_Visible == View.VISIBLE){
-            if (FileExist(sd_Card_dir))Get_All_Path(new File(sd_Card_dir));
+        if (external_Visible == View.VISIBLE) {
+            if (FileExist(sd_Card_dir)) Get_All_Path(new File(sd_Card_dir));
         }
         // check for length in file_icon
         DuplicatedFilesUsingLength();
@@ -66,17 +67,17 @@ public class ScanDuplicateData {
         }
     }
 
-    private void DuplicatedFilesUsingLength(){
-        ArrayList<Long> getAllDataLength =new ArrayList<>();
-        for(File data: getAllData){
+    private void DuplicatedFilesUsingLength() {
+        ArrayList<Long> getAllDataLength = new ArrayList<>();
+        for (File data : getAllData) {
             getAllDataLength.add(data.length());
         }
 
-        for(int i = getAllDataLength.size()-1 ;i >0;i--){
-            for(int j = 0 ;j <getAllDataLength.size();j++){
-                if(i !=j){
-                    if(getAllDataLength.get(i).equals(getAllDataLength.get(j)))break;
-                    if(j==getAllDataLength.size()-1){
+        for (int i = getAllDataLength.size() - 1; i > 0; i--) {
+            for (int j = 0; j < getAllDataLength.size(); j++) {
+                if (i != j) {
+                    if (getAllDataLength.get(i).equals(getAllDataLength.get(j))) break;
+                    if (j == getAllDataLength.size() - 1) {
                         getAllDataLength.remove(i);
                         getAllData.remove(i);
                     }
@@ -85,17 +86,18 @@ public class ScanDuplicateData {
         }
     }
 
-    private void DuplicateFileType(){
-        ArrayList<String> getAllDataType =new ArrayList<>();
-        for(File data: getAllData){
+    private void DuplicateFileType() {
+        ArrayList<String> getAllDataType = new ArrayList<>();
+        for (File data : getAllData) {
             getAllDataType.add(getMimeType(Uri.fromFile(data)));
         }
 
-        for(int i = getAllDataType.size()-1 ;i >0;i--){
-            for(int j = 0 ;j <getAllDataType.size();j++){
-                if(i !=j){
-                    if(getAllDataType.get(i) == null || getAllDataType.get(i).equals(getAllDataType.get(j)))break;
-                    if(j==getAllDataType.size()-1){
+        for (int i = getAllDataType.size() - 1; i > 0; i--) {
+            for (int j = 0; j < getAllDataType.size(); j++) {
+                if (i != j) {
+                    if (getAllDataType.get(i) == null || getAllDataType.get(i).equals(getAllDataType.get(j)))
+                        break;
+                    if (j == getAllDataType.size() - 1) {
                         getAllDataType.remove(i);
                         getAllData.remove(i);
                     }
@@ -118,6 +120,7 @@ public class ScanDuplicateData {
         }
         return mimeType;
     }
+
     private void DuplicatedFilesUsingHashTable(Map<String, List<String>> lists) {
         for (File child : getAllData) {
             try {
@@ -138,12 +141,13 @@ public class ScanDuplicateData {
             }
         }
     }
-    private void Get_All_Path(File directory  ){
+
+    private void Get_All_Path(File directory) {
         for (File child : directory.listFiles()) {
             if (child.isDirectory()) {
                 Get_All_Path(child);
-            }else {
-                if(!child.getName().equals(".nomedia"))
+            } else {
+                if (!child.getName().equals(".nomedia"))
                     getAllData.add(child);
             }
         }
@@ -153,7 +157,7 @@ public class ScanDuplicateData {
         return dataStore;
     }
 
-    private boolean FileExist(String path){
-        return   (new File(path).listFiles() != null && new File(path).exists());
+    private boolean FileExist(String path) {
+        return (new File(path).listFiles() != null && new File(path).exists());
     }
 }

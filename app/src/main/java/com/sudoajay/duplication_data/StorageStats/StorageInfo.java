@@ -64,7 +64,7 @@ public class StorageInfo {
         return availableInternalPercent = GetDecimal2Round(((double)(internal_Available_Size*100)/internal_Total_Size));
     }
     public String getUsedInternalPercentage(){
-        return usedInternalPercent = GetDecimal2Round((((double)(internal_Total_Size-internal_Available_Size)*100)/internal_Total_Size));
+        return usedInternalPercent = GetDecimal2Round((((double)(internal_Total_Size - internal_Available_Size)*100)/internal_Total_Size));
     }
 
 

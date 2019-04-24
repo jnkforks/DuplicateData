@@ -51,7 +51,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginLeft="@dimen/textViewInternal_margin_left"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:text="@string/text_Internal_Storage"
@@ -89,7 +88,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginLeft="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="5dp"
                     android:text="@string/text_Used_Space"
@@ -106,7 +104,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
-                    android:layout_marginLeft="@dimen/textViewUsedSpaceSize_margin_left"
                     android:layout_marginTop="35dp"
                     android:paddingBottom="10dp"
                     android:text="@string/text_Used_Space_Size"
@@ -297,7 +294,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginLeft="@dimen/textViewInternal_margin_left"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:text="@string/text_External_Storage"
@@ -387,6 +383,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cardViewExternal2">
 
                 <android.support.constraint.ConstraintLayout
+                    android:id="@+id/constraintLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="20dp"
@@ -517,4 +514,4 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    </ScrollView>
+</ScrollView>

@@ -45,7 +45,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_custom_dialog_permission_TextView3_Margin_Left"
+            android:layout_weight="1"
             android:visibility="invisible"
             tools:ignore="NestedWeights" />
 

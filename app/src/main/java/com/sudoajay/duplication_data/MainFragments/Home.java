@@ -6,16 +6,20 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.sudoajay.duplication_data.MainNavigation;
+import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
+import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.R;
 import com.sudoajay.duplication_data.StorageStats.StorageInfo;
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference;
-import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.util.Objects;
 
@@ -28,13 +32,17 @@ public class Home extends Fragment {
     // global variable
     private MainNavigation main_navigation;
     private View layout;
-    private CircularProgressBar circularProgressBarInternal,circularProgressBarExternal;
+    private CircularProgressBar circularProgressBarInternal, circularProgressBarExternal;
     private final int animationDuration = 4000;
     private TextView textViewInternal2, textViewInternal3,
             textViewUsedSpaceSizeInternal, textViewInternal4, textViewInternal5,
-            textViewUsedSpaceSizeExternal,textViewExternal2,textViewExternal4,
-            textViewExternal5,textViewExternal3;
+            textViewUsedSpaceSizeExternal, textViewExternal2, textViewExternal4,
+            textViewExternal5, textViewExternal3;
     private StorageInfo storageInfo;
+    private AndroidExternalStoragePermission externalStoragePermission;
+    private AndroidSdCardPermission sdCardPermission;
+    private View customToastLayout;
+    private Toast toast;
 
     public Home() {
         // Required empty public constructor
@@ -57,10 +65,12 @@ public class Home extends Fragment {
         Reference();
 
         //Set Storage Stats
-
         SetInternalStorageStats();
         SetExternalStorageStats();
 
+        LayoutInflater inflaters = getLayoutInflater();
+        customToastLayout = inflaters.inflate(R.layout.activity_custom_toast,
+                (ViewGroup) layout.findViewById(R.id.toastcustom));
 
         // custom progress bar
         circularProgressBarInternal.setProgressWithAnimation(Float.valueOf(storageInfo.getAvialableInternalPercent()), animationDuration); // Default duration = 1500ms
@@ -78,16 +88,17 @@ public class Home extends Fragment {
         textViewInternal5 = layout.findViewById(R.id.textViewInternal5);
         circularProgressBarInternal = layout.findViewById(R.id.circularProgressBarInternal);
 
-        textViewExternal4= layout.findViewById(R.id.textViewExternal4);
+        textViewExternal4 = layout.findViewById(R.id.textViewExternal4);
         textViewUsedSpaceSizeExternal = layout.findViewById(R.id.textViewUsedSpaceSizeExternal);
-        textViewExternal2= layout.findViewById(R.id.textViewExternal2);
+        textViewExternal2 = layout.findViewById(R.id.textViewExternal2);
         textViewExternal5 = layout.findViewById(R.id.textViewExternal5);
-        textViewExternal3= layout.findViewById(R.id.textViewExternal3);
-        circularProgressBarExternal= layout.findViewById(R.id.circularProgressBarExternal);
+        textViewExternal3 = layout.findViewById(R.id.textViewExternal3);
+        circularProgressBarExternal = layout.findViewById(R.id.circularProgressBarExternal);
 
         //Sd Card shared Preference
         SdCardPathSharedPreference sdCardPathSharedPreference = new SdCardPathSharedPreference(Objects.requireNonNull(getContext()));
-
+        externalStoragePermission = new AndroidExternalStoragePermission(getContext(), main_navigation);
+        sdCardPermission = new AndroidSdCardPermission(getContext(), main_navigation, main_navigation);
         // create object
         storageInfo = new StorageInfo(sdCardPathSharedPreference.getSdCardPath());
     }
@@ -97,58 +108,68 @@ public class Home extends Fragment {
     public void OnClick(View v) {
         switch (v.getId()) {
             case R.id.cardViewInternal3:
-                if (circularProgressBarInternal.getColor() == -13665742) {
-                    circularProgressBarInternal.setBackgroundColor(ContextCompat.getColor
-                            (Objects.requireNonNull(getContext()), R.color.progressBarColor));
-                    circularProgressBarInternal.setColor(ContextCompat.getColor
-                            (Objects.requireNonNull(getContext()), R.color.background_Progress_Bar_Color));
-                    circularProgressBarInternal.setProgressWithAnimation(Float.valueOf(storageInfo.getUsedInternalPercent())
-                            , 0); // Default duration = 1500ms
+                if (externalStoragePermission.isExternalStorageWritable()) {
+                    if (circularProgressBarInternal.getColor() == -13665742) {
+                        circularProgressBarInternal.setBackgroundColor(ContextCompat.getColor
+                                (Objects.requireNonNull(getContext()), R.color.progressBarColor));
+                        circularProgressBarInternal.setColor(ContextCompat.getColor
+                                (Objects.requireNonNull(getContext()), R.color.background_Progress_Bar_Color));
+                        circularProgressBarInternal.setProgressWithAnimation(Float.valueOf(storageInfo.getUsedInternalPercent())
+                                , 0); // Default duration = 1500ms
 
-                    textViewInternal2.setText(storageInfo.Convert_It((storageInfo.getInternal_Total_Size() -
-                            storageInfo.getInternal_Available_Size())));
+                        textViewInternal2.setText(StorageInfo.Convert_It((storageInfo.getInternal_Total_Size() -
+                                storageInfo.getInternal_Available_Size())));
 
-                    textViewInternal3.setText(getResources().getString(R.string.text_Used));
+                        textViewInternal3.setText(getResources().getString(R.string.text_Used));
 
+                    } else {
+                        circularProgressBarInternal.setBackgroundColor(ContextCompat.getColor
+                                (Objects.requireNonNull(getContext()), R.color.background_Progress_Bar_Color));
+                        circularProgressBarInternal.setColor(ContextCompat.getColor
+                                (Objects.requireNonNull(getContext()), R.color.progressBarColor));
+
+                        circularProgressBarInternal.setProgressWithAnimation(Float.valueOf(storageInfo.getAvialableInternalPercent())
+                                , 0); // Default duration = 1500ms
+                        textViewInternal2.setText(StorageInfo.Convert_It(storageInfo.getInternal_Available_Size()));
+                        textViewInternal3.setText(getResources().getString(R.string.text_Free));
+
+                    }
                 } else {
-                    circularProgressBarInternal.setBackgroundColor(ContextCompat.getColor
-                            (Objects.requireNonNull(getContext()), R.color.background_Progress_Bar_Color));
-                    circularProgressBarInternal.setColor(ContextCompat.getColor
-                            (Objects.requireNonNull(getContext()), R.color.progressBarColor));
-
-                    circularProgressBarInternal.setProgressWithAnimation(Float.valueOf(storageInfo.getAvialableInternalPercent())
-                            , 0); // Default duration = 1500ms
-                    textViewInternal2.setText(storageInfo.Convert_It(storageInfo.getInternal_Available_Size()));
-                    textViewInternal3.setText(getResources().getString(R.string.text_Free));
-
+                    externalStoragePermission.call_Thread();
                 }
                 break;
             case R.id.cardViewExternal3:
-                if (circularProgressBarExternal.getColor() == -13665742) {
-                    circularProgressBarExternal.setBackgroundColor(ContextCompat.getColor
-                            (Objects.requireNonNull(getContext()), R.color.progressBarColor));
-                    circularProgressBarExternal.setColor(ContextCompat.getColor
-                            (Objects.requireNonNull(getContext()), R.color.background_Progress_Bar_Color));
-                    circularProgressBarExternal.setProgressWithAnimation(Float.valueOf(storageInfo.getUsedExternalPercentage())
-                            , 0); // Default duration = 1500ms
+                if (sdCardPermission.isSdStorageWritable()) {
+                    if (circularProgressBarExternal.getColor() == -13665742) {
+                        circularProgressBarExternal.setBackgroundColor(ContextCompat.getColor
+                                (Objects.requireNonNull(getContext()), R.color.progressBarColor));
+                        circularProgressBarExternal.setColor(ContextCompat.getColor
+                                (Objects.requireNonNull(getContext()), R.color.background_Progress_Bar_Color));
+                        circularProgressBarExternal.setProgressWithAnimation(Float.valueOf(storageInfo.getUsedExternalPercentage())
+                                , 0); // Default duration = 1500ms
 
-                    textViewExternal2.setText(storageInfo.Convert_It((storageInfo.getExternal_Total_Size() -
-                            storageInfo.getExternal_Available_Size())));
+                        textViewExternal2.setText(StorageInfo.Convert_It((storageInfo.getExternal_Total_Size() -
+                                storageInfo.getExternal_Available_Size())));
 
-                    textViewExternal3.setText(getResources().getString(R.string.text_Used));
+                        textViewExternal3.setText(getResources().getString(R.string.text_Used));
 
+                    } else {
+                        circularProgressBarExternal.setBackgroundColor(ContextCompat.getColor
+                                (Objects.requireNonNull(getContext()), R.color.background_Progress_Bar_Color));
+                        circularProgressBarExternal.setColor(ContextCompat.getColor
+                                (Objects.requireNonNull(getContext()), R.color.progressBarColor));
+
+                        circularProgressBarExternal.setProgressWithAnimation(Float.valueOf(storageInfo.getAvailableExternalPercentage())
+                                , 0); // Default duration = 1500ms
+                        textViewExternal2.setText(StorageInfo.Convert_It(storageInfo.getExternal_Available_Size()));
+                        textViewExternal3.setText(getResources().getString(R.string.text_Free));
+
+                    }
                 } else {
-                    circularProgressBarExternal.setBackgroundColor(ContextCompat.getColor
-                            (Objects.requireNonNull(getContext()), R.color.background_Progress_Bar_Color));
-                    circularProgressBarExternal.setColor(ContextCompat.getColor
-                            (Objects.requireNonNull(getContext()), R.color.progressBarColor));
-
-                    circularProgressBarExternal.setProgressWithAnimation(Float.valueOf(storageInfo.getAvailableExternalPercentage())
-                            , 0); // Default duration = 1500ms
-                    textViewExternal2.setText(storageInfo.Convert_It(storageInfo.getExternal_Available_Size()));
-                    textViewExternal3.setText(getResources().getString(R.string.text_Free));
-
+                    Toast_It("Select the SD Card");
+                    sdCardPermission.call_Thread();
                 }
+                break;
         }
     }
 
@@ -188,5 +209,19 @@ public class Home extends Fragment {
         textViewExternal5.setText(usedExternalPercent + " % Free");
     }
 
+    public void Toast_It(String message) {
+        TextView toast_TextView = customToastLayout.findViewById(R.id.text);
+        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
+            toast = new Toast(main_navigation.getApplicationContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(customToastLayout);
+            toast_TextView.setText(message);
+            toast.show();
+        } else {
+            toast.cancel();
+        }
+
+    }
 }
 

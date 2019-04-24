@@ -90,7 +90,7 @@ public class Scan extends Fragment {
         // create object
         androidExternalStoragePermission = new AndroidExternalStoragePermission(getContext(), getActivity());
 
-        androidSdCardPermission = new AndroidSdCardPermission(getContext(), Scan.this,getActivity());
+        androidSdCardPermission = new AndroidSdCardPermission(getContext(), Scan.this, getActivity());
 
         storageInfo = new StorageInfo(androidSdCardPermission.getSd_Card_Path_URL());
 
@@ -103,14 +103,14 @@ public class Scan extends Fragment {
             case R.id.scan_Button1:
 
                 // if nothing check
-                if(internal_Check.getVisibility() == View.GONE &&
+                if (internal_Check.getVisibility() == View.GONE &&
                         external_Check.getVisibility() == View.GONE)
                     Toast_It("You Supposed To Select Something");
                 else {
                     try {
                         MultiThreadingTask multiThreadingTask = new MultiThreadingTask();
                         multiThreadingTask.execute();
-                    }catch (Exception ignored){
+                    } catch (Exception ignored) {
                     }
 
                 }
@@ -126,14 +126,14 @@ public class Scan extends Fragment {
                 if (internal_Check.getVisibility() == View.GONE) {
                     if (androidExternalStoragePermission.isExternalStorageWritable()) {
                         internal_Check.setVisibility(View.VISIBLE);
-                        totalSizeLong += storageInfo.getInternal_Total_Size();
+                        totalSizeLong += storageInfo.getInternal_Total_Size() - storageInfo.getInternal_Available_Size();
                     } else {
 
                         androidExternalStoragePermission.call_Thread();
                     }
                 } else {
                     internal_Check.setVisibility(View.GONE);
-                    totalSizeLong -= storageInfo.getInternal_Total_Size();
+                    totalSizeLong -= storageInfo.getInternal_Total_Size() - storageInfo.getInternal_Available_Size();
                 }
                 break;
 
@@ -148,14 +148,14 @@ public class Scan extends Fragment {
                     if (androidSdCardPermission.isSdStorageWritable()) {
                         external_Check.setVisibility(View.VISIBLE);
 
-                        totalSizeLong += storageInfo.getExternal_Total_Size();
+                        totalSizeLong += storageInfo.getExternal_Total_Size() - storageInfo.getExternal_Available_Size();
                     } else {
                         Toast_It("Select the SD Card");
                         androidSdCardPermission.call_Thread();
                     }
                 } else {
                     external_Check.setVisibility(View.GONE);
-                    totalSizeLong -= storageInfo.getExternal_Total_Size();
+                    totalSizeLong -= storageInfo.getExternal_Total_Size() - storageInfo.getExternal_Available_Size();
                 }
                 break;
         }
@@ -166,17 +166,18 @@ public class Scan extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void isWritable() {
+        totalSizeLong = 0;
         if (!androidExternalStoragePermission.isExternalStorageWritable()) {
             internal_Check.setVisibility(View.GONE);
         } else {
             storageInfo.getTotalInternalMemorySize();
-            totalSizeLong += storageInfo.getInternal_Total_Size();
+            totalSizeLong += storageInfo.getInternal_Total_Size() - storageInfo.getInternal_Available_Size();
         }
         if (!androidSdCardPermission.isSdStorageWritable()) {
             external_Check.setVisibility(View.GONE);
         } else {
             storageInfo.getTotalExternalMemorySize();
-            totalSizeLong += storageInfo.getExternal_Total_Size();
+            totalSizeLong += storageInfo.getExternal_Total_Size() - storageInfo.getExternal_Available_Size();
         }
         file_Size_Text.setText(getResources().getString(R.string.file_Size_Text).substring(0, 12) +
                 StorageInfo.Convert_It(totalSizeLong));
@@ -221,8 +222,8 @@ public class Scan extends Fragment {
     @SuppressLint("StaticFieldLeak")
     public class MultiThreadingTask extends AsyncTask<String, String, String> {
 
-        private   AlertDialog alertDialog;
-        private ScanDuplicateData scanDuplicateData ;
+        private AlertDialog alertDialog;
+        private ScanDuplicateData scanDuplicateData;
 
         @Override
         protected void onPreExecute() {
@@ -236,10 +237,11 @@ public class Scan extends Fragment {
             alertDialog.show();
 
             // create object
-            scanDuplicateData= new ScanDuplicateData(getContext());
+            scanDuplicateData = new ScanDuplicateData(getContext());
 
             super.onPreExecute();
         }
+
         @Override
         protected String doInBackground(String... strings) {
             scanDuplicateData.Duplication(androidExternalStoragePermission.getExternal_Path(),
@@ -247,17 +249,19 @@ public class Scan extends Fragment {
                     internal_Check.getVisibility(), external_Check.getVisibility());
             return null;
         }
+
         @Override
         protected void onProgressUpdate(String... values) {
 
             super.onProgressUpdate(values);
         }
+
         @Override
         protected void onPostExecute(String s) {
             alertDialog.dismiss();
 
             Intent intent = new Intent(main_navigation, ShowDuplicate.class);
-            intent.putExtra("Duplication_Class_Data" , scanDuplicateData.getList());
+            intent.putExtra("Duplication_Class_Data", scanDuplicateData.getList());
             startActivity(intent);
             super.onPostExecute(s);
 

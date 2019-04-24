@@ -22,7 +22,6 @@
 	<dimen name="slide_desc">38.4dp</dimen>
 	<dimen name="scan_Button_Padding_end">125dp</dimen>
 	<dimen name="activity_horizontal_margin">38.4dp</dimen>
-	<dimen name="nav_header_height">422.4dp</dimen>
 	<dimen name="scan_Button_Padding_Start">130dp</dimen>
 	<dimen name="activity_custom_dialog_permission_TextView3_Margin_Left">288dp</dimen>
 	<dimen name="external_Check_Margin_left">8dp</dimen>

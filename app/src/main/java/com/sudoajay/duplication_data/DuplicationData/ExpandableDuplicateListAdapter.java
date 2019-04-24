@@ -34,14 +34,15 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
     private List<String> list_Header;
     private HashMap<String, List<String>> list_Header_Child;
     private List<Integer> arrow_Image_Resource;
-    private HashMap<Integer , List<Boolean>> checkBoxArray;
+    private HashMap<Integer, List<Boolean>> checkBoxArray;
+
     public ExpandableDuplicateListAdapter(Context context, List<String> list_Header, HashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource,
-                                          final HashMap<Integer , List<Boolean>> checkBoxArray) {
+                                          final HashMap<Integer, List<Boolean>> checkBoxArray) {
         this.context = context;
         this.list_Header = list_Header;
         this.list_Header_Child = list_Header_Child;
         this.arrow_Image_Resource = arrow_Image_Resource;
-        this.checkBoxArray=checkBoxArray;
+        this.checkBoxArray = checkBoxArray;
     }
 
     @Override
@@ -136,7 +137,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
                     checkBoxView.setChecked(false);
                     Objects.requireNonNull(checkBoxArray.get(groupPosition)).set(childPosition, false);
 
-                }else {
+                } else {
                     checkBoxView.setChecked(true);
                     Objects.requireNonNull(checkBoxArray.get(groupPosition)).set(childPosition, true);
                 }

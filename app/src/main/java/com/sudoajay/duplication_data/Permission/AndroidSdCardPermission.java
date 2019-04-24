@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.MainNavigation;
@@ -27,17 +26,17 @@ public class AndroidSdCardPermission {
     private SdCardPathSharedPreference sdCardPathSharedPreference;
     private Activity activity;
 
-    public AndroidSdCardPermission(Context context, MainNavigation mainNavigation, Activity activity) {
+    public AndroidSdCardPermission(final Context context, final MainNavigation mainNavigation, final Activity activity) {
         this.context = context;
         this.mainNavigation = mainNavigation;
-        this.activity =activity;
+        this.activity = activity;
         Grab();
     }
 
     public AndroidSdCardPermission(Context context, Scan scan, Activity activity) {
         this.context = context;
         this.scan = scan;
-        this.activity =activity;
+        this.activity = activity;
         Grab();
     }
 
@@ -67,11 +66,8 @@ public class AndroidSdCardPermission {
             int REQUEST_CODE_OPEN_DOCUMENT_TREE = 42;
 
             if (mainNavigation != null) {
-                Log.d("Storage_Access","Donee");
                 mainNavigation.startActivityForResult(intent, REQUEST_CODE_OPEN_DOCUMENT_TREE);
-            }
-            else if (scan != null) {
-                Log.d("Storage_Access","Doneeeeeee");
+            } else if (scan != null) {
                 scan.startActivityForResult(intent, REQUEST_CODE_OPEN_DOCUMENT_TREE);
             }
 
@@ -92,7 +88,7 @@ public class AndroidSdCardPermission {
 
     public boolean isSdStorageWritable() {
         return (!sd_Card_Path_URL.equals(Environment.getExternalStorageDirectory().getAbsolutePath()) &&
-                new File(sd_Card_Path_URL).exists() && new File(sd_Card_Path_URL).listFiles() != null );
+                new File(sd_Card_Path_URL).exists() && new File(sd_Card_Path_URL).listFiles() != null);
     }
 
     public void Grab() {

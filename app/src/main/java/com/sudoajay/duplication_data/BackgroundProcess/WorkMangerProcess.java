@@ -4,6 +4,7 @@ package com.sudoajay.duplication_data.BackgroundProcess;
 import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import com.sudoajay.duplication_data.DuplicationData.ScanDuplicateData;
@@ -22,7 +23,6 @@ import androidx.work.WorkerParameters;
 public class WorkMangerProcess extends Worker {
 
 
-
     public WorkMangerProcess(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
@@ -32,9 +32,11 @@ public class WorkMangerProcess extends Worker {
     @Override
     public Result doWork() {
 
+
+        Log.d("SomethingGoing", "Hi There");
         // local variable
-        int sdcard,internal = View.INVISIBLE;
-        long size=0;
+        int sdcard, internal = View.INVISIBLE;
+        long size = 0;
         String textPass;
 
         ArrayList<String> savePath = new ArrayList<>();
@@ -42,28 +44,28 @@ public class WorkMangerProcess extends Worker {
                 = new AndroidSdCardPermission(getApplicationContext());
         if (new File(Environment.getExternalStorageDirectory().getAbsolutePath()).exists()) {
             savePath.add(Environment.getExternalStorageDirectory().getAbsolutePath());
-            internal= View.VISIBLE;
+            internal = View.VISIBLE;
         }
         if (androidSdCardPermission.isSdStorageWritable()) {
             savePath.add(androidSdCardPermission.getSd_Card_Path_URL());
-            sdcard =  View.VISIBLE;
-        }else {
+            sdcard = View.VISIBLE;
+        } else {
             savePath.add(null);
-            sdcard =  View.INVISIBLE;
+            sdcard = View.INVISIBLE;
         }
-            
-        ScanDuplicateData scanDuplicateData = new ScanDuplicateData(getApplicationContext());
-        scanDuplicateData.Duplication(savePath.get(0),savePath.get(1), internal,sdcard);
 
-        for(String path:scanDuplicateData.getList()){
-            if(!path.equalsIgnoreCase("and")){
-                size+= new File(path).length();
+        ScanDuplicateData scanDuplicateData = new ScanDuplicateData(getApplicationContext());
+        scanDuplicateData.Duplication(savePath.get(0), savePath.get(1), internal, sdcard);
+
+        for (String path : scanDuplicateData.getList()) {
+            if (!path.equalsIgnoreCase("and")) {
+                size += new File(path).length();
             }
         }
 
-        textPass= "We Have Found " + ShowDuplicate.Convert_It(size) + " Of Duplicate Files";
-        NotifyNotification notifyNotification  = new NotifyNotification(getApplicationContext());
-        notifyNotification.notify(textPass,getApplicationContext().getString(R.string.transfer_Done_title));
+        textPass = "We Have Found " + ShowDuplicate.Convert_It(size) + " Of Duplicate Files";
+        NotifyNotification notifyNotification = new NotifyNotification(getApplicationContext());
+        notifyNotification.notify(textPass, getApplicationContext().getString(R.string.transfer_Done_title));
 
         return Result.success();
     }

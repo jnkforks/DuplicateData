@@ -12,11 +12,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -298,6 +298,7 @@ public class ShowDuplicate extends AppCompatActivity {
         startActivity(intent);
 
     }
+
     @SuppressLint("StaticFieldLeak")
     public class MultiThreadingTask extends AsyncTask<String, String, String> {
         int progress = 0;
@@ -339,8 +340,8 @@ public class ShowDuplicate extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             Notification();
             DeleteData deleteData = new DeleteData
-                    (getApplicationContext(),list_Header_Child,expandableduplicatelistadapter
-                            .getCheckBoxArray(),multiThreadingtask);
+                    (getApplicationContext(), list_Header_Child, expandableduplicatelistadapter
+                            .getCheckBoxArray(), multiThreadingtask);
             deleteData.DeleteCache(ShowDuplicate.this);
             return null;
         }
@@ -384,7 +385,7 @@ public class ShowDuplicate extends AppCompatActivity {
             public void run() {
                 notificationManager.cancel(1);
                 NotifyNotification notifyNotification = new NotifyNotification(getApplicationContext());
-                notifyNotification.notify("You Have Saved " + Convert_It(total_Size) + " Of Data ",getResources().getString(R.string.transfer_Done_title));
+                notifyNotification.notify("You Have Saved " + Convert_It(total_Size) + " Of Data ", getResources().getString(R.string.transfer_Done_title));
                 CustomToast.ToastIt(getApplicationContext(), "Successfully Data Deleted");
 
             }
@@ -443,7 +444,6 @@ public class ShowDuplicate extends AppCompatActivity {
             return (hours - 12) + ":" + minutes + " PM";
         }
     }
-
 
 
 }

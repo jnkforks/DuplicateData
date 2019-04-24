@@ -17,16 +17,19 @@
 
         <!-- Main Launcher Class -->
         <activity
-            android:name=".MainNavigation"
-            android:label="@string/title_activity_main__navigation"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".SplashScreen.WelcomeActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DuplicationData.ShowDuplicate"
+        <activity android:name=".MainNavigation" />
+        <activity
+            android:name=".DuplicationData.ShowDuplicate"
             tools:ignore="InnerclassSeparator" />
 
         <meta-data
