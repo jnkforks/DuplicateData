@@ -125,8 +125,8 @@ public class ScanDuplicateData {
         for (File child : getAllData) {
             try {
                 FileInputStream fileInput = new FileInputStream(child);
-                byte fileData[] = new byte[(int) child.length()];
-                fileInput.read(fileData);
+                byte[] fileData = new byte[(int) child.length()];
+               int nouse = fileInput.read(fileData);
                 fileInput.close();
                 String uniqueFileHash = new BigInteger(1, messageDigest.digest(fileData)).toString(16);
                 List<String> list = lists.get(uniqueFileHash);
@@ -137,7 +137,7 @@ public class ScanDuplicateData {
                 }
                 list.add(child.getAbsolutePath());
             } catch (IOException e) {
-                throw new RuntimeException("cannot read file_icon " + child.getAbsolutePath(), e);
+
             }
         }
     }

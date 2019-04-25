@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.provider.DocumentFile;
+import android.util.Log;
 
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;

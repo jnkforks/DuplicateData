@@ -57,8 +57,12 @@
                 <TextView
                     android:id="@+id/nameTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="2dp"
+                    android:layout_height="20dp"
+                    android:layout_weight="1"
+                    android:paddingStart="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="5dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#000000"
                     android:textSize="16sp"
@@ -72,8 +76,10 @@
                 <TextView
                     android:id="@+id/pathTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_weight="1"
                     android:ellipsize="none"
+                    android:paddingBottom="10dp"
                     android:textColor="#000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.34"
@@ -81,6 +87,7 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/nameTextView"
                     app:layout_constraintVertical_bias="0.013" />
+
             </LinearLayout>
 
 
