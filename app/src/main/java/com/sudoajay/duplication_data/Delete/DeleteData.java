@@ -82,40 +82,35 @@ public class DeleteData {
             try {
                 isSuccesfull = file.getCanonicalFile().delete();
             } catch (IOException e) {
-                e.printStackTrace();
+
             }
         }
 
     }
 
     public void DeleteTheDataFromExternalStorage(String path) {
-        if (sdCarddocumentFile != null) {
+        DocumentFile sdCardDocument= sdCarddocumentFile;
+        if (sdCardDocument != null) {
             String[] spiltSdPath = path.split(sdCardPath + "/");
             String[] spilt = spiltSdPath[1].split("/");
-            for (int i = 0; i < spilt.length; i++) {
-                if (i == spilt.length - 1) {
-                    sdCarddocumentFile.delete();
+            for (int i = 0; i <= spilt.length; i++) {
+                if (i == spilt.length ) {
+                    sdCardDocument.delete();
                 } else {
-                    sdCarddocumentFile = getIntoDocument(sdCarddocumentFile, spilt[i]);
+                    sdCardDocument = getIntoDocument(sdCardDocument, spilt[i]);
                 }
+
             }
         }
     }
 
     public DocumentFile getIntoDocument(final DocumentFile documentFile, final String name) {
-        return documentFile.findFile(check_For_Duplicate(documentFile, name));
+            for(DocumentFile get:documentFile.listFiles())Log.e( "DeleteTheDataFrom", get.getName());
+        return documentFile.findFile(name);
     }
 
 
-    public String check_For_Duplicate(DocumentFile file, String name) {
-        DocumentFile[] Files = file.listFiles();
-        for (DocumentFile files : Files) {
-            if (Objects.requireNonNull(files.getName()).equalsIgnoreCase(name)) {
-                return files.getName();
-            }
-        }
-        return name;
-    }
+
 
     public String Split_The_URI(String url) {
         String save[] = url.split("%3A");

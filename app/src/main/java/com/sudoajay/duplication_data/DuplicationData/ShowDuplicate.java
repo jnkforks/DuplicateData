@@ -18,6 +18,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -96,8 +97,10 @@ public class ShowDuplicate extends AppCompatActivity {
                 if (get.equalsIgnoreCase("And")) {
                     i++;
                     list_Header.add("Group " + i);
+
                     arrow_Image_Resource.add(R.drawable.arrow_up_icon);
                 }
+
             }
             i = 0;
             for (String get : Data) {
@@ -293,8 +296,9 @@ public class ShowDuplicate extends AppCompatActivity {
     }
 
     public void SendBack() {
+        CustomToast.ToastIt(getApplicationContext(), "Count");
         Intent intent = new Intent(getApplicationContext(), MainNavigation.class);
-        intent.putExtra("SendBack", "Duplication");
+        intent.putExtra("passing", "Duplication");
         startActivity(intent);
 
     }
@@ -342,7 +346,7 @@ public class ShowDuplicate extends AppCompatActivity {
             DeleteData deleteData = new DeleteData
                     (getApplicationContext(), list_Header_Child, expandableduplicatelistadapter
                             .getCheckBoxArray(), multiThreadingtask);
-            deleteData.DeleteCache(ShowDuplicate.this);
+//            deleteData.DeleteCache(ShowDuplicate.this);
             return null;
         }
     }
