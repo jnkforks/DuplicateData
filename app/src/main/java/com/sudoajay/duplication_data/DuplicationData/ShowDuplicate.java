@@ -18,7 +18,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -168,10 +167,10 @@ public class ShowDuplicate extends AppCompatActivity {
                                         int groupPosition, int childPosition, long id) {
                 // TODO Auto-generated method stub
 
-                open_With(new File(list_Header_Child.get(list_Header.get(groupPosition)).get(childPosition)));
+                open_With(new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)));
                 expandableduplicatelistadapter.getChildView(groupPosition, childPosition, false, v, parent);
 
-                return false;
+                return true;
             }
 
         });
