@@ -16,8 +16,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.provider.DocumentFile;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -33,6 +35,7 @@ import com.sudoajay.duplication_data.MainNavigation;
 import com.sudoajay.duplication_data.Notification.NotifyNotification;
 import com.sudoajay.duplication_data.Permission.NotificationPermissionCheck;
 import com.sudoajay.duplication_data.R;
+import com.sudoajay.duplication_data.SdCard.SdCardPath;
 import com.sudoajay.duplication_data.StorageStats.StorageInfo;
 import com.sudoajay.duplication_data.Toast.CustomToast;
 
@@ -343,12 +346,14 @@ public class ShowDuplicate extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             Notification();
             DeleteData deleteData = new DeleteData
-                    (getApplicationContext(), list_Header_Child, expandableduplicatelistadapter
+                    (ShowDuplicate.this, list_Header_Child, expandableduplicatelistadapter
                             .getCheckBoxArray(), multiThreadingtask);
-//            deleteData.DeleteCache(ShowDuplicate.this);
+            deleteData.DeleteCache(ShowDuplicate.this);
             return null;
         }
     }
+
+
 
     public static String Convert_It(long size) {
         if (size > (1024 * 1024 * 1024)) {

@@ -30,7 +30,6 @@ import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.SdCard.SdCardPath;
 
-import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -164,15 +163,11 @@ public class MainNavigation extends AppCompatActivity
         grantUriPermission(getPackageName(), sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, MainNavigation.this);
-        if (new File(sd_Card_Path_URL).exists())
+        if (!isSamePath(sd_Card_Path_URL)) {
             string_URI = Split_The_URI(sd_Card_URL.toString());
-        androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
-        androidSdCardPermission.setString_URI(string_URI);
-
-        File file = new File(sd_Card_Path_URL);
-        if (!isSamePath(sd_Card_Path_URL) && file.exists()) {
-            sd_Card_Path_URL = Split_The_URI(sd_Card_URL.toString());
-            sd_Card_URL = Uri.parse(sd_Card_Path_URL);
+            sd_Card_Path_URL = Spilit_The_Path(string_URI,sd_Card_Path_URL);
+            androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
+            androidSdCardPermission.setString_URI(string_URI);
         }
     }
 
@@ -181,8 +176,14 @@ public class MainNavigation extends AppCompatActivity
     }
 
     public String Split_The_URI(String url) {
-        String save[] = url.split("%3A");
+        String[] save = url.split("%3A");
         return save[0] + "%3A";
+    }
+    public String Spilit_The_Path(final String url,final String path) {
+        String[] spilt = url.split("%3A");
+        String[] getPaths = spilt[0].split("/");
+        String[] paths = path.split(getPaths[getPaths.length-1]);
+        return  paths[0]+getPaths[getPaths.length-1];
     }
 
     @Override

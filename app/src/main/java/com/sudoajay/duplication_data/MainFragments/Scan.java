@@ -27,8 +27,6 @@ import com.sudoajay.duplication_data.R;
 import com.sudoajay.duplication_data.SdCard.SdCardPath;
 import com.sudoajay.duplication_data.StorageStats.StorageInfo;
 
-import java.io.File;
-
 import dmax.dialog.SpotsDialog;
 
 
@@ -200,25 +198,39 @@ public class Scan extends Fragment {
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String string_URI = null;
+        // local variable
+        Uri sd_Card_URL ;
+        String sd_Card_Path_URL, string_URI = null;
+
         if (resultCode != Activity.RESULT_OK)
             return;
-        Uri sd_Card_URL = data.getData();
+        sd_Card_URL = data.getData();
         main_navigation.grantUriPermission(main_navigation.getPackageName(), sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        assert sd_Card_URL != null;
         main_navigation.getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        String sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, main_navigation);
-        if (new File(sd_Card_Path_URL).exists())
+        sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, main_navigation);
+        if (!isSamePath(sd_Card_Path_URL)) {
             string_URI = Split_The_URI(sd_Card_URL.toString());
-        androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
-        androidSdCardPermission.setString_URI(string_URI);
-    }
+            sd_Card_Path_URL = Spilit_The_Path(string_URI,sd_Card_Path_URL);
+            androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
+            androidSdCardPermission.setString_URI(string_URI);
+        }
 
+    }
+    public boolean isSamePath(String sd_Card_Path_URL) {
+        return androidExternalStoragePermission.getExternal_Path().equals(sd_Card_Path_URL);
+    }
 
     public String Split_The_URI(String url) {
         String save[] = url.split("%3A");
         return save[0] + "%3A";
     }
-
+    public String Spilit_The_Path(final String url,final String path) {
+        String spilt[] = url.split("%3A");
+        String getPaths[] = spilt[0].split("/");
+        String paths[] = path.split(getPaths[getPaths.length-1]);
+        return  paths[0]+getPaths[getPaths.length-1];
+    }
     @SuppressLint("StaticFieldLeak")
     public class MultiThreadingTask extends AsyncTask<String, String, String> {
 

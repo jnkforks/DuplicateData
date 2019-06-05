@@ -1,11 +1,9 @@
 package com.sudoajay.duplication_data.Delete;
 
 import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.provider.DocumentFile;
-import android.util.Log;
 
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
@@ -24,24 +22,24 @@ public class DeleteData {
     private HashMap<Integer, List<Boolean>> checkBoxArray;
     private SdCardPathSharedPreference sdCardPathSharedPreference;
     private DocumentFile sdCarddocumentFile;
-    private String sdCardPath;
-    private Context context;
+    private String sdCardPath, sdCardUri;
+    private ShowDuplicate showDuplicate;
     private ShowDuplicate.MultiThreadingTask multiThreadingTask;
 
-    public DeleteData(final Context context, final HashMap<String, List<String>> list_Header_Child, final HashMap<Integer, List<Boolean>> checkBoxArray,
+    public DeleteData(final ShowDuplicate showDuplicate, final HashMap<String, List<String>> list_Header_Child, final HashMap<Integer, List<Boolean>> checkBoxArray,
                       final ShowDuplicate.MultiThreadingTask multiThreadingTask) {
         this.list_Header_Child = list_Header_Child;
         this.checkBoxArray = checkBoxArray;
         this.multiThreadingTask = multiThreadingTask;
-        this.context = context;
+        this.showDuplicate = showDuplicate;
 
         // sd card path setup
-        sdCardPathSharedPreference = new SdCardPathSharedPreference(context);
+        sdCardPathSharedPreference = new SdCardPathSharedPreference(showDuplicate);
         sdCardPath = sdCardPathSharedPreference.getSdCardPath();
         if (sdCardPathSharedPreference.getStringURI() != null) {
-            String sd_Card_Uri = Split_The_URI(sdCardPathSharedPreference.getStringURI());
-            Uri sd_Card_URL = Uri.parse(sd_Card_Uri);
-            sdCarddocumentFile = DocumentFile.fromTreeUri(context, sd_Card_URL);
+            sdCardUri = Split_The_URI(sdCardPathSharedPreference.getStringURI());
+            Uri sd_Card_URL = Uri.parse(sdCardUri);
+            sdCarddocumentFile = DocumentFile.fromTreeUri(showDuplicate, sd_Card_URL);
         }
 
         GetThePath();
@@ -74,6 +72,7 @@ public class DeleteData {
 
     }
 
+
     public void DeleteTheDataFromInternalStorage(String path) {
 
         File file = new File(path);
@@ -87,29 +86,21 @@ public class DeleteData {
         }
 
     }
-
     public void DeleteTheDataFromExternalStorage(String path) {
-        DocumentFile sdCardDocument= sdCarddocumentFile;
+        DocumentFile sdCardDocument = sdCarddocumentFile;
         if (sdCardDocument != null) {
             String[] spiltSdPath = path.split(sdCardPath + "/");
             String[] spilt = spiltSdPath[1].split("/");
-            for (int i = 0; i <= spilt.length; i++) {
-                if (i == spilt.length ) {
-                    sdCardDocument.delete();
-                } else {
-                    sdCardDocument = getIntoDocument(sdCardDocument, spilt[i]);
+            for (String part : spilt) {
+                DocumentFile nextDocument = sdCardDocument.findFile(part);
+                if (nextDocument != null) {
+                    sdCardDocument = nextDocument;
                 }
-
             }
+            sdCardDocument.delete();
         }
+
     }
-
-    public DocumentFile getIntoDocument(final DocumentFile documentFile, final String name) {
-            for(DocumentFile get:documentFile.listFiles())Log.e( "DeleteTheDataFrom", get.getName());
-        return documentFile.findFile(name);
-    }
-
-
 
 
     public String Split_The_URI(String url) {
@@ -121,9 +112,9 @@ public class DeleteData {
 
         ArrayList<String> savePath = new ArrayList<>();
         AndroidExternalStoragePermission androidExternalStoragePermission
-                = new AndroidExternalStoragePermission(context, activity);
+                = new AndroidExternalStoragePermission(showDuplicate, activity);
         AndroidSdCardPermission androidSdCardPermission
-                = new AndroidSdCardPermission(context);
+                = new AndroidSdCardPermission(showDuplicate);
         if (androidExternalStoragePermission.isExternalStorageWritable()) {
             savePath.add(androidExternalStoragePermission.getExternal_Path());
         }

@@ -12,8 +12,8 @@ android {
     }
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
+            shrinkResources false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -35,11 +35,11 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.github.SudoAjay:LoadingAnimation-Android:v3.1'
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'android.arch.work:work-runtime:1.0.1'
 
     // firebase configuration
-    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
 
 }
     // google play services
