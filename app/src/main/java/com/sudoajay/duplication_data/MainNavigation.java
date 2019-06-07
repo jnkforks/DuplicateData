@@ -29,7 +29,9 @@ import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.SdCard.SdCardPath;
+import com.sudoajay.duplication_data.Toast.CustomToast;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -161,11 +163,17 @@ public class MainNavigation extends AppCompatActivity
             return;
         sd_Card_URL = resultData.getData();
         grantUriPermission(getPackageName(), sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        assert sd_Card_URL != null;
         getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, MainNavigation.this);
         if (!isSamePath(sd_Card_Path_URL)) {
-            string_URI = Split_The_URI(sd_Card_URL.toString());
-            sd_Card_Path_URL = Spilit_The_Path(string_URI,sd_Card_Path_URL);
+            string_URI = sd_Card_URL.toString();
+            sd_Card_Path_URL = Spilit_The_Path(string_URI, sd_Card_Path_URL);
+
+            if (!isSelectSdRootDirectory(sd_Card_URL.toString()) || !new File(sd_Card_Path_URL).exists()) {
+                CustomToast.ToastIt(getApplicationContext(), getResources().getString(R.string.errorMes));
+                return;
+            }
             androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
             androidSdCardPermission.setString_URI(string_URI);
         }
@@ -175,9 +183,10 @@ public class MainNavigation extends AppCompatActivity
         return androidExternalStoragePermission.getExternal_Path().equals(sd_Card_Path_URL);
     }
 
-    public String Split_The_URI(String url) {
-        String[] save = url.split("%3A");
-        return save[0] + "%3A";
+    private boolean isSelectSdRootDirectory(String path) {
+        if (path.substring(path.length() - 3).equals("%3A")) return true;
+        return false;
+
     }
     public String Spilit_The_Path(final String url,final String path) {
         String[] spilt = url.split("%3A");

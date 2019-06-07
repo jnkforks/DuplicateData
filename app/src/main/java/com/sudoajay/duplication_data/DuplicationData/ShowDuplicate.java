@@ -298,7 +298,6 @@ public class ShowDuplicate extends AppCompatActivity {
     }
 
     public void SendBack() {
-        CustomToast.ToastIt(getApplicationContext(), "Count");
         Intent intent = new Intent(getApplicationContext(), MainNavigation.class);
         intent.putExtra("passing", "Duplication");
         startActivity(intent);

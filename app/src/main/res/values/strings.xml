@@ -86,4 +86,7 @@
     <string name="slide_2_title">Storage Stats</string>
     <string name="slide_2_desc">Storage Analysis &amp; Storage Stats</string>
     <string name="start">Start</string>
+
+    <!--Error Message-->
+    <string name="errorMes">Please Select the Sd Card Root Directory</string>
 </resources>
