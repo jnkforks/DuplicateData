@@ -3,6 +3,7 @@ package com.sudoajay.duplication_data.DuplicationData;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
@@ -52,16 +53,22 @@ public class ScanDuplicateData {
         }
         // check for length in file_icon
         DuplicatedFilesUsingLength();
+
         // check for mime type
         DuplicateFileType();
 
         // check for hash using "SHA-512"
         DuplicatedFilesUsingHashTable(lists);
-        for (List<String> list : lists.values()) {
+
+        for (String name: lists.keySet()) {
+            String key = name.toString();
+            String value = lists.get(name).toString();
+            Log.d("Get_All_Path",key + " " + value);
+        }
+            for (List<String> list : lists.values()) {
             if (list.size() > 1) {
                 dataStore.addAll(list);
                 dataStore.add("And");
-
             }
 
         }

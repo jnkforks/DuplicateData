@@ -111,15 +111,16 @@ public class DeleteData {
         for (String getKey : sdCardStore.keySet()) {
             DocumentFile sdCardDocument = sdCarddocumentFile;
             if (sdCardDocument != null) {
-                String[] spiltSdPath = getKey.split(sdCardPath + "/");
-                String[] spilt = spiltSdPath[1].split("/");
-                for (String part : spilt) {
-                    DocumentFile nextDocument = sdCardDocument.findFile(part);
-                    if (nextDocument != null) {
-                        sdCardDocument = nextDocument;
+                String[] spiltSdPath = getKey.split(sdCardPath);
+                if (spiltSdPath.length > 1) {
+                    String[] spilt = spiltSdPath[1].split("/");
+                    for (String part : spilt) {
+                        DocumentFile nextDocument = sdCardDocument.findFile(part);
+                        if (nextDocument != null) {
+                            sdCardDocument = nextDocument;
+                        }
                     }
                 }
-
                 for (String value : Objects.requireNonNull(sdCardStore.get(getKey))) {
                     DocumentFile save = sdCardDocument.findFile(value);
                     save.delete();
