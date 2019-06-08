@@ -76,8 +76,6 @@ public class DeleteData {
         }
 
     }
-
-
     public void DeleteTheDataFromInternalStorage(String path) {
 
         File file = new File(path);

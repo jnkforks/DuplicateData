@@ -31,9 +31,6 @@ public class WorkMangerProcess extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-
-
-        Log.d("SomethingGoing", "Hi There");
         // local variable
         int sdcard, internal = View.INVISIBLE;
         long size = 0;
