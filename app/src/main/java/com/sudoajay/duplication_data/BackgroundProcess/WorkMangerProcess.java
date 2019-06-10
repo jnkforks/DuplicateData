@@ -4,8 +4,10 @@ package com.sudoajay.duplication_data.BackgroundProcess;
 import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
+
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import com.sudoajay.duplication_data.DuplicationData.ScanDuplicateData;
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
@@ -15,9 +17,6 @@ import com.sudoajay.duplication_data.R;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 
 public class WorkMangerProcess extends Worker {
@@ -60,10 +59,11 @@ public class WorkMangerProcess extends Worker {
             }
         }
 
-        textPass = "We Have Found " + ShowDuplicate.Convert_It(size) + " Of Duplicate Files";
-        NotifyNotification notifyNotification = new NotifyNotification(getApplicationContext());
-        notifyNotification.notify(textPass, getApplicationContext().getString(R.string.transfer_Done_title));
-
+        if (size != 0) {
+            textPass = "We Have Found " + ShowDuplicate.Convert_It(size) + " Of Duplicate Files";
+            NotifyNotification notifyNotification = new NotifyNotification(getApplicationContext());
+            notifyNotification.notify(textPass, getApplicationContext().getString(R.string.transfer_Done_title));
+        }
         return Result.success();
     }
 
