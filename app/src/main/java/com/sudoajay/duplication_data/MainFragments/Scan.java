@@ -28,8 +28,6 @@ import com.sudoajay.duplication_data.SdCard.SdCardPath;
 import com.sudoajay.duplication_data.StorageStats.StorageInfo;
 import com.sudoajay.duplication_data.Toast.CustomToast;
 
-import java.io.File;
-
 import dmax.dialog.SpotsDialog;
 
 
@@ -144,14 +142,14 @@ public class Scan extends Fragment {
 
                 // call this method to get size of data
                 storageInfo.getTotalExternalMemorySize();
-
+                androidSdCardPermission = new AndroidSdCardPermission(getContext(), Scan.this, getActivity());
                 if (external_Check.getVisibility() == View.GONE) {
                     if (androidSdCardPermission.isSdStorageWritable()) {
                         external_Check.setVisibility(View.VISIBLE);
 
                         totalSizeLong += storageInfo.getExternal_Total_Size() - storageInfo.getExternal_Available_Size();
                     } else {
-                        Toast_It("Select the SD Card");
+                        Toast_It("Select the SD Card Root Path");
                         androidSdCardPermission.call_Thread();
                     }
                 } else {
@@ -212,17 +210,17 @@ public class Scan extends Fragment {
         assert sd_Card_URL != null;
         main_navigation.getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, main_navigation);
-        if (!isSamePath(sd_Card_Path_URL)) {
-            string_URI = sd_Card_URL.toString();
+
+        string_URI = sd_Card_URL.toString();
             sd_Card_Path_URL = Spilit_The_Path(string_URI, sd_Card_Path_URL);
 
-            if (!isSelectSdRootDirectory(sd_Card_URL.toString()) || !new File(sd_Card_Path_URL).exists()) {
+        if (!isSelectSdRootDirectory(sd_Card_URL.toString()) || isSamePath(sd_Card_Path_URL)) {
                 CustomToast.ToastIt(getContext(), getResources().getString(R.string.errorMes));
                 return;
             }
             androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
             androidSdCardPermission.setString_URI(string_URI);
-        }
+
 
     }
     public boolean isSamePath(String sd_Card_Path_URL) {
