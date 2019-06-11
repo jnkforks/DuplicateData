@@ -289,7 +289,7 @@ public class MainNavigation extends AppCompatActivity
 
         // this task for Background Show Size
         PeriodicWorkRequest.Builder myWorkBuilder =
-                new PeriodicWorkRequest.Builder(WorkMangerProcess.class, 4, TimeUnit.HOURS);
+                new PeriodicWorkRequest.Builder(WorkMangerProcess.class, 24, TimeUnit.HOURS);
 
         PeriodicWorkRequest myWork = myWorkBuilder.build();
         WorkManager.getInstance()
