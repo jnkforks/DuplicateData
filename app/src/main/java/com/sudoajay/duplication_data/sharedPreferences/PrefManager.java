@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 
 import com.sudoajay.duplication_data.R;
 
-/**
- * Created by Lincoln on 05/05/16.
- */
 public class PrefManager {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;

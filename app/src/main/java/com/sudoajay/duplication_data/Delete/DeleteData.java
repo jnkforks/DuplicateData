@@ -3,7 +3,7 @@ package com.sudoajay.duplication_data.Delete;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v4.provider.DocumentFile;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;

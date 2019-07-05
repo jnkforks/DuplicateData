@@ -14,12 +14,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v4.provider.DocumentFile;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -35,7 +34,6 @@ import com.sudoajay.duplication_data.MainNavigation;
 import com.sudoajay.duplication_data.Notification.NotifyNotification;
 import com.sudoajay.duplication_data.Permission.NotificationPermissionCheck;
 import com.sudoajay.duplication_data.R;
-import com.sudoajay.duplication_data.SdCard.SdCardPath;
 import com.sudoajay.duplication_data.StorageStats.StorageInfo;
 import com.sudoajay.duplication_data.Toast.CustomToast;
 

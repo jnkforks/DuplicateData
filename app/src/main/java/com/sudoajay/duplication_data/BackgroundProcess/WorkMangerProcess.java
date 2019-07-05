@@ -3,7 +3,7 @@ package com.sudoajay.duplication_data.BackgroundProcess;
 
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import androidx.work.Worker;
