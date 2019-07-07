@@ -22,6 +22,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess;
+import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess1;
 import com.sudoajay.duplication_data.MainFragments.Home;
 import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
@@ -94,6 +95,9 @@ public class MainNavigation extends AppCompatActivity
 
         // call Background
         BackgroundTask();
+
+        BackgroundTask1();
+
 
     }
 
@@ -290,6 +294,17 @@ public class MainNavigation extends AppCompatActivity
         // this task for Background Show Size
         PeriodicWorkRequest.Builder myWorkBuilder =
                 new PeriodicWorkRequest.Builder(WorkMangerProcess.class, 24, TimeUnit.HOURS);
+
+        PeriodicWorkRequest myWork = myWorkBuilder.build();
+        WorkManager.getInstance()
+                .enqueueUniquePeriodicWork("Scan Duplication", ExistingPeriodicWorkPolicy.KEEP, myWork);
+
+    }
+    private void BackgroundTask1() {
+
+        // this task for Background Show Size
+        PeriodicWorkRequest.Builder myWorkBuilder =
+                new PeriodicWorkRequest.Builder(WorkMangerProcess1.class, 18, TimeUnit.HOURS);
 
         PeriodicWorkRequest myWork = myWorkBuilder.build();
         WorkManager.getInstance()

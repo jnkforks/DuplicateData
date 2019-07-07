@@ -74,6 +74,7 @@
 
     <!--Notfication CHannel Name-->
     <string name="transfer_Done_title">Transfer Done</string>
+    <string name="file_found_title">File Found</string>
     <string name="transfer_Done_Id">Transfer Done Id </string>
     <string name="duplicate_title">Duplicate</string>
     <string name="duplicate_Id">Duplicate Id </string>
