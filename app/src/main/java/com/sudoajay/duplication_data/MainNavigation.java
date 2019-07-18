@@ -4,25 +4,24 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import com.google.android.material.navigation.NavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.android.material.navigation.NavigationView;
 import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess;
-import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess1;
 import com.sudoajay.duplication_data.MainFragments.Home;
 import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
@@ -93,11 +92,8 @@ public class MainNavigation extends AppCompatActivity
         androidExternalStoragePermission.call_Thread();
 
 
-        // call Background
+//        // call Background
         BackgroundTask();
-
-        BackgroundTask1();
-
 
     }
 
@@ -291,24 +287,16 @@ public class MainNavigation extends AppCompatActivity
 
     private void BackgroundTask() {
 
-        // this task for Background Show Size
-        PeriodicWorkRequest.Builder myWorkBuilder =
-                new PeriodicWorkRequest.Builder(WorkMangerProcess.class, 24, TimeUnit.HOURS);
-
-        PeriodicWorkRequest myWork = myWorkBuilder.build();
-        WorkManager.getInstance()
-                .enqueueUniquePeriodicWork("Scan Duplication", ExistingPeriodicWorkPolicy.KEEP, myWork);
-
-    }
-    private void BackgroundTask1() {
 
         // this task for Background Show Size
         PeriodicWorkRequest.Builder myWorkBuilder =
-                new PeriodicWorkRequest.Builder(WorkMangerProcess1.class, 18, TimeUnit.HOURS);
+                new PeriodicWorkRequest.Builder(WorkMangerProcess.class, 1, TimeUnit.DAYS);
+
 
         PeriodicWorkRequest myWork = myWorkBuilder.build();
-        WorkManager.getInstance()
+        WorkManager.getInstance(getApplicationContext())
                 .enqueueUniquePeriodicWork("Scan Duplication", ExistingPeriodicWorkPolicy.KEEP, myWork);
 
     }
+
 }
