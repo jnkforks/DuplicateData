@@ -143,6 +143,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
                 }
             }
         });
+
         checkBoxView.setChecked(Objects.requireNonNull(checkBoxArray.get(groupPosition)).get(childPosition));
         return convertView;
 

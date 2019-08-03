@@ -32,7 +32,7 @@ import com.sudoajay.duplication_data.Toast.CustomToast;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class MainNavigation extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     // global variable
@@ -87,8 +87,8 @@ public class MainNavigation extends AppCompatActivity
 
 
         // check ExternalStorage Permission
-        androidExternalStoragePermission = new AndroidExternalStoragePermission(MainNavigation.this,
-                MainNavigation.this);
+        androidExternalStoragePermission = new AndroidExternalStoragePermission(MainActivity.this,
+                MainActivity.this);
         androidExternalStoragePermission.call_Thread();
 
 
@@ -111,7 +111,7 @@ public class MainNavigation extends AppCompatActivity
         scan = new Scan();
 
         // check SDCard Storage Permission
-        androidSdCardPermission = new AndroidSdCardPermission(getApplicationContext(), MainNavigation.this, MainNavigation.this);
+        androidSdCardPermission = new AndroidSdCardPermission(getApplicationContext(), MainActivity.this, MainActivity.this);
 
     }
 
@@ -138,7 +138,7 @@ public class MainNavigation extends AppCompatActivity
     }
 
     public Fragment getVisibleFragment() {
-        FragmentManager fragmentManager = MainNavigation.this.getSupportFragmentManager();
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
         List<Fragment> fragments = fragmentManager.getFragments();
         if ((fragment != null && fragment.isVisible())) {
             for (Fragment fragment : fragments) {
@@ -162,7 +162,7 @@ public class MainNavigation extends AppCompatActivity
         grantUriPermission(getPackageName(), sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         assert sd_Card_URL != null;
         getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, MainNavigation.this);
+        sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, MainActivity.this);
             string_URI = sd_Card_URL.toString();
             sd_Card_Path_URL = Spilit_The_Path(string_URI, sd_Card_Path_URL);
 
@@ -256,11 +256,11 @@ public class MainNavigation extends AppCompatActivity
         if (id == R.id.nav_Home) {
             // Handle the Home Action
             setTitle("Home");
-            fragment = home.createInstance(MainNavigation.this);
+            fragment = home.createInstance(MainActivity.this);
         } else if (id == R.id.nav_Scan) {
             // Handle the Scan Action
             setTitle("Scan");
-            fragment = scan.createInstance(MainNavigation.this);
+            fragment = scan.createInstance(MainActivity.this);
         } else if (id == R.id.nav_Share) {
 
         } else if (id == R.id.nav_Rate_Us) {

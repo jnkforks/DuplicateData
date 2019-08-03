@@ -76,7 +76,7 @@ public class DeleteData {
         }
 
     }
-    public void DeleteTheDataFromInternalStorage(String path) {
+    public static void DeleteTheDataFromInternalStorage(String path) {
 
         File file = new File(path);
         boolean isSuccesfull = file.delete();

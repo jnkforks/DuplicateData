@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.sudoajay.duplication_data.MainFragments.Scan;
-import com.sudoajay.duplication_data.MainNavigation;
+import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.SdCard.SdCardDialog;
 import com.sudoajay.duplication_data.Toast.CustomToast;
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference;
@@ -21,14 +21,14 @@ import java.io.File;
 public class AndroidSdCardPermission {
     private Context context;
     private String sd_Card_Path_URL = "", string_URI;
-    private MainNavigation mainNavigation;
+    private MainActivity mainActivity;
     private Scan scan;
     private SdCardPathSharedPreference sdCardPathSharedPreference;
     private Activity activity;
 
-    public AndroidSdCardPermission(final Context context, final MainNavigation mainNavigation, final Activity activity) {
+    public AndroidSdCardPermission(final Context context, final MainActivity mainActivity, final Activity activity) {
         this.context = context;
-        this.mainNavigation = mainNavigation;
+        this.mainActivity = mainActivity;
         this.activity = activity;
         Grab();
     }
@@ -65,8 +65,8 @@ public class AndroidSdCardPermission {
             final Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
             int REQUEST_CODE_OPEN_DOCUMENT_TREE = 42;
 
-            if (mainNavigation != null) {
-                mainNavigation.startActivityForResult(intent, REQUEST_CODE_OPEN_DOCUMENT_TREE);
+            if (mainActivity != null) {
+                mainActivity.startActivityForResult(intent, REQUEST_CODE_OPEN_DOCUMENT_TREE);
             } else if (scan != null) {
                 scan.startActivityForResult(intent, REQUEST_CODE_OPEN_DOCUMENT_TREE);
             }

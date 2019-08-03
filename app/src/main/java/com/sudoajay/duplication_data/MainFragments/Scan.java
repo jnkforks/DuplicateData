@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.sudoajay.duplication_data.DuplicationData.ScanDuplicateData;
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
-import com.sudoajay.duplication_data.MainNavigation;
+import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.R;
@@ -37,7 +37,7 @@ import dmax.dialog.SpotsDialog;
 public class Scan extends Fragment {
 
     // global variable
-    private MainNavigation main_navigation;
+    private MainActivity main_navigation;
     private View layout;
     private ImageView internal_Check, external_Check;
     private AndroidExternalStoragePermission androidExternalStoragePermission;
@@ -52,7 +52,7 @@ public class Scan extends Fragment {
         // Required empty public constructor
     }
 
-    public Scan createInstance(MainNavigation main_navigation) {
+    public Scan createInstance(MainActivity main_navigation) {
         this.main_navigation = main_navigation;
         return this;
     }

@@ -12,7 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
-import com.sudoajay.duplication_data.MainNavigation;
+import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.R;
 
 /**
@@ -60,7 +60,7 @@ public class NotifyNotification {
 
 
         // setup intent and passing value
-        intent = new Intent(context, MainNavigation.class);
+        intent = new Intent(context, MainActivity.class);
 
         if (notficationHint.equalsIgnoreCase(context.getString(R.string.transfer_Done_title)))
             intent.putExtra("passing", "DuplicateData");

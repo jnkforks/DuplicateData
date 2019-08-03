@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
-import com.sudoajay.duplication_data.MainNavigation;
+import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.R;
@@ -30,7 +30,7 @@ import java.util.Objects;
 public class Home extends Fragment {
 
     // global variable
-    private MainNavigation main_navigation;
+    private MainActivity main_navigation;
     private View layout;
     private CircularProgressBar circularProgressBarInternal, circularProgressBarExternal;
     private final int animationDuration = 4000;
@@ -48,7 +48,7 @@ public class Home extends Fragment {
         // Required empty public constructor
     }
 
-    public Home createInstance(MainNavigation main_navigation) {
+    public Home createInstance(MainActivity main_navigation) {
         this.main_navigation = main_navigation;
         return this;
     }

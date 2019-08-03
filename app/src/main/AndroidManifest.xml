@@ -11,13 +11,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
         <!-- Main Launcher Class -->
         <activity
-            android:name=".SplashScreen.WelcomeActivity"
+            android:name=".IntroSceen.WelcomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true"
@@ -28,7 +29,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainNavigation" />
+
+        <activity android:name=".SplashScreen.Splash"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="InnerclassSeparator" />
+
+
+        <activity android:name=".MainActivity" />
+
         <activity
             android:name=".DuplicationData.ShowDuplicate"
             tools:ignore="InnerclassSeparator" />

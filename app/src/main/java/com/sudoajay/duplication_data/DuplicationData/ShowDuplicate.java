@@ -19,6 +19,7 @@ import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -30,7 +31,7 @@ import android.widget.TextView;
 
 import com.sudoajay.duplication_data.BuildConfig;
 import com.sudoajay.duplication_data.Delete.DeleteData;
-import com.sudoajay.duplication_data.MainNavigation;
+import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.Notification.NotifyNotification;
 import com.sudoajay.duplication_data.Permission.NotificationPermissionCheck;
 import com.sudoajay.duplication_data.R;
@@ -67,6 +68,7 @@ public class ShowDuplicate extends AppCompatActivity {
     private NotificationPermissionCheck notificationPermissionCheck;
     private Notification notification;
     private NotificationManager notificationManager;
+    private List<String> unnecessaryList ;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -94,12 +96,14 @@ public class ShowDuplicate extends AppCompatActivity {
 
         } else {
             for (String get : Data) {
+
                 if (get.equalsIgnoreCase("And")) {
                     i++;
                     list_Header.add("Group " + i);
 
                     arrow_Image_Resource.add(R.drawable.arrow_up_icon);
                 }
+
 
             }
             i = 0;
@@ -112,13 +116,17 @@ public class ShowDuplicate extends AppCompatActivity {
                     setsBoolean.clear();
                 } else {
                     sets.add(get);
-                    if (setsBoolean.size() == 0) setsBoolean.add(false);
+                    if (setsBoolean.size() == 0 && !IsMatchUnnecessary(get)){
+                        setsBoolean.add(false);
+                    }
                     else {
                         setsBoolean.add(true);
                     }
                 }
+
             }
         }
+
         expandableduplicatelistadapter = new ExpandableDuplicateListAdapter(this, list_Header, list_Header_Child, arrow_Image_Resource
                 , checkBoxArray);
         expandableListView.setAdapter(expandableduplicatelistadapter);
@@ -186,6 +194,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
     }
 
+
     private void reference() {
 
         // reference
@@ -199,6 +208,17 @@ public class ShowDuplicate extends AppCompatActivity {
         // create object
         multiThreadingtask = new MultiThreadingTask();
         notificationPermissionCheck = new NotificationPermissionCheck(ShowDuplicate.this);
+
+        // add unnecessary data
+        String whatsapp_Path = "/WhatsApp/";
+       unnecessaryList = new ArrayList<>();
+        unnecessaryList.add(whatsapp_Path + ".Shared/");
+        unnecessaryList.add(whatsapp_Path + ".Trash/");
+        unnecessaryList.add(whatsapp_Path + "cache/");
+        unnecessaryList.add(whatsapp_Path + "Theme/");
+        unnecessaryList.add(whatsapp_Path + ".Thumbs/");
+        unnecessaryList.add(whatsapp_Path + "Databases");
+
     }
 
     public void OnClick(final View v) {
@@ -230,7 +250,13 @@ public class ShowDuplicate extends AppCompatActivity {
 
         }
     }
+    private boolean IsMatchUnnecessary(final String path){
 
+        for(String gets:unnecessaryList){
+            if(path.contains(gets)) return true;
+        }
+        return false;
+    }
     public void open_With(File file) {
         MimeTypeMap myMime = MimeTypeMap.getSingleton();
         Intent newIntent = new Intent(Intent.ACTION_VIEW);
@@ -296,7 +322,7 @@ public class ShowDuplicate extends AppCompatActivity {
     }
 
     public void SendBack() {
-        Intent intent = new Intent(getApplicationContext(), MainNavigation.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("passing", "Duplication");
         startActivity(intent);
 

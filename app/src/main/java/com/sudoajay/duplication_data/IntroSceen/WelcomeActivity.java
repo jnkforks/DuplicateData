@@ -1,4 +1,4 @@
-package com.sudoajay.duplication_data.SplashScreen;
+package com.sudoajay.duplication_data.IntroSceen;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +20,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sudoajay.duplication_data.MainNavigation;
+import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.R;
+import com.sudoajay.duplication_data.SplashScreen.Splash;
 import com.sudoajay.duplication_data.sharedPreferences.PrefManager;
 
 public class WelcomeActivity extends AppCompatActivity {
@@ -120,7 +121,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        prefManager.setFirstTimeLaunch(false);
+
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("Url") != null) {
             String url = getIntent().getExtras().getString("Url");
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -128,7 +129,12 @@ public class WelcomeActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
 
-            startActivity(new Intent(WelcomeActivity.this, MainNavigation.class));
+            if(prefManager.isFirstTimeLaunch()) {
+                startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+            }else{
+                startActivity(new Intent(WelcomeActivity.this, Splash.class));
+            }
+            prefManager.setFirstTimeLaunch(false);
             finish();
         }
     }

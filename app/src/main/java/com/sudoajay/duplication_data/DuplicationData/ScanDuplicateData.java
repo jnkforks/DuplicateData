@@ -3,9 +3,11 @@ package com.sudoajay.duplication_data.DuplicationData;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import com.sudoajay.duplication_data.Toast.CustomToast;
 
@@ -16,6 +18,8 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,9 +29,12 @@ public class ScanDuplicateData {
     private List<File> getAllData = new LinkedList<>();
     private ArrayList<String> dataStore = new ArrayList<>();
     private static Context context;
+    private String external_Path_Url,whatsapp_Path;
 
     public ScanDuplicateData(final Context context) {
         ScanDuplicateData.context = context;
+        external_Path_Url = Environment.getExternalStorageDirectory().getAbsolutePath();
+        whatsapp_Path = "/WhatsApp/";
     }
 
     private static MessageDigest messageDigest;
@@ -70,8 +77,62 @@ public class ScanDuplicateData {
                 dataStore.addAll(list);
                 dataStore.add("And");
             }
+        }
+        UnnecessaryData();
+    }
+
+    private   void UnnecessaryData() {
+        if (new File(external_Path_Url + whatsapp_Path + ".Shared/").exists())
+            DigDeep( external_Path_Url + whatsapp_Path + ".Shared/");
+        if (new File(external_Path_Url + whatsapp_Path + ".Trash").exists())
+            DigDeep(external_Path_Url + whatsapp_Path + ".Trash/");
+        if (new File(external_Path_Url + whatsapp_Path + "cache").exists())
+            DigDeep(external_Path_Url + whatsapp_Path + "cache/");
+        if (new File(external_Path_Url + whatsapp_Path + "Theme").exists())
+            DigDeep(external_Path_Url + whatsapp_Path + "Theme/");
+        if (new File(external_Path_Url + whatsapp_Path + ".Thumbs").exists())
+            DigDeep(external_Path_Url + whatsapp_Path + ".Thumbs/");
+
+        if (new File(external_Path_Url + whatsapp_Path + "Databases").exists())
+            WhatsappDatabase(new File(external_Path_Url + whatsapp_Path + "Databases/"));
+
+
+    }
+    public void WhatsappDatabase(File database_File){
+        try{
+            List<File> files = new ArrayList<>(Arrays.asList(database_File.listFiles()));
+            Convert_Into_Last_Modified(files);
+            for (int i = files.size()-1 ; i >=1;i--){
+                dataStore.add(files.get(i).getAbsolutePath());
+            }
+            dataStore.add("And");
+        }catch (Exception e){
 
         }
+    }
+
+    public void Convert_Into_Last_Modified(List<File> files){
+        File temp_File;
+        for (int i = 0 ; i < files.size();i++){
+            for (int j = i ; j < files.size()-1;j++){
+                Date date1 = new Date(files.get(i).lastModified());
+                Date date2 = new Date(files.get(j+1).lastModified());
+                if(date1.compareTo(date2) < 0){
+                    temp_File=files.get(i);
+                    files.set(i,files.get(j+1));
+                    files.set(j+1,temp_File);
+                }
+            }
+        }
+    }
+
+
+    private void DigDeep(final String folder){
+        File[] files = new File(folder).listFiles();
+        for (File data : files) {
+            dataStore.add(data.getAbsolutePath());
+        }
+        dataStore.add("And");
     }
 
     private void DuplicatedFilesUsingLength() {
