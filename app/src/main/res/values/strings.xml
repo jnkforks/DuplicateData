@@ -91,4 +91,8 @@
 
     <!--Error Message-->
     <string name="errorMes">Please Select the Sd Card Root Directory</string>
+
+    <!--Download Folder Empty-->
+    <string name="nothing_text">Nothing!!</string>
+    <string name="noDuplicateFoundText">There is no duplicate Found.</string>
 </resources>

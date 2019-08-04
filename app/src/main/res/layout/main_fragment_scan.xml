@@ -10,12 +10,16 @@
     <Button
         android:id="@+id/file_Size_Text"
         style="@style/Widget.AppCompat.Button"
-        android:layout_width="219dp"
-        android:layout_height="100dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
         android:background="@drawable/activity_my_blank_button"
         android:drawableStart="@drawable/multiple_data"
         android:enabled="false"
         android:fontFamily="sans-serif-smallcaps"
+        android:lines="1"
+        android:maxLines="1"
         android:onClick="OnClick"
         android:padding="@dimen/file_Size_Text_PaddingAll"
         android:text="@string/file_Size_Text"
@@ -44,7 +48,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.486"
+        app:layout_constraintVertical_bias="0.485"
         app:srcCompat="@drawable/internal_storage_icon" />
 
     <ImageView
@@ -54,6 +58,7 @@
         android:onClick="OnClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/internal_Image_View"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.486"

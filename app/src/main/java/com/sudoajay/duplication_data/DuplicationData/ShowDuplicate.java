@@ -14,6 +14,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +46,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import dmax.dialog.SpotsDialog;
@@ -61,14 +64,14 @@ public class ShowDuplicate extends AppCompatActivity {
     private Button deleteDuplicateButton;
     private View deleteDuplicateButton1;
     private RemoteViews contentView;
-    private TextView textViewNothing;
-    private long total_Size;
+    private long total_Size,totalCount=0;
     private ImageView refreshImage_View;
     private MultiThreadingTask multiThreadingtask;
     private NotificationPermissionCheck notificationPermissionCheck;
     private Notification notification;
     private NotificationManager notificationManager;
     private List<String> unnecessaryList ;
+    private ConstraintLayout nothingToShow_ConstraintsLayout;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -92,7 +95,7 @@ public class ShowDuplicate extends AppCompatActivity {
         if (Data.isEmpty()) {
             deleteDuplicateButton.setVisibility(View.INVISIBLE);
             deleteDuplicateButton1.setVisibility(View.INVISIBLE);
-            textViewNothing.setVisibility(View.VISIBLE);
+            nothingToShow_ConstraintsLayout.setVisibility(View.VISIBLE);
 
         } else {
             for (String get : Data) {
@@ -199,7 +202,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
         // reference
         deleteDuplicateButton = findViewById(R.id.deleteDuplicateButton);
-        textViewNothing = findViewById(R.id.textViewNothing);
+        nothingToShow_ConstraintsLayout = findViewById(R.id.nothingToShow_ConstraintsLayout);
         refreshImage_View = findViewById(R.id.refreshImage_View);
         expandableListView = findViewById(R.id.duplicateExpandableListView);
         deleteDuplicateButton1 = findViewById(R.id.deleteDuplicateButton1);
@@ -336,7 +339,7 @@ public class ShowDuplicate extends AppCompatActivity {
         protected void onPreExecute() {
             AlertDialog alertDialog = new SpotsDialog.Builder()
                     .setContext(ShowDuplicate.this)
-                    .setMessage("Deletion....")
+                    .setMessage("Delete....")
                     .setCancelable(false)
                     .setTheme(R.style.Custom)
                     .build();
@@ -344,6 +347,13 @@ public class ShowDuplicate extends AppCompatActivity {
             alertDialog.show();
             SendBack();
             CustomToast.ToastIt(getApplicationContext(), "Deletion");
+
+            totalCount =0 ;
+            for (Map.Entry<Integer, List<Boolean>> entry : expandableduplicatelistadapter.getCheckBoxArray().entrySet()) {
+                for (Boolean checked : entry.getValue()) {
+                    if(checked) totalCount++;
+                   }
+            }
             super.onPreExecute();
         }
 
@@ -357,10 +367,10 @@ public class ShowDuplicate extends AppCompatActivity {
         @Override
         public void onProgressUpdate(String... values) {
             progress++;
-            contentView.setTextViewText(R.id.size_Title, progress + "/" + list_Header.size());
-            contentView.setTextViewText(R.id.percent_Text, ((progress * 100) / list_Header.size()) + "%");
+            contentView.setTextViewText(R.id.size_Title, progress + "/" + totalCount);
+            contentView.setTextViewText(R.id.percent_Text, ((progress * 100) / totalCount) + "%");
             contentView.setTextViewText(R.id.time_Tittle, get_Current_Time());
-            contentView.setProgressBar(R.id.progressBar, list_Header.size(), progress, false);
+            contentView.setProgressBar(R.id.progressBar, (int)totalCount, progress, false);
             notificationManager.notify(1, notification);
             super.onProgressUpdate(values);
         }
@@ -434,7 +444,7 @@ public class ShowDuplicate extends AppCompatActivity {
         contentView.setTextViewText(R.id.title, "Deletion...");
         contentView.setTextViewText(R.id.time_Tittle, get_Current_Time());
         contentView.setProgressBar(R.id.progressBar, 100, 0, false);
-        contentView.setTextViewText(R.id.size_Title, "0/" + list_Header.size());
+        contentView.setTextViewText(R.id.size_Title, "0/" + totalCount);
         contentView.setTextViewText(R.id.percent_Text, "00%");
 
         if (notificationManager == null) {

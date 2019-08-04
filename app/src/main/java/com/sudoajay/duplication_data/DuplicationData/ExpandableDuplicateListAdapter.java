@@ -212,7 +212,8 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         if (i > 0) {
             extension = path.substring(i + 1);
         }
-        if (extension.equals("jpg") || extension.equals("mp4") || extension.equals("jpeg")) {
+        if (extension.equals("jpg") || extension.equals("mp4") || extension.equals("jpeg") || extension.equals("png")
+                || extension.equals("gif")|| extension.equals("webp")) {
             // Images || Videos
             Glide.with(context)
                     .asBitmap()
@@ -228,6 +229,8 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
         else if (extension.equals("opus")) {
             imageView.setImageResource(R.drawable.voice_icon);
+        }else{
+            imageView.setImageResource(R.drawable.file_icon);
         }
 
     }

@@ -17,6 +17,8 @@
 
     <color name="notificationColor">#28b4ff</color>
 
+    <color name="noDuplicateFound">#ffffff</color>
+
     <color name="bg_screen1">#0d8dd1</color>
     <color name="bg_screen2">#e4a234</color>
     <color name="bg_screen3">#48a74b</color>

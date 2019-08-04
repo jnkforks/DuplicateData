@@ -32,13 +32,13 @@
                 android:id="@+id/coverImageView"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:padding="@dimen/arrow_Image_View_margin_start"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/linearLayout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/file_icon" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <LinearLayout
                 android:id="@+id/linearLayout"

@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.Toast;
 
 import com.sudoajay.duplication_data.Toast.CustomToast;
 
@@ -92,7 +91,6 @@ public class ScanDuplicateData {
             DigDeep(external_Path_Url + whatsapp_Path + "Theme/");
         if (new File(external_Path_Url + whatsapp_Path + ".Thumbs").exists())
             DigDeep(external_Path_Url + whatsapp_Path + ".Thumbs/");
-
         if (new File(external_Path_Url + whatsapp_Path + "Databases").exists())
             WhatsappDatabase(new File(external_Path_Url + whatsapp_Path + "Databases/"));
 
@@ -102,10 +100,12 @@ public class ScanDuplicateData {
         try{
             List<File> files = new ArrayList<>(Arrays.asList(database_File.listFiles()));
             Convert_Into_Last_Modified(files);
-            for (int i = files.size()-1 ; i >=1;i--){
-                dataStore.add(files.get(i).getAbsolutePath());
+            if (!files.isEmpty()) {
+                for (int i = files.size() - 1; i >= 1; i--) {
+                    dataStore.add(files.get(i).getAbsolutePath());
+                }
+                dataStore.add("And");
             }
-            dataStore.add("And");
         }catch (Exception e){
 
         }
@@ -129,10 +129,12 @@ public class ScanDuplicateData {
 
     private void DigDeep(final String folder){
         File[] files = new File(folder).listFiles();
-        for (File data : files) {
-            dataStore.add(data.getAbsolutePath());
+        if (files.length != 0) {
+            for (File data : files) {
+                dataStore.add(data.getAbsolutePath());
+            }
+            dataStore.add("And");
         }
-        dataStore.add("And");
     }
 
     private void DuplicatedFilesUsingLength() {

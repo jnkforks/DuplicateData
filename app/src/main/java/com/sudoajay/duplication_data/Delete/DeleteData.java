@@ -121,6 +121,7 @@ public class DeleteData {
                 }
                 for (String value : Objects.requireNonNull(sdCardStore.get(getKey))) {
                     DocumentFile save = sdCardDocument.findFile(value);
+                    assert save != null;
                     save.delete();
                     multiThreadingTask.onProgressUpdate();
                 }
