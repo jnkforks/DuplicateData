@@ -129,42 +129,4 @@ public class DeleteData {
         }
     }
 
-
-
-    public void DeleteCache(final Activity activity) {
-
-        ArrayList<String> savePath = new ArrayList<>();
-        AndroidExternalStoragePermission androidExternalStoragePermission
-                = new AndroidExternalStoragePermission(showDuplicate, activity);
-        AndroidSdCardPermission androidSdCardPermission
-                = new AndroidSdCardPermission(showDuplicate);
-        if (androidExternalStoragePermission.isExternalStorageWritable()) {
-            savePath.add(androidExternalStoragePermission.getExternal_Path());
-        }
-        if (androidSdCardPermission.isSdStorageWritable()) {
-            savePath.add(androidSdCardPermission.getSd_Card_Path_URL());
-        }
-        for (String path : savePath) {
-            File androidDataFolder = new File(path + "/Android/data/");
-            if (androidDataFolder.exists()) {
-                File[] filesList = androidDataFolder.listFiles();
-                if (filesList != null) {
-                    for (File file : filesList) {
-                        if (file.isDirectory()) {
-                            file = new File(file.getAbsolutePath() + "/cache/");
-                            if (file.exists()) {
-                                try {
-                                    boolean isSuccesfull = file.delete();
-                                    if (file.exists())
-                                        isSuccesfull = file.getCanonicalFile().delete();
-                                } catch (Exception e) {
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 }

@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="serif"
+            android:fontFamily="@font/lato"
             android:text="@string/slide_1_title"
             android:textColor="#c3000000"
             android:textSize="30sp" />
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/slide_Text_Gap"
-            android:fontFamily="serif"
+            android:fontFamily="@font/lato"
             android:text="@string/slide_1_desc"
             android:textAlignment="center"
             android:textColor="#be000000"

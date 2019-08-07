@@ -34,7 +34,6 @@ dependencies {
 //    external library
     implementation 'com.mikhaellopez:circularprogressbar:2.0.0'
 
-    implementation 'com.github.SudoAjay:LoadingAnimation-Android:v3.1'
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     def work_version = "2.1.0"

@@ -14,14 +14,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -30,6 +22,12 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
 
 import com.sudoajay.duplication_data.BuildConfig;
 import com.sudoajay.duplication_data.Delete.DeleteData;
@@ -72,6 +70,7 @@ public class ShowDuplicate extends AppCompatActivity {
     private NotificationManager notificationManager;
     private List<String> unnecessaryList ;
     private ConstraintLayout nothingToShow_ConstraintsLayout;
+    private ArrayList<String> Data;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -89,7 +88,7 @@ public class ShowDuplicate extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         assert bundle != null;
-        ArrayList<String> Data = bundle.getStringArrayList("Duplication_Class_Data");
+        Data = bundle.getStringArrayList("Duplication_Class_Data");
         int i = 0;
         assert Data != null;
         if (Data.isEmpty()) {
@@ -98,36 +97,8 @@ public class ShowDuplicate extends AppCompatActivity {
             nothingToShow_ConstraintsLayout.setVisibility(View.VISIBLE);
 
         } else {
-            for (String get : Data) {
 
-                if (get.equalsIgnoreCase("And")) {
-                    i++;
-                    list_Header.add("Group " + i);
-
-                    arrow_Image_Resource.add(R.drawable.arrow_up_icon);
-                }
-
-
-            }
-            i = 0;
-            for (String get : Data) {
-                if (get.equalsIgnoreCase("And")) {
-                    list_Header_Child.put(list_Header.get(i), new ArrayList<>(sets));
-                    checkBoxArray.put(i, new ArrayList<>(setsBoolean));
-                    i++;
-                    sets.clear();
-                    setsBoolean.clear();
-                } else {
-                    sets.add(get);
-                    if (setsBoolean.size() == 0 && !IsMatchUnnecessary(get)){
-                        setsBoolean.add(false);
-                    }
-                    else {
-                        setsBoolean.add(true);
-                    }
-                }
-
-            }
+            OnRefresh(true);
         }
 
         expandableduplicatelistadapter = new ExpandableDuplicateListAdapter(this, list_Header, list_Header_Child, arrow_Image_Resource
@@ -214,32 +185,33 @@ public class ShowDuplicate extends AppCompatActivity {
 
         // add unnecessary data
         String whatsapp_Path = "/WhatsApp/";
-       unnecessaryList = new ArrayList<>();
+        unnecessaryList = new ArrayList<>();
         unnecessaryList.add(whatsapp_Path + ".Shared/");
         unnecessaryList.add(whatsapp_Path + ".Trash/");
         unnecessaryList.add(whatsapp_Path + "cache/");
         unnecessaryList.add(whatsapp_Path + "Theme/");
         unnecessaryList.add(whatsapp_Path + ".Thumbs/");
         unnecessaryList.add(whatsapp_Path + "Databases");
+        unnecessaryList.add("/Android/data/");
+
 
     }
 
     public void OnClick(final View v) {
-        String rating_link = "https://play.google.com/store/apps/details?id=com.sudoajay.whatsapp_media_mover";
+
         switch (v.getId()) {
             case R.id.backImageView:
                 onBackPressed();
                 break;
             case R.id.shareImageView:
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
-                i.putExtra(Intent.EXTRA_SUBJECT, "Link-Share");
-                i.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.shareText) + rating_link);
-                startActivity(Intent.createChooser(i, "Share via"));
+                Share();
                 break;
             case R.id.refreshImage_View:
-                if (refreshImage_View.getRotation() % 360 == 0)
+                if (refreshImage_View.getRotation() % 360 == 0) {
                     refreshImage_View.animate().rotationBy(360f).setDuration(1000);
+                    OnRefresh(false);
+                    expandableListView.invalidate();
+                }
                 break;
             case R.id.deleteDuplicateButton:
             case R.id.deleteDuplicateButton1:
@@ -252,6 +224,50 @@ public class ShowDuplicate extends AppCompatActivity {
                 break;
 
         }
+    }
+
+    private void OnRefresh(final boolean whenStart) {
+        int i;
+        if (!whenStart) {
+
+            for (i = 0; i < list_Header.size(); i++) {
+                expandableListView.collapseGroup(i);
+            }
+
+            arrow_Image_Resource.clear();
+            list_Header_Child.clear();
+            list_Header.clear();
+            setsBoolean.clear();
+            checkBoxArray.clear();
+        }
+        i = 0;
+
+        for (String get : Data) {
+
+            if (get.equalsIgnoreCase("And")) {
+                if (!sets.isEmpty()) {
+
+                    list_Header.add("Group " + (i + 1));
+                    arrow_Image_Resource.add(R.drawable.arrow_up_icon);
+
+                    list_Header_Child.put(list_Header.get(i), new ArrayList<>(sets));
+                    checkBoxArray.put(i, new ArrayList<>(setsBoolean));
+                    i++;
+                    sets.clear();
+                    setsBoolean.clear();
+                }
+            } else {
+                sets.add(get);
+                if (setsBoolean.size() == 0 && !IsMatchUnnecessary(get)) {
+                    setsBoolean.add(false);
+                } else {
+                    setsBoolean.add(true);
+                }
+            }
+
+
+        }
+
     }
     private boolean IsMatchUnnecessary(final String path){
 
@@ -381,7 +397,6 @@ public class ShowDuplicate extends AppCompatActivity {
             DeleteData deleteData = new DeleteData
                     (ShowDuplicate.this, list_Header_Child, expandableduplicatelistadapter
                             .getCheckBoxArray(), multiThreadingtask);
-            deleteData.DeleteCache(ShowDuplicate.this);
             return null;
         }
     }
@@ -426,7 +441,7 @@ public class ShowDuplicate extends AppCompatActivity {
             public void run() {
                 notificationManager.cancel(1);
                 NotifyNotification notifyNotification = new NotifyNotification(getApplicationContext());
-                notifyNotification.notify("You Have Saved " + Convert_It(total_Size) + " Of Data ", getResources().getString(R.string.transfer_Done_title));
+                notifyNotification.notify("You Have Saved " + Convert_It(total_Size) + " Of Data ", getResources().getString(R.string.delete_Done_title));
                 CustomToast.ToastIt(getApplicationContext(), "Successfully Data Deleted");
 
             }
@@ -484,6 +499,15 @@ public class ShowDuplicate extends AppCompatActivity {
 
             return (hours - 12) + ":" + minutes + " PM";
         }
+    }
+
+    private void Share() {
+        String rating_link = "https://play.google.com/store/apps/details?id=com.sudoajay.whatsapp_media_mover";
+        Intent i = new Intent(android.content.Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(android.content.Intent.EXTRA_SUBJECT, "Link-Share");
+        i.putExtra(android.content.Intent.EXTRA_TEXT, R.string.share_info + rating_link);
+        startActivity(Intent.createChooser(i, "Share via"));
     }
 
 

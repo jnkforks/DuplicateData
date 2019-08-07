@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_screen2">
+    android:background="@color/bg_screen3">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -21,13 +21,13 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/background_timer_icon" />
+            android:src="@drawable/storage_analyzer_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/lato"
-            android:text="@string/slide_2_title"
+            android:text="@string/slide_3_title"
             android:textColor="#c3000000"
             android:textSize="30sp" />
 
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/lato"
             android:paddingTop="@dimen/slide_Text_Gap"
-            android:text="@string/slide_2_desc"
+            android:text="@string/slide_3_desc"
             android:textAlignment="center"
             android:textColor="#be000000"
             android:textSize="18sp" />

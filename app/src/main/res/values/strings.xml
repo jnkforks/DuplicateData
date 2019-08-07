@@ -9,11 +9,13 @@
     <string name="action_settings">Settings</string>
 
     <!--Navigation Drawer Items-->
-    <string name="home_Item">Home</string>
-    <string name="scan_Item">Scan</string>
-    <string name="share_Item">Share</string>
-    <string name="rate_Us_Item">Rate-Us</string>
-    <string name="contact_Item">Contact</string>
+    <string name="nav_home_Item">Home</string>
+    <string name="nav_scan_Item">Scan</string>
+    <string name="nav_share_Item">Share</string>
+    <string name="nav_rate_Us_Item">Rate-Us</string>
+    <string name="nav_contact_Item">Contact</string>
+    <string name="nav_background_Timer">Background </string>
+    <string name="nav_Foreground_Setting">Foreground </string>
 
 
     <!--Main Home Screen-->
@@ -38,6 +40,16 @@
 
     <!--SharedPreference Heading-->
     <string name="MY_PREFS_NAME">@string/app_name</string>
+    <string name="keyValue">WhatsApp_Path</string>
+    <string name="background_Service_Working">Background Service Working</string>
+    <string name="foreground_Service_Working">Foreground Service Working</string>
+    <string name="task_A_NextDate">Task A NextDate</string>
+    <string name="task_B_NextDate">Task B NextDate</string>
+    <string name="task_C_NextDate">Task C NextDate</string>
+    <string name="task_A_Done">Task A Done</string>
+    <string name="task_B_Done">Task B Done</string>
+    <string name="task_C_Done">Task C Done</string>
+
 
     <!--Sd Card Path SharedPreference-->
     <string name="sdCardPath">Sd Card Path</string>
@@ -73,7 +85,7 @@
 
 
     <!--Notfication CHannel Name-->
-    <string name="transfer_Done_title">Transfer Done</string>
+    <string name="delete_Done_title">Successfully Data Deleted</string>
     <string name="file_found_title">File Found</string>
     <string name="transfer_Done_Id">Transfer Done Id </string>
     <string name="duplicate_title">Duplicate</string>
@@ -83,8 +95,10 @@
     <!--Slide Information-->
     <string name="slide_1_title">Duplicate Data</string>
     <string name="slide_1_desc">Scan And Remove Duplicate Data</string>
-    <string name="slide_2_title">Storage Stats</string>
-    <string name="slide_2_desc">Storage Analysis &amp; Storage Stats</string>
+    <string name="slide_2_title">Background Timer</string>
+    <string name="slide_2_desc">Delete Duplicate Data Automatically</string>
+    <string name="slide_3_title">Storage Stats</string>
+    <string name="slide_3_desc">Storage Analysis &amp; Storage Stats</string>
     <string name="start">Start</string>
     <string name="next">Next</string>
     <string name="skip">Skip</string>
@@ -95,4 +109,28 @@
     <!--Download Folder Empty-->
     <string name="nothing_text">Nothing!!</string>
     <string name="noDuplicateFoundText">There is no duplicate Found.</string>
+
+    <!--share app-->
+    <string name="share_info">Hey check This App which help you to Delete Duplicate and Unnecessary Data - </string>
+
+
+    <!--Foreground setting heading-->
+    <string name="foreground_Setting_Text">Foreground Service</string>
+    <string name="Choose_Ok_Text">OK</string>
+    <string name="Choose_Cancel_Text">Cancel</string>
+    <string name="setting_Heading_Text">Setting</string>
+    <string name="custom_Dialog_Box_Heading">Foreground Service</string>
+    <string name="custom_Dialog_Box_Text">Are you sure to stop all your background Task?</string>
+
+
+    <!-- Foreground Service Setup-->
+    <string name="stop_Foreground_Service">Stop Service</string>
+    <string name="why_This_Foreground_Service">Why This ? </string>
+
+    <!--foreground service custom dialog-->
+    <string name="custom_Foreground_Permission">Smart phone are more restrict about background Process from which our background task not working So if you want to us to run background task
+        follow the steps which is given on that Website .</string>
+    <string name="custom_Foreground_Permission_Follow">Follow It</string>
+    <string name="see_more_text">See More</string>
+    <string name="background_restriction_text">Background Restriction</string>
 </resources>

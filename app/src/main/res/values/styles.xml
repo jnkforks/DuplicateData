@@ -8,6 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="listPreferredItemHeightSmall">45dp</item>
+        <item name="android:listDivider">@color/separateColor</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -18,14 +20,24 @@
     </style>
 
     <style name="Custom" parent="android:Theme.DeviceDefault.Dialog">
-        <item name="DialogTitleAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="DialogTitleText">Updating…</item>
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Material.Medium</item>
+
         <item name="DialogSpotColor">@android:color/holo_orange_dark</item>
-        <item name="DialogSpotCount">4</item>
+        <item name="DialogSpotCount">5</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="SCBSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/colorPrimary</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#FFFFFF</item>
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#5F5F5F</item>
+    </style>
 </resources>

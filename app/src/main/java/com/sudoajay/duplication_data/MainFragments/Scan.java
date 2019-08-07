@@ -256,6 +256,8 @@ public class Scan extends Fragment {
 
             alertDialog.show();
 
+
+
             // create object
             scanDuplicateData = new ScanDuplicateData(getContext());
 

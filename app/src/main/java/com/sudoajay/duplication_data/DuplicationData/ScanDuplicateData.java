@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
@@ -23,6 +22,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ScanDuplicateData {
     private List<File> getAllData = new LinkedList<>();
@@ -46,7 +46,8 @@ public class ScanDuplicateData {
         }
     }
 
-    public void Duplication(String external_dir, String sd_Card_dir, int internal_Visible, int external_Visible) {
+    public void Duplication(final String external_dir, final String sd_Card_dir, final int internal_Visible,
+                            final int external_Visible) {
 
 
         Map<String, List<String>> lists = new HashMap<>();
@@ -66,18 +67,14 @@ public class ScanDuplicateData {
         // check for hash using "SHA-512"
         DuplicatedFilesUsingHashTable(lists);
 
-        for (String name: lists.keySet()) {
-            String key = name.toString();
-            String value = lists.get(name).toString();
-            Log.d("Get_All_Path",key + " " + value);
-        }
-            for (List<String> list : lists.values()) {
+        for (List<String> list : lists.values()) {
             if (list.size() > 1) {
                 dataStore.addAll(list);
                 dataStore.add("And");
             }
         }
         UnnecessaryData();
+        CacheData(external_dir, sd_Card_dir, internal_Visible, external_Visible);
     }
 
     private   void UnnecessaryData() {
@@ -100,7 +97,7 @@ public class ScanDuplicateData {
         try{
             List<File> files = new ArrayList<>(Arrays.asList(database_File.listFiles()));
             Convert_Into_Last_Modified(files);
-            if (!files.isEmpty()) {
+            if (files.size() > 1) {
                 for (int i = files.size() - 1; i >= 1; i--) {
                     dataStore.add(files.get(i).getAbsolutePath());
                 }
@@ -134,6 +131,47 @@ public class ScanDuplicateData {
                 dataStore.add(data.getAbsolutePath());
             }
             dataStore.add("And");
+        }
+    }
+
+    public void CacheData(final String external_dir, final String sd_Card_dir, final int internal_Visible,
+                          final int external_Visible) {
+
+        ArrayList<String> savePath = new ArrayList<>();
+
+        if (internal_Visible == View.VISIBLE) {
+            savePath.add(external_dir);
+        }
+        if (external_Visible == View.VISIBLE) {
+            savePath.add(sd_Card_dir);
+        }
+        for (String path : savePath) {
+            File androidDataFolder = new File(path + "/Android/data/");
+            if (androidDataFolder.exists()) {
+                File[] filesList = androidDataFolder.listFiles();
+                if (filesList != null) {
+                    for (File file : filesList) {
+                        if (file.isDirectory()) {
+                            if (new File(file.getAbsolutePath() + "/cache/").exists()) {
+                                SaveCacheFiles(new File(file.getAbsolutePath() + "/cache/").listFiles());
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+        if (!dataStore.isEmpty())
+            dataStore.add("And");
+    }
+
+    private void SaveCacheFiles(final File[] file) {
+        for (File getFile : file) {
+            if (getFile.isDirectory()) {
+                SaveCacheFiles(getFile.listFiles());
+            } else {
+                dataStore.add(getFile.getAbsolutePath());
+            }
         }
     }
 
@@ -179,7 +217,7 @@ public class ScanDuplicateData {
 
     public String getMimeType(Uri uri) {
         String mimeType = null;
-        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+        if (Objects.equals(uri.getScheme(), ContentResolver.SCHEME_CONTENT)) {
             ContentResolver cr = context.getContentResolver();
             mimeType = cr.getType(uri);
         } else {

@@ -7,29 +7,38 @@
         <item
             android:id="@+id/nav_Home"
             android:icon="@drawable/home_icon"
-            android:title="@string/home_Item" />
+            android:title="@string/nav_home_Item" />
         <item
             android:id="@+id/nav_Scan"
             android:icon="@drawable/search_icon"
-            android:title="@string/scan_Item" />
+            android:title="@string/nav_scan_Item" />
 
+        <item
+            android:id="@+id/nav_background_Timer"
+            android:icon="@drawable/background_timer_icon"
+            android:title="@string/nav_background_Timer" />
+
+        <item
+            android:id="@+id/nav_Foreground_Setting"
+            android:icon="@drawable/foreground_icon"
+            android:title="@string/nav_Foreground_Setting" />
     </group>
 
-    <group android:id="@+id/grp1" android:checkableBehavior="single" >
+    <group android:id="@+id/grp1" android:checkableBehavior="single"  >
 
         <item
             android:id="@+id/nav_Share"
             android:icon="@drawable/share_icon"
-            android:title="@string/share_Item" />
+            android:title="@string/nav_share_Item" />
         <item
             android:id="@+id/nav_Rate_Us"
             android:icon="@drawable/rate_icon"
-            android:title="@string/rate_Us_Item" />
+            android:title="@string/nav_rate_Us_Item" />
 
         <item
             android:id="@+id/nav_Contact_Me"
             android:icon="@drawable/contact_icon"
-            android:title="@string/contact_Item" />
+            android:title="@string/nav_contact_Item" />
 
     </group>
 

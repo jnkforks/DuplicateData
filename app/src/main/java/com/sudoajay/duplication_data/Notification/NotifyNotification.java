@@ -62,7 +62,7 @@ public class NotifyNotification {
         // setup intent and passing value
         intent = new Intent(context, MainActivity.class);
 
-        if (notficationHint.equalsIgnoreCase(context.getString(R.string.transfer_Done_title)))
+        if (notficationHint.equalsIgnoreCase(context.getString(R.string.delete_Done_title)))
             intent.putExtra("passing", "DuplicateData");
 
 

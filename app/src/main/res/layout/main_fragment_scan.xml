@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_Color">
+    android:background="#fff">
 
 
     <Button
@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="60dp"
         android:layout_marginRight="60dp"
+        android:layout_marginBottom="60dp"
         android:background="@drawable/activity_my_blank_button"
         android:drawableStart="@drawable/multiple_data"
         android:enabled="false"
@@ -28,14 +29,11 @@
         android:textSize="15sp"
         android:textStyle="bold"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/internal_Image_View"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <ImageView
@@ -120,11 +118,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="1"
-        android:background="@color/activity_my_scan_button_color"
+        android:background="@color/activity_bottom_button_color"
         android:onClick="OnClick"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/scan_Button" />
 
@@ -145,7 +143,7 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
 

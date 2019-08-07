@@ -22,6 +22,7 @@ import androidx.work.WorkManager;
 
 import com.google.android.material.navigation.NavigationView;
 import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess;
+import com.sudoajay.duplication_data.Custom_Dialog.CustomDialogForForegroundService;
 import com.sudoajay.duplication_data.MainFragments.Home;
 import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private AndroidSdCardPermission androidSdCardPermission;
     private AndroidExternalStoragePermission androidExternalStoragePermission;
+    private final String rating_link = "https://play.google.com/store/apps/details?id=com.sudoajay.whatsapp_media_mover";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (value == null) {
-            // default Home
+//             default Home
             setTitle("Home");
             navigationView.getMenu().getItem(0).setChecked(true);
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
@@ -254,12 +256,20 @@ public class MainActivity extends AppCompatActivity
             // Handle the Scan Action
             setTitle("Scan");
             fragment = scan.createInstance(MainActivity.this);
-        } else if (id == R.id.nav_Share) {
+        }else if(id == R.id.nav_background_Timer){
+
+        }else if(id == R.id.nav_Foreground_Setting) {
+            CallCustomDailogForeground();
+        }
+
+        else if (id == R.id.nav_Share) {
+            Share();
 
         } else if (id == R.id.nav_Rate_Us) {
+            Rate_Us();
 
         } else if (id == R.id.nav_Contact_Me) {
-
+            Open_Email();
         }
         Replace_Fragments();
 
@@ -279,8 +289,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void BackgroundTask() {
-
-
         // this task for Background Show Size
         PeriodicWorkRequest.Builder myWorkBuilder =
                 new PeriodicWorkRequest.Builder(WorkMangerProcess.class, 1, TimeUnit.DAYS);
@@ -289,6 +297,42 @@ public class MainActivity extends AppCompatActivity
         PeriodicWorkRequest myWork = myWorkBuilder.build();
         WorkManager.getInstance(getApplicationContext())
                 .enqueueUniquePeriodicWork("Scan Duplication", ExistingPeriodicWorkPolicy.KEEP, myWork);
+    }
+
+    public void CallCustomDailogForeground() {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CustomDialogForForegroundService custom_dialog_for_changes_options
+                = new CustomDialogForForegroundService();
+        custom_dialog_for_changes_options.show(ft, "dialog");
+    }
+
+    private void Share() {
+
+        Intent i = new Intent(android.content.Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(android.content.Intent.EXTRA_SUBJECT, "Link-Share");
+        i.putExtra(android.content.Intent.EXTRA_TEXT, R.string.share_info + rating_link);
+        startActivity(Intent.createChooser(i, "Share via"));
+    }
+
+    public void Rate_Us() {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(rating_link));
+        startActivity(i);
+    }
+
+
+    public void Open_Email() {
+
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + "sudoajay@gmail.com"));
+            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+            intent.putExtra(Intent.EXTRA_TEXT, "");
+            startActivity(intent);
+        } catch (Exception e) {
+            CustomToast.ToastIt(getApplicationContext(), "There is no Email App");
+        }
 
     }
 
