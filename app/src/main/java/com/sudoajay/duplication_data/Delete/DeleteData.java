@@ -1,8 +1,11 @@
 package com.sudoajay.duplication_data.Delete;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
+
 import androidx.documentfile.provider.DocumentFile;
 
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
@@ -14,21 +17,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
 public class DeleteData {
-    private HashMap<String, List<String>> list_Header_Child, sdCardStore = new HashMap<>();;
-    private HashMap<Integer, List<Boolean>> checkBoxArray;
+    private LinkedHashMap<String, List<String>> list_Header_Child, sdCardStore = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, List<Boolean>> checkBoxArray;
     private SdCardPathSharedPreference sdCardPathSharedPreference;
     private DocumentFile sdCarddocumentFile;
     private String sdCardPath, sdCardUri;
     private ShowDuplicate showDuplicate;
     private ShowDuplicate.MultiThreadingTask multiThreadingTask;
     private List<String> sdcard = new ArrayList<>(), pathStore = new ArrayList<>();
+    private Boolean atBackground;
 
 
-    public DeleteData(final ShowDuplicate showDuplicate, final HashMap<String, List<String>> list_Header_Child, final HashMap<Integer, List<Boolean>> checkBoxArray,
+    public DeleteData(final ShowDuplicate showDuplicate, final LinkedHashMap<String, List<String>> list_Header_Child, final LinkedHashMap<Integer, List<Boolean>> checkBoxArray,
                       final ShowDuplicate.MultiThreadingTask multiThreadingTask) {
         this.list_Header_Child = list_Header_Child;
         this.checkBoxArray = checkBoxArray;
@@ -43,26 +48,41 @@ public class DeleteData {
             Uri sd_Card_URL = Uri.parse(sdCardUri);
             sdCarddocumentFile = DocumentFile.fromTreeUri(showDuplicate, sd_Card_URL);
         }
-
+        atBackground = false;
         GetThePath();
 
     }
 
+    public DeleteData(final Context context,final LinkedHashMap<String, List<String>> list_Header_Child, final LinkedHashMap<Integer, List<Boolean>> checkBoxArray,final String sdCardPath,
+                      final String sdCardUri){
+
+        this.list_Header_Child = list_Header_Child;
+        this.checkBoxArray =checkBoxArray;
+        this.sdCardPath = sdCardPath;
+        if (sdCardUri != null) {
+            this.sdCardUri = sdCardUri;
+            Uri sd_Card_URL = Uri.parse(sdCardUri);
+            sdCarddocumentFile = DocumentFile.fromTreeUri(context, sd_Card_URL);
+        }
+        atBackground = true;
+        GetThePath();
+    }
 
     private void GetThePath() {
         int i = 0, j = 0;
-
-        for (HashMap.Entry<String, List<String>> entry : list_Header_Child.entrySet()) {
+        
+        for (LinkedHashMap.Entry<String, List<String>> entry : list_Header_Child.entrySet()) {
             for (String path : entry.getValue()) {
-                if (Objects.requireNonNull(checkBoxArray.get(i)).get(j)) {
+                if (Objects.requireNonNull(checkBoxArray.get(i)).get(j)){
                     SeprateTheData(path);
-
                 }
                 j++;
             }
+
             j = 0;
             i++;
         }
+
         SeprateTheSDCardPath();
         DeleteTheDataFromExternalStorage();
     }
@@ -70,7 +90,7 @@ public class DeleteData {
     public void SeprateTheData(String path) {
         if (path.contains(Environment.getExternalStorageDirectory().getAbsolutePath())) {
             DeleteTheDataFromInternalStorage(path);
-            multiThreadingTask.onProgressUpdate();
+            if(!atBackground) multiThreadingTask.onProgressUpdate();
         } else {
             sdcard.add(path);
         }
@@ -123,7 +143,7 @@ public class DeleteData {
                     DocumentFile save = sdCardDocument.findFile(value);
                     assert save != null;
                     save.delete();
-                    multiThreadingTask.onProgressUpdate();
+                    if(!atBackground) multiThreadingTask.onProgressUpdate();
                 }
             }
         }

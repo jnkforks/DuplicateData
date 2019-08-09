@@ -109,6 +109,10 @@ public class AndroidSdCardPermission {
     }
 
 
+    public String getString_URI() {
+        return string_URI;
+    }
+
     public void setSd_Card_Path_URL(String sd_Card_Path_URL) {
         this.sd_Card_Path_URL = sd_Card_Path_URL;
         sdCardPathSharedPreference.setSdCardPath(sd_Card_Path_URL);

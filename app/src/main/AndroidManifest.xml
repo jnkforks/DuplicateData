@@ -63,7 +63,10 @@
 
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
+        </service> <service android:enabled="true" android:name=".ForegroundService.Foreground"
+        tools:ignore="InnerclassSeparator" />
+
+
 
 
         <service android:name=".Receive_Boot_Completed.ForegroundServiceBoot"

@@ -177,7 +177,7 @@ public class CustomDialogForForegroundService extends DialogFragment implements 
 
                 // Modify the layout
                 current.getLayoutParams().width = width - ((10 * width) / 100);
-                current.getLayoutParams().height = height - ((70 * height) / 100);
+//                current.getLayoutParams().height = height - ((70 * height) / 100);
             }
         } while (current.getParent() != null);
 

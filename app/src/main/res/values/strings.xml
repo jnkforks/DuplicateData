@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Duplication Data</string>
     <string name="title_activity_main__navigation">Main_Navigation</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -14,8 +14,8 @@
     <string name="nav_share_Item">Share</string>
     <string name="nav_rate_Us_Item">Rate-Us</string>
     <string name="nav_contact_Item">Contact</string>
-    <string name="nav_background_Timer">Background </string>
-    <string name="nav_Foreground_Setting">Foreground </string>
+    <string name="nav_background_Timer">Background Timer </string>
+    <string name="nav_Foreground_Setting">Foreground Setting </string>
 
 
     <!--Main Home Screen-->
@@ -133,4 +133,29 @@
     <string name="custom_Foreground_Permission_Follow">Follow It</string>
     <string name="see_more_text">See More</string>
     <string name="background_restriction_text">Background Restriction</string>
+
+
+    <!--Background Task-->
+    <string name="background_Timer_Heading">What You Like ?</string>
+    <string name="timer_icon">Timer icon</string>
+    <string name="Choose_Ok">OK</string>
+    <string name="Choose_Cancel">Cancel</string>
+
+    <!--custom weekdays Setup-->
+    <string-array name="customWeekdaysSetup" tools:ignore="TypographyFractions">
+        <item>No Day Selected</item>
+        <item>At Every 1/2 Day</item>
+        <item>At Every 1 Day</item>
+        <item>At Every 2 Day</item>
+        <item>Custom WeekDay</item>
+        <item>Once A Month(Same Date)</item>
+    </string-array>
+
+    <!--Default Date-->
+    <string name="today_Date">Today</string>
+    <string name="yesterday_Date">Yesterday</string>
+    <string name="tomorrow_Date">Tomorrow</string>
+
+    <string name="setting_Updated">Setting Updated</string>
+
 </resources>

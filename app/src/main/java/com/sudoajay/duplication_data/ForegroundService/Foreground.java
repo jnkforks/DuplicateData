@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
@@ -15,6 +16,9 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess1;
+import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess2;
+import com.sudoajay.duplication_data.Database_Classes.BackgroundTimerDataBase;
 import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.R;
 import com.sudoajay.duplication_data.Receive_Boot_Completed.ForegroundServiceBoot;
@@ -22,8 +26,10 @@ import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -128,17 +134,13 @@ public class Foreground extends Service {
             // check if date matches then run the process
 
 //            // first Process or Task A
-//            if (DatesMatches(traceBackgroundService.getTaskA(), 1))
-//                WorkMangerTaskA.getWork(getApplicationContext());
-//
-//            // Second Process or Task B
-//            if (DatesMatches(traceBackgroundService.getTaskB(), 2))
-//                WorkMangerTaskB.getWork(getApplicationContext());
-//
-//            // Third Process or Task C
-//            if (DatesMatches(traceBackgroundService.getTaskC(), 3)) {
-//                WorkMangerTaskC.runThread(getApplicationContext());
-//            }
+            if (DatesMatches(traceBackgroundService.getTaskA(), 1))
+                WorkMangerProcess1.GetWorkDone(getApplicationContext());
+
+            // Second Process or Task B
+            if (DatesMatches(traceBackgroundService.getTaskB(), 2))
+                WorkMangerProcess2.GetWorkDone(getApplicationContext());
+
 
             Task();
         } else if (Objects.requireNonNull(intent.getStringExtra("com.sudoajay.whatapp_media_mover_to_sdcard.ForegroundDialog"))
@@ -201,13 +203,11 @@ public class Foreground extends Service {
             if (todayDate.after(curDate)) {
                 if (!format.format(todayDate).equals(format.format(curDate))) {
                     if (type == 1) {
-//                        traceBackgroundService.setTaskA();
-                    } else if (type == 2) {
-//                        traceBackgroundService.setTaskB();
+                        traceBackgroundService.setTaskA();
                     } else {
 
-//                        traceBackgroundService.setTaskC
-//                                (TraceBackgroundService.NextDate(Main_Navigation.getHours(getApplicationContext())));
+                        traceBackgroundService.setTaskB
+                                (TraceBackgroundService.NextDate(getHours(getApplicationContext())));
                     }
                 }
             }
@@ -239,5 +239,60 @@ public class Foreground extends Service {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setTime, pendingIntent);
         }
 
+    }
+
+    public static int getHours(final Context context) {
+
+        BackgroundTimerDataBase backgroundTimerDataBase = new BackgroundTimerDataBase(context);
+        // set the Task is started
+
+        // this task for cleaning and show today task
+        int hour = 0;
+
+        // grab the data From Database
+
+
+        if (!backgroundTimerDataBase.check_For_Empty()) {
+            Cursor cursor = backgroundTimerDataBase.GetTheRepeatedlyWeekdays();
+            if (cursor != null && cursor.moveToFirst()) {
+                cursor.moveToFirst();
+
+                try {
+
+                    switch (cursor.getInt(0)) {
+                        case 0: // At Every 1/2 Day
+                            hour = 12;
+                            break;
+                        case 1:// At Every 1 Day
+                            hour = 24;
+                            break;
+                        case 2:
+                            // At Every 2 Day
+                            hour = (24 * 2);
+                            break;
+                        case 3:
+
+                            Calendar calendar = Calendar.getInstance();
+                            int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+                            String weekdays = cursor.getString(1);
+                            List<Integer> listWeekdays = new ArrayList<>();
+                            for (int i = 0; i < weekdays.length(); i++) {
+                                listWeekdays.add(Character.getNumericValue(weekdays.charAt(i)));
+                            }
+
+                            hour = 24 * WorkMangerProcess2.CountDay(currentDay, listWeekdays);
+
+                            break;
+                        case 4:  // At Every month(Same Date)
+                            hour = (24 * 30);
+                            break;
+                    }
+
+                } catch (Exception e) {
+                }
+            }
+        }
+        return hour;
     }
 }

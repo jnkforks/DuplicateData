@@ -52,4 +52,8 @@
     <color name="drawer_background_color">#ff303030</color>
     <color name="selected_drawer_item_color">#4D8EEB</color>
 
+    <!--Background Task-->
+    <color name="textColorOnCustomSpinner">#000000</color>
+    <string name="endlessly_Date">Endlessly</string>
+    <string name="repeatedly_Text">Repeatedly Timer</string>
 </resources>

@@ -25,6 +25,7 @@ import com.sudoajay.duplication_data.R;
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,12 +33,12 @@ import java.util.Objects;
 public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> list_Header;
-    private HashMap<String, List<String>> list_Header_Child;
+    private LinkedHashMap<String, List<String>> list_Header_Child;
     private List<Integer> arrow_Image_Resource;
-    private HashMap<Integer, List<Boolean>> checkBoxArray;
+    private LinkedHashMap<Integer, List<Boolean>> checkBoxArray;
 
-    public ExpandableDuplicateListAdapter(Context context, List<String> list_Header, HashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource,
-                                          final HashMap<Integer, List<Boolean>> checkBoxArray) {
+    public ExpandableDuplicateListAdapter(Context context, List<String> list_Header, LinkedHashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource,
+                                          final LinkedHashMap<Integer, List<Boolean>> checkBoxArray) {
         this.context = context;
         this.list_Header = list_Header;
         this.list_Header_Child = list_Header_Child;
@@ -298,11 +299,11 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         return resizedBitmap;
     }
 
-    public HashMap<Integer, List<Boolean>> getCheckBoxArray() {
+    public LinkedHashMap<Integer, List<Boolean>> getCheckBoxArray() {
         return checkBoxArray;
     }
 
-    public void setCheckBoxArray(HashMap<Integer, List<Boolean>> checkBoxArray) {
-        this.checkBoxArray = checkBoxArray;
-    }
+
+
+
 }

@@ -1,10 +1,11 @@
 package com.sudoajay.duplication_data;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -21,16 +22,22 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.google.android.material.navigation.NavigationView;
-import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess;
+import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerTaskManager;
+import com.sudoajay.duplication_data.Custom_Dialog.CustomDialogForBackgroundTimer;
 import com.sudoajay.duplication_data.Custom_Dialog.CustomDialogForForegroundService;
+import com.sudoajay.duplication_data.ForegroundService.Foreground;
+import com.sudoajay.duplication_data.ForegroundService.ForegroundDialog;
 import com.sudoajay.duplication_data.MainFragments.Home;
 import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.SdCard.SdCardPath;
 import com.sudoajay.duplication_data.Toast.CustomToast;
+import com.sudoajay.duplication_data.sharedPreferences.PrefManager;
+import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity
@@ -47,7 +54,7 @@ public class MainActivity extends AppCompatActivity
     private AndroidSdCardPermission androidSdCardPermission;
     private AndroidExternalStoragePermission androidExternalStoragePermission;
     private final String rating_link = "https://play.google.com/store/apps/details?id=com.sudoajay.whatsapp_media_mover";
-
+    private TraceBackgroundService traceBackgroundService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         if (extras != null) {
             value = extras.getString("passing");
         }
-
 
         // Reference and Create Object
         Reference();
@@ -87,6 +93,13 @@ public class MainActivity extends AppCompatActivity
             onNavigationItemSelected(navigationView.getMenu().getItem(1));
         }
 
+        if (getIntent().getAction() != null) {
+            if (Objects.requireNonNull(getIntent().getAction()).equalsIgnoreCase("Stop_Foreground(Setting)")) {
+                navigationView.getMenu().getItem(1).setChecked(true);
+                onNavigationItemSelected(navigationView.getMenu().getItem(3));
+            }
+
+        }
 
         // check ExternalStorage Permission
         androidExternalStoragePermission = new AndroidExternalStoragePermission(MainActivity.this,
@@ -95,7 +108,22 @@ public class MainActivity extends AppCompatActivity
 
 
 //        // call Background
-        BackgroundTask();
+        Task();
+
+        traceBackgroundService = new TraceBackgroundService(getApplicationContext());
+        PrefManager prefManager = new PrefManager(getApplicationContext());
+        //    first time check
+        if (!traceBackgroundService.isBackgroundServiceWorking()) {
+            if (traceBackgroundService.isForegroundServiceWorking()) {
+                if (!isServiceRunningInForeground(getApplicationContext(), Foreground.class)) {
+                    ForegroundDialog foregroundService = new ForegroundDialog(MainActivity.this,
+                            MainActivity.this);
+                    foregroundService.call_Thread();
+
+                }
+            }
+        }
+
 
     }
 
@@ -257,6 +285,8 @@ public class MainActivity extends AppCompatActivity
             setTitle("Scan");
             fragment = scan.createInstance(MainActivity.this);
         }else if(id == R.id.nav_background_Timer){
+            CallCustomDailogBackgroundTimer();
+
 
         }else if(id == R.id.nav_Foreground_Setting) {
             CallCustomDailogForeground();
@@ -288,17 +318,26 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void BackgroundTask() {
-        // this task for Background Show Size
-        PeriodicWorkRequest.Builder myWorkBuilder =
-                new PeriodicWorkRequest.Builder(WorkMangerProcess.class, 1, TimeUnit.DAYS);
+    private void Task() {
 
+        // set the Task is started
+        PeriodicWorkRequest.Builder myWorkBuilder =
+                new PeriodicWorkRequest.Builder(WorkMangerTaskManager.class, 12, TimeUnit.HOURS);
 
         PeriodicWorkRequest myWork = myWorkBuilder.build();
         WorkManager.getInstance(getApplicationContext())
-                .enqueueUniquePeriodicWork("Scan Duplication", ExistingPeriodicWorkPolicy.KEEP, myWork);
+                .enqueueUniquePeriodicWork("Manages", ExistingPeriodicWorkPolicy.KEEP, myWork);
+
     }
 
+
+    public void CallCustomDailogBackgroundTimer() {
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        CustomDialogForBackgroundTimer customDialogForBackgroundTimer
+                = new CustomDialogForBackgroundTimer(this);
+        customDialogForBackgroundTimer.show(ft, "dialog");
+    }
     public void CallCustomDailogForeground() {
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -334,6 +373,28 @@ public class MainActivity extends AppCompatActivity
             CustomToast.ToastIt(getApplicationContext(), "There is no Email App");
         }
 
+    }
+
+    public boolean isServiceRunningInForeground(Context context, Class<?> serviceClass) {
+        try {
+            ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    if (service.foreground) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            if (!ServicesWorking()) return true;
+            return false;
+        }
+    }
+
+    public boolean ServicesWorking() {
+        traceBackgroundService.isBackgroundWorking();
+        return !traceBackgroundService.isBackgroundServiceWorking();
     }
 
 }

@@ -19,10 +19,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 
-public class WorkMangerProcess extends Worker {
+public class WorkMangerProcess1 extends Worker {
 
 
-    public WorkMangerProcess(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    public WorkMangerProcess1(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
     }
@@ -30,6 +30,11 @@ public class WorkMangerProcess extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+            GetWorkDone(getApplicationContext());
+        return Result.success();
+    }
+
+    public static void GetWorkDone(final Context context){
         // local variable
         int sdcard, internal = View.INVISIBLE;
         long size = 0;
@@ -37,7 +42,7 @@ public class WorkMangerProcess extends Worker {
 
         ArrayList<String> savePath = new ArrayList<>();
         AndroidSdCardPermission androidSdCardPermission
-                = new AndroidSdCardPermission(getApplicationContext());
+                = new AndroidSdCardPermission(context);
         if (new File(Environment.getExternalStorageDirectory().getAbsolutePath()).exists()) {
             savePath.add(Environment.getExternalStorageDirectory().getAbsolutePath());
             internal = View.VISIBLE;
@@ -50,7 +55,7 @@ public class WorkMangerProcess extends Worker {
             sdcard = View.INVISIBLE;
         }
 
-        ScanDuplicateData scanDuplicateData = new ScanDuplicateData(getApplicationContext());
+        ScanDuplicateData scanDuplicateData = new ScanDuplicateData(context);
         scanDuplicateData.Duplication(savePath.get(0), savePath.get(1), internal, sdcard);
 
         for (String path : scanDuplicateData.getList()) {
@@ -61,10 +66,9 @@ public class WorkMangerProcess extends Worker {
 
         if (size != 0) {
             textPass = "We Have Found " + ShowDuplicate.Convert_It(size) + " Of Duplicate Files";
-            NotifyNotification notifyNotification = new NotifyNotification(getApplicationContext());
-            notifyNotification.notify(textPass, getApplicationContext().getString(R.string.file_found_title));
+            NotifyNotification notifyNotification = new NotifyNotification(context);
+            notifyNotification.notify(textPass, context.getString(R.string.file_found_title));
         }
-        return Result.success();
     }
 
 }

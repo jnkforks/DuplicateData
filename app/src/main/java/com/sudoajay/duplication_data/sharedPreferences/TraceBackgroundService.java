@@ -49,11 +49,11 @@ public class TraceBackgroundService {
     }
 
     public String getTaskB() {
-        return pref.getString(_context.getString(R.string.task_C_NextDate), "");
+        return pref.getString(_context.getString(R.string.task_B_NextDate), "");
     }
 
     public void setTaskB(final String taskB) {
-        editor.putString(_context.getString(R.string.task_C_NextDate), taskB);
+        editor.putString(_context.getString(R.string.task_B_NextDate), taskB);
         editor.apply();
     }
 

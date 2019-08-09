@@ -55,9 +55,9 @@ public class ShowDuplicate extends AppCompatActivity {
     private List<Integer> arrow_Image_Resource = new ArrayList<>();
     private ExpandableDuplicateListAdapter expandableduplicatelistadapter;
     private List<String> list_Header = new ArrayList<>(), sets = new ArrayList<>();
-    private HashMap<String, List<String>> list_Header_Child = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<String>> list_Header_Child = new LinkedHashMap<>();
     @SuppressLint("UseSparseArrays")
-    private HashMap<Integer, List<Boolean>> checkBoxArray = new HashMap<>();
+    private LinkedHashMap<Integer, List<Boolean>> checkBoxArray = new LinkedHashMap<>();
     private List<Boolean> setsBoolean = new ArrayList<>();
     private Button deleteDuplicateButton;
     private View deleteDuplicateButton1;
@@ -394,9 +394,8 @@ public class ShowDuplicate extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             Notification();
-            DeleteData deleteData = new DeleteData
-                    (ShowDuplicate.this, list_Header_Child, expandableduplicatelistadapter
-                            .getCheckBoxArray(), multiThreadingtask);
+         new DeleteData(ShowDuplicate.this, list_Header_Child,
+                 expandableduplicatelistadapter.getCheckBoxArray(), multiThreadingtask);
             return null;
         }
     }
