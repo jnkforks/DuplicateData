@@ -414,8 +414,6 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
     private void CheckingAndSetting() {
         TraceBackgroundService traceBackgroundService =
                 new TraceBackgroundService(Objects.requireNonNull(getContext()));
-        traceBackgroundService.setBackgroundServiceWorking(false);
-        traceBackgroundService.setForegroundServiceWorking(true);
         if (!traceBackgroundService.isBackgroundServiceWorking()
                 && traceBackgroundService.isForegroundServiceWorking()) {
             // call thread and dialog to run foreground service
