@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "900369200320-dnkomhqjhlrn97q1d97vimqbckgdhtjh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sudoajay.duplication_data",
+            "certificate_hash": "76a725010c7a7213bf6511960e6393c4299e865e"
+          }
+        },
+        {
           "client_id": "900369200320-g1ivp81sclm6gfeq3e6g5eb9s6k5bce9.apps.googleusercontent.com",
           "client_type": 3
         }
