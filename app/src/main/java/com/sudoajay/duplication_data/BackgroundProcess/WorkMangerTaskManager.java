@@ -34,7 +34,7 @@ public class WorkMangerTaskManager extends Worker {
 
 
         OneTimeWorkRequest everyDayWork =
-                new OneTimeWorkRequest.Builder(WorkMangerProcess1.class).addTag("Regular Duplicate Size").setInitialDelay(5
+                new OneTimeWorkRequest.Builder(WorkMangerProcess1.class).addTag("Regular Duplicate Size").setInitialDelay(20
                         , TimeUnit.MINUTES).build();
 
         OneTimeWorkRequest onceAWeekWork =
@@ -56,23 +56,24 @@ public class WorkMangerTaskManager extends Worker {
         Date date = null;
         try {
             date = dateFormat.parse(traceBackgroundService.getTaskA());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        if (dateFormat.format(todayDate).equals(dateFormat.format(date))) {
+            if (dateFormat.format(todayDate).equals(dateFormat.format(date)) || date.before(todayDate)) {
             list.add(everyDayWork);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         // Check for Date B Task
         try {
             date = dateFormat.parse(traceBackgroundService.getTaskB());
+
+
+            if (dateFormat.format(todayDate).equals(dateFormat.format(date)) || date.before(todayDate)) {
+            list.add(onceAWeekWork);
+        }
         } catch (ParseException e) {
             e.printStackTrace();
-        }
-
-        if (dateFormat.format(todayDate).equals(dateFormat.format(date))) {
-            list.add(onceAWeekWork);
         }
 
         WorkManager.getInstance(getApplicationContext())

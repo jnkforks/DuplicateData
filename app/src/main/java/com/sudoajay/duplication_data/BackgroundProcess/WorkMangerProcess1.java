@@ -14,6 +14,7 @@ import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
 import com.sudoajay.duplication_data.Notification.NotifyNotification;
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.R;
+import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,6 +70,11 @@ public class WorkMangerProcess1 extends Worker {
             NotifyNotification notifyNotification = new NotifyNotification(context);
             notifyNotification.notify(textPass, context.getString(R.string.file_found_title));
         }
+
+
+        TraceBackgroundService traceBackgroundService = new TraceBackgroundService(context);
+        // set next date
+        traceBackgroundService.setTaskA();
     }
 
 }

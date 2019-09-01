@@ -104,8 +104,8 @@ public class TraceBackgroundService {
                 if (yesterday.after(getDate))
                     setBackgroundServiceWorking(false);
             }
-        } catch (ParseException e) {
-            setBackgroundServiceWorking(true);
+        } catch (Exception e) {
+            setBackgroundServiceWorking(false);
         }
 
     }

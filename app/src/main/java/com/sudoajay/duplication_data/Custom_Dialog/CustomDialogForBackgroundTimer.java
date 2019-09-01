@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,9 +74,9 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
                 cursor.moveToFirst();
 
 //                chooseSpinner.setSelectedIndex(cursor.getInt(1));
-                repeatedlySpinner.setSelectedIndex(cursor.getInt(2));
+                repeatedlySpinner.setSelectedIndex(cursor.getInt(1));
                 if (cursor.getInt(2) == 3) {
-                    Fill_The_Selected_Weekdays(cursor.getString(3));
+                    Fill_The_Selected_Weekdays(cursor.getString(2));
                     weekdaysPicker.setVisibility(View.VISIBLE);
                 }
                 try {
@@ -84,10 +85,10 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
                     simpleDateFormat.setCalendar(calendar);
 
-                    if (cursor.getString(4).equalsIgnoreCase(simpleDateFormat.format(calendar.getTime()))) {
+                    if (cursor.getString(3).equalsIgnoreCase(simpleDateFormat.format(calendar.getTime()))) {
                         endlesslyEditText.setText(getResources().getText(R.string.today_Date));
                     } else {
-                        endlesslyEditText.setText(cursor.getString(4));
+                        endlesslyEditText.setText(cursor.getString(3));
                     }
                 } catch (Exception e) {
                     CustomToast.ToastIt(getContext(), "Something Wrong");
@@ -256,6 +257,7 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
 
     private void TraceTheData() {
         int hour = 12;
+
         switch (repeatedlySpinner.getSelectedIndex()) {
             case 1: // At Every 1/2 Day
                 hour = 12;

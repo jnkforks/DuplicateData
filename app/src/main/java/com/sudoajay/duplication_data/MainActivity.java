@@ -112,6 +112,15 @@ public class MainActivity extends AppCompatActivity
 
         traceBackgroundService = new TraceBackgroundService(getApplicationContext());
         PrefManager prefManager = new PrefManager(getApplicationContext());
+
+        if (traceBackgroundService.isBackgroundServiceWorking()) {
+            traceBackgroundService.isBackgroundWorking();
+        }
+        if (!traceBackgroundService.isBackgroundServiceWorking()) {
+            // if the background service not working then
+            traceBackgroundService.setTaskA();
+            traceBackgroundService.setTaskB(TraceBackgroundService.NextDate(24));
+        }
         //    first time check
         if (!traceBackgroundService.isBackgroundServiceWorking()) {
             if (traceBackgroundService.isForegroundServiceWorking()) {
