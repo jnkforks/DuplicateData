@@ -22,6 +22,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.google.android.material.navigation.NavigationView;
+import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess2;
 import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerTaskManager;
 import com.sudoajay.duplication_data.Custom_Dialog.CustomDialogForBackgroundTimer;
 import com.sudoajay.duplication_data.Custom_Dialog.CustomDialogForForegroundService;
@@ -111,7 +112,6 @@ public class MainActivity extends AppCompatActivity
         Task();
 
         traceBackgroundService = new TraceBackgroundService(getApplicationContext());
-        PrefManager prefManager = new PrefManager(getApplicationContext());
 
         if (traceBackgroundService.isBackgroundServiceWorking()) {
             traceBackgroundService.isBackgroundWorking();
@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
+
+        WorkMangerProcess2.GetWorkDone(getApplicationContext());
 
     }
 

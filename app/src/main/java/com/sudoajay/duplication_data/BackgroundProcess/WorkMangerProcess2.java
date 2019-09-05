@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -121,9 +122,9 @@ public class WorkMangerProcess2 extends Worker {
 
         new DeleteData(context,list_Header_Child,checkBoxArray,
                 androidSdCardPermission.getSd_Card_Path_URL(),androidSdCardPermission.getString_URI());
-        if(fileSize != 0) {
+//        if(fileSize != 0) {
             call_Thread(context);
-        }
+
 
     }
 
@@ -152,6 +153,7 @@ public class WorkMangerProcess2 extends Worker {
 
     private static void getNextDate(final Context context) {
         BackgroundTimerDataBase backgroundTimerDataBase = new BackgroundTimerDataBase(context);
+        TraceBackgroundService traceBackgroundService = new TraceBackgroundService(context);
         int hour = 0;
         if (!backgroundTimerDataBase.check_For_Empty()) {
             Cursor cursor = backgroundTimerDataBase.GetTheChoose_TypeRepeatedlyEndlessly();
@@ -188,31 +190,34 @@ public class WorkMangerProcess2 extends Worker {
                         break;
                 }
                 if (hour != 0) {
-                    TraceBackgroundService traceBackgroundService = new TraceBackgroundService(context);
+
                     // set next date
-                    traceBackgroundService.setTaskB(TraceBackgroundService.NextDate(hour));
+
                 }
             }
+            String TAG = "Gotcha";
             try {
-                // check for endlessly and delete the database
+
                 assert cursor != null;
                 if (!cursor.getString(2).equalsIgnoreCase("No Date Fixed")) {
-                    // current or today date
-                    Calendar calendars = Calendar.getInstance();
-                    Date curDate = calendars.getTime();
-
-                    // specific date from database
                     DateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-                    Date date = format.parse(cursor.getString(2));
 
-                    if (!format.format(curDate).equals(format.format(date))) {
-                        // Delete The Database
-                        Cursor cursor1 = backgroundTimerDataBase.GetTheId();
-                        backgroundTimerDataBase.deleteData(cursor1.getString(0));
+                    Date date = format.parse(cursor.getString(2));
+                    Calendar calendars = Calendar.getInstance();
+                    Date todayDate = calendars.getTime();
+                    if (date.before(todayDate) || format.format(todayDate).equals(format.format(date))) {
+
+
+                        if (!backgroundTimerDataBase.check_For_Empty()) {
+                            backgroundTimerDataBase.deleteData();
+                        }
+                        traceBackgroundService.setTaskB("Empty");
                     }
                 }
-            } catch (Exception e) {
 
+
+            } catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
             }
         }
     }

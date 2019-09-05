@@ -4,10 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-
 import com.sudoajay.duplication_data.R;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -99,10 +97,16 @@ public class TraceBackgroundService {
 
         try {
 
-            if (getTaskB() != null) {
+            if (!getTaskB().equals("") || !getTaskB().equals("Empty")) {
+
                 Date getDate = dateFormat.parse(getTaskB());
-                if (yesterday.after(getDate))
+                if (yesterday.after(getDate)) {
                     setBackgroundServiceWorking(false);
+                } else {
+                    setBackgroundServiceWorking(true);
+                }
+            } else {
+                setBackgroundServiceWorking(true);
             }
         } catch (Exception e) {
             setBackgroundServiceWorking(false);
