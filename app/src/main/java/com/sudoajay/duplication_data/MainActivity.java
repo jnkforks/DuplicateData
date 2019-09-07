@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-        WorkMangerProcess2.GetWorkDone(getApplicationContext());
 
     }
 

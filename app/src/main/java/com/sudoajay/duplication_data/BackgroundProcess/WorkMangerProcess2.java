@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -122,7 +121,7 @@ public class WorkMangerProcess2 extends Worker {
 
         new DeleteData(context,list_Header_Child,checkBoxArray,
                 androidSdCardPermission.getSd_Card_Path_URL(),androidSdCardPermission.getString_URI());
-//        if(fileSize != 0) {
+        if (fileSize != 0)
             call_Thread(context);
 
 
@@ -192,7 +191,7 @@ public class WorkMangerProcess2 extends Worker {
                 if (hour != 0) {
 
                     // set next date
-
+                    traceBackgroundService.setTaskB(TraceBackgroundService.NextDate(hour));
                 }
             }
             String TAG = "Gotcha";

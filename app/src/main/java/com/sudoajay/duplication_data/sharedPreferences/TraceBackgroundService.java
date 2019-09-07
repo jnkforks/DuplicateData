@@ -3,6 +3,7 @@ package com.sudoajay.duplication_data.sharedPreferences;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.sudoajay.duplication_data.R;
 
@@ -97,7 +98,7 @@ public class TraceBackgroundService {
 
         try {
 
-            if (!getTaskB().equals("") || !getTaskB().equals("Empty")) {
+            if (!getTaskB().equals("") || !getTaskB().equals("Empty") || getTaskB() != null) {
 
                 Date getDate = dateFormat.parse(getTaskB());
                 if (yesterday.after(getDate)) {
@@ -109,8 +110,10 @@ public class TraceBackgroundService {
                 setBackgroundServiceWorking(true);
             }
         } catch (Exception e) {
-            setBackgroundServiceWorking(false);
+            setBackgroundServiceWorking(true);
+
         }
+        
 
     }
 }
