@@ -121,26 +121,18 @@ public class WorkMangerProcess2 extends Worker {
 
         new DeleteData(context,list_Header_Child,checkBoxArray,
                 androidSdCardPermission.getSd_Card_Path_URL(),androidSdCardPermission.getString_URI());
-        if (fileSize != 0)
-            call_Thread(context);
+        if (fileSize != 0) {
+            NotifyNotification notifyNotification = new NotifyNotification(context);
+            notifyNotification.notify("You Have Saved " + ShowDuplicate.Convert_It(fileSize) +
+                    " Of Data ", context.getResources().getString(R.string.delete_Done_title));
+
+            // this is just for backup plan
+            getNextDate(context);
+        }
 
 
     }
 
-    public static void call_Thread(final Context context) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                NotifyNotification notifyNotification = new NotifyNotification(context);
-                notifyNotification.notify("You Have Saved " + ShowDuplicate.Convert_It(fileSize) +
-                        " Of Data ", context.getResources().getString(R.string.delete_Done_title));
-
-                // this is just for backup plan
-                getNextDate(context);
-            }
-        }, 2000);
-    }
 
     private static boolean IsMatchUnnecessary(final String path) {
 
@@ -194,9 +186,8 @@ public class WorkMangerProcess2 extends Worker {
                     traceBackgroundService.setTaskB(TraceBackgroundService.NextDate(hour));
                 }
             }
-            String TAG = "Gotcha";
             try {
-
+                // check for endlessly and delete the database
                 assert cursor != null;
                 if (!cursor.getString(2).equalsIgnoreCase("No Date Fixed")) {
                     DateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
@@ -204,19 +195,16 @@ public class WorkMangerProcess2 extends Worker {
                     Date date = format.parse(cursor.getString(2));
                     Calendar calendars = Calendar.getInstance();
                     Date todayDate = calendars.getTime();
+
                     if (date.before(todayDate) || format.format(todayDate).equals(format.format(date))) {
-
-
                         if (!backgroundTimerDataBase.check_For_Empty()) {
                             backgroundTimerDataBase.deleteData();
                         }
                         traceBackgroundService.setTaskB("Empty");
                     }
                 }
-
-
             } catch (Exception e) {
-                Log.e(TAG, e.getLocalizedMessage());
+
             }
         }
     }
