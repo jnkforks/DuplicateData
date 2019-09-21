@@ -259,17 +259,17 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
         int hour = 12;
 
         switch (repeatedlySpinner.getSelectedIndex()) {
-            case 1: // At Every 1/2 Day
+            case 0: // At Every 1/2 Day
                 hour = 12;
                 break;
-            case 2:// At Every 1 Day
+            case 1:// At Every 1 Day
                 hour = 24;
                 break;
-            case 3:
+            case 2:
                 // At Every 2 Day
                 hour = (24 * 2);
                 break;
-            case 4:
+            case 3:
 
                 Calendar calendar = Calendar.getInstance();
                 int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
@@ -283,7 +283,7 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
                 hour = 24 * CountDay(currentDay, listWeekdays);
 
                 break;
-            case 5:  // At Every month(Same Date)
+            case 4:  // At Every month(Same Date)
                 hour = (24 * 30);
                 break;
         }

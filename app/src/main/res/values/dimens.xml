@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
@@ -32,5 +32,7 @@
     <dimen name="under_list_cover_Image_View_layout_width">110dp</dimen>
     <dimen name="scan_button_layout_width">120dp</dimen>
     <dimen name="slide_Text_Gap">10dp</dimen>
+    <dimen name="design_navigation_icon_size" tools:override="true">20dp</dimen>
+
 
 </resources>

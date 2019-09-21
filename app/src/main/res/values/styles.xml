@@ -40,4 +40,9 @@
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">#5F5F5F</item>
     </style>
+
+
+    <style name="NavDrawerTextStyle" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">15sp</item>
+    </style>
 </resources>
