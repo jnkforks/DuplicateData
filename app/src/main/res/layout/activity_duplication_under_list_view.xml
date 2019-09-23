@@ -41,7 +41,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -58,37 +58,34 @@
                 <TextView
                     android:id="@+id/nameTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:paddingStart="2dp"
-                    android:paddingTop="10dp"
                     android:paddingEnd="2dp"
                     android:text=""
                     android:textColor="#000000"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.642"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/pathTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="20dp"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="none"
                     android:text=""
                     android:textColor="#000"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.34"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nameTextView"
-                    app:layout_constraintVertical_bias="0.013" />
+                    app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <CheckBox
