@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
 
         // local variable
+        super.onActivityResult(requestCode, resultCode, resultData);
         Uri sd_Card_URL;
         String sd_Card_Path_URL, string_URI = null;
 
@@ -211,16 +212,16 @@ public class MainActivity extends AppCompatActivity
         assert sd_Card_URL != null;
         getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, MainActivity.this);
-            string_URI = sd_Card_URL.toString();
-            sd_Card_Path_URL = Spilit_The_Path(string_URI, sd_Card_Path_URL);
+        string_URI = sd_Card_URL.toString();
+        sd_Card_Path_URL = Spilit_The_Path(string_URI, sd_Card_Path_URL);
 
         if (!isSelectSdRootDirectory(sd_Card_URL.toString()) || isSamePath(sd_Card_Path_URL)) {
-                CustomToast.ToastIt(getApplicationContext(), getResources().getString(R.string.errorMes));
-                return;
-            }
-            androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
-            androidSdCardPermission.setString_URI(string_URI);
+            CustomToast.ToastIt(getApplicationContext(), getResources().getString(R.string.errorMes));
+            return;
         }
+        androidSdCardPermission.setSd_Card_Path_URL(sd_Card_Path_URL);
+        androidSdCardPermission.setString_URI(string_URI);
+    }
 
 
     public boolean isSamePath(String sd_Card_Path_URL) {

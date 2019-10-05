@@ -29,6 +29,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
+import com.sudoajay.duplication_data.AdFolder.InterstitialAds;
 import com.sudoajay.duplication_data.BuildConfig;
 import com.sudoajay.duplication_data.Delete.DeleteData;
 import com.sudoajay.duplication_data.MainActivity;
@@ -71,6 +72,7 @@ public class ShowDuplicate extends AppCompatActivity {
     private List<String> unnecessaryList ;
     private ConstraintLayout nothingToShow_ConstraintsLayout;
     private ArrayList<String> Data;
+    private InterstitialAds interstitialAds;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -166,6 +168,7 @@ public class ShowDuplicate extends AppCompatActivity {
         });
         expandableListView.invalidate();
 
+        interstitialAds = new InterstitialAds(getApplicationContext(), 1);
     }
 
 
@@ -325,7 +328,7 @@ public class ShowDuplicate extends AppCompatActivity {
         button_Yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                OpenAds();
                 multiThreadingtask.execute();
 
                 dialog.dismiss();
@@ -338,6 +341,18 @@ public class ShowDuplicate extends AppCompatActivity {
             }
         });
         dialog.show();
+    }
+
+    public void OpenAds() {
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (interstitialAds.isLoaded())
+                    interstitialAds.getmInterstitialAd().show();
+            }
+        }, 3000);
     }
 
     public void SendBack() {

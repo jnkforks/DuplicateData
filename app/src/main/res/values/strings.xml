@@ -113,6 +113,8 @@
     <!--share app-->
     <string name="share_info">Hey check This App which help you to Delete Duplicate and Unnecessary Data - </string>
 
+    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/8691691433</string>
+
 
     <!--Foreground setting heading-->
     <string name="foreground_Setting_Text">Foreground Service</string>

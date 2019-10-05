@@ -1,22 +1,17 @@
 package com.sudoajay.duplication_data.Delete;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 
 import androidx.documentfile.provider.DocumentFile;
 
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
-import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
-import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
