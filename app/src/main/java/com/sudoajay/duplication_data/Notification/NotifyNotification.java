@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
 
 import com.sudoajay.duplication_data.MainActivity;
@@ -44,7 +45,6 @@ public class NotifyNotification {
      * <a href="https://developer.android.com/design/patterns/notifications.html">
      * Notification design guidelines</a> when doing so.
      *
-     * @see #cancel(Context)
      */
 
     // Constructor
@@ -151,21 +151,13 @@ public class NotifyNotification {
 
         // check if there ia data with empty
         // more and view button classification
-        notify(context, builder.build());
+        notify(builder.build());
     }
 
     @TargetApi(Build.VERSION_CODES.ECLAIR)
-    private void notify(final Context context, final Notification notification) {
+    private void notify(final Notification notification) {
 
         notificationManager.notify(NOTIFICATION_TAG, 0, notification);
-    }
-
-
-    @TargetApi(Build.VERSION_CODES.ECLAIR)
-    private static void cancel(final Context context) {
-        final NotificationManager nm = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.cancel(NOTIFICATION_TAG, 0);
     }
 
 

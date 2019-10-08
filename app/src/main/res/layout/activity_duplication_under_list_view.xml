@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/background_Color">
 
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +15,7 @@
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="3dp"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@color/noDuplicateFound"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -25,7 +26,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#fff"
             android:orientation="horizontal">
 
 
@@ -33,6 +33,7 @@
                 android:id="@+id/coverImageView"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:paddingStart="5dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -41,7 +42,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -58,46 +59,54 @@
                 <TextView
                     android:id="@+id/nameTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:paddingStart="2dp"
+                    android:paddingTop="10dp"
                     android:paddingEnd="2dp"
                     android:text=""
                     android:textColor="#000000"
                     android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.642"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
                     android:id="@+id/pathTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:ellipsize="none"
+                    android:maxLines="2"
                     android:text=""
                     android:textColor="#000"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_bias="0.34"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+                    app:layout_constraintVertical_bias="0.013" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
 
             <CheckBox
                 android:id="@+id/checkBoxView"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginEnd="@dimen/arrow_Image_View_margin_start"
+                android:layout_marginEnd="5dp"
+                android:checked="true"
                 android:focusable="false"
+                android:buttonTint="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

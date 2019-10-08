@@ -24,7 +24,6 @@ import com.sudoajay.duplication_data.R;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -37,8 +36,8 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
     private List<Integer> arrow_Image_Resource;
     private LinkedHashMap<Integer, List<Boolean>> checkBoxArray;
 
-    public ExpandableDuplicateListAdapter(Context context, List<String> list_Header, LinkedHashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource,
-                                          final LinkedHashMap<Integer, List<Boolean>> checkBoxArray) {
+    ExpandableDuplicateListAdapter(Context context, List<String> list_Header, LinkedHashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource,
+                                   final LinkedHashMap<Integer, List<Boolean>> checkBoxArray) {
         this.context = context;
         this.list_Header = list_Header;
         this.list_Header_Child = list_Header_Child;
@@ -64,7 +63,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return this.list_Header_Child.get(this.list_Header.get(groupPosition)).get(childPosition);
+        return Objects.requireNonNull(this.list_Header_Child.get(this.list_Header.get(groupPosition))).get(childPosition);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "InflateParams"})
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String headerTitle = (String) getGroup(groupPosition);
@@ -110,6 +109,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
@@ -155,7 +155,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public static long getFileSizeInBytes(String fileName) {
+    private static long getFileSizeInBytes(String fileName) {
         long ret = 0;
         File f = new File(fileName);
         if (f.exists()) {
@@ -163,20 +163,18 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
                 return f.length();
             } else if (f.isDirectory()) {
                 File[] contents = f.listFiles();
-                for (int i = 0; i < contents.length; i++) {
-                    if (contents[i].isFile()) {
-                        ret += contents[i].length();
-                    } else if (contents[i].isDirectory())
-                        ret += getFileSizeInBytes(contents[i].getPath());
+                for (File content : contents) {
+                    if (content.isFile()) {
+                        ret += content.length();
+                    } else if (content.isDirectory())
+                        ret += getFileSizeInBytes(content.getPath());
                 }
             }
-        } else {
-            ret = 0;
         }
         return ret;
     }
 
-    public String Convert_It(long size) {
+    private String Convert_It(long size) {
         if (size > (1024 * 1024 * 1024)) {
             // GB
             return Convert_To_Decimal((float) size / (1024 * 1024 * 1024)) + " GB";
@@ -191,7 +189,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
     }
 
-    public String Convert_To_Decimal(float value) {
+    private String Convert_To_Decimal(float value) {
         String size = value + "";
         if (value >= 1000) {
             return size.substring(0, 4);
@@ -207,36 +205,50 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
     }
 
-    public void Check_For_Extension(String path, ImageView imageView) {
+    private void Check_For_Extension(String path, ImageView imageView) {
         int i = path.lastIndexOf('.');
         String extension = "";
         if (i > 0) {
             extension = path.substring(i + 1);
         }
-        if (extension.equals("jpg") || extension.equals("mp4") || extension.equals("jpeg") || extension.equals("png")
-                || extension.equals("gif")|| extension.equals("webp")) {
-            // Images || Videos
-            Glide.with(context)
-                    .asBitmap()
-                    .load(Uri.fromFile(new File(path)))
-                    .into(imageView);
-        } else if (extension.equals("mp3") || extension.equals("m4a") || extension.equals("amr") || extension.equals("aac")) {
-            // Audiio
-            getAudioAlbumImageContentUri(imageView, path);
+        switch (extension) {
+            case "jpg":
+            case "mp4":
+            case "jpeg":
+            case "png":
+            case "gif":
+            case "webp":
+                // Images || Videos
+                Glide.with(context)
+                        .asBitmap()
+                        .load(Uri.fromFile(new File(path)))
+                        .into(imageView);
+                break;
+            case "mp3":
+            case "m4a":
+            case "amr":
+            case "aac":
+                // Audiio
+                getAudioAlbumImageContentUri(imageView, path);
 
-        } else if (extension.equals("pptx") || extension.equals("pdf")
-                || extension.equals("docx") || extension.equals("txt"))
-            imageView.setImageResource(R.drawable.document_icon);
-
-        else if (extension.equals("opus")) {
-            imageView.setImageResource(R.drawable.voice_icon);
-        }else{
-            imageView.setImageResource(R.drawable.file_icon);
+                break;
+            case "pptx":
+            case "pdf":
+            case "docx":
+            case "txt":
+                imageView.setImageResource(R.drawable.document_icon);
+                break;
+            case "opus":
+                imageView.setImageResource(R.drawable.voice_icon);
+                break;
+            default:
+                imageView.setImageResource(R.drawable.file_icon);
+                break;
         }
 
     }
 
-    public void getAudioAlbumImageContentUri(ImageView imageView, String filePath) {
+    private void getAudioAlbumImageContentUri(ImageView imageView, String filePath) {
         try {
             Uri audioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
             String selection = MediaStore.Audio.Media.DATA + "=? ";
@@ -269,8 +281,8 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         }
     }
 
-    public Bitmap get_Cover(long album_id) {
-        Bitmap artwork = null;
+    private Bitmap get_Cover(long album_id) {
+        Bitmap artwork;
         Bitmap resizedBitmap = null;
         try {
             Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
@@ -299,7 +311,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         return resizedBitmap;
     }
 
-    public LinkedHashMap<Integer, List<Boolean>> getCheckBoxArray() {
+    LinkedHashMap<Integer, List<Boolean>> getCheckBoxArray() {
         return checkBoxArray;
     }
 

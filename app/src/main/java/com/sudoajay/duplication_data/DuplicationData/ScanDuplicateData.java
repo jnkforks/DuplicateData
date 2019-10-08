@@ -1,5 +1,6 @@
 package com.sudoajay.duplication_data.DuplicationData;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import java.util.Objects;
 public class ScanDuplicateData {
     private List<File> getAllData = new LinkedList<>();
     private ArrayList<String> dataStore = new ArrayList<>();
+    @SuppressLint("StaticFieldLeak")
     private static Context context;
     private String external_Path_Url,whatsapp_Path;
 
@@ -93,7 +95,8 @@ public class ScanDuplicateData {
 
 
     }
-    public void WhatsappDatabase(File database_File){
+
+    private void WhatsappDatabase(File database_File) {
         try{
             List<File> files = new ArrayList<>(Arrays.asList(database_File.listFiles()));
             Convert_Into_Last_Modified(files);
@@ -103,12 +106,12 @@ public class ScanDuplicateData {
                 }
                 dataStore.add("And");
             }
-        }catch (Exception e){
+        } catch (Exception ignored) {
 
         }
     }
 
-    public void Convert_Into_Last_Modified(List<File> files){
+    private void Convert_Into_Last_Modified(List<File> files) {
         File temp_File;
         for (int i = 0 ; i < files.size();i++){
             for (int j = i ; j < files.size()-1;j++){
@@ -134,8 +137,8 @@ public class ScanDuplicateData {
         }
     }
 
-    public void CacheData(final String external_dir, final String sd_Card_dir, final int internal_Visible,
-                          final int external_Visible) {
+    private void CacheData(final String external_dir, final String sd_Card_dir, final int internal_Visible,
+                           final int external_Visible) {
 
         ArrayList<String> savePath = new ArrayList<>();
 
@@ -215,8 +218,8 @@ public class ScanDuplicateData {
     }
 
 
-    public String getMimeType(Uri uri) {
-        String mimeType = null;
+    private String getMimeType(Uri uri) {
+        String mimeType;
         if (Objects.equals(uri.getScheme(), ContentResolver.SCHEME_CONTENT)) {
             ContentResolver cr = context.getContentResolver();
             mimeType = cr.getType(uri);
@@ -234,7 +237,6 @@ public class ScanDuplicateData {
             try {
                 FileInputStream fileInput = new FileInputStream(child);
                 byte[] fileData = new byte[(int) child.length()];
-               int nouse = fileInput.read(fileData);
                 fileInput.close();
                 String uniqueFileHash = new BigInteger(1, messageDigest.digest(fileData)).toString(16);
                 List<String> list = lists.get(uniqueFileHash);
@@ -244,7 +246,7 @@ public class ScanDuplicateData {
                     lists.put(uniqueFileHash, list);
                 }
                 list.add(child.getAbsolutePath());
-            } catch (IOException e) {
+            } catch (IOException ignored) {
 
             }
         }

@@ -10,10 +10,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.sudoajay.duplication_data.R;
 
@@ -30,7 +31,7 @@ public class AndroidExternalStoragePermission {
     }
 
 
-    public void Storage_Permission_Granted() {
+    private void Storage_Permission_Granted() {
 
             if (Build.VERSION.SDK_INT >= 23) {
                 if (ContextCompat.checkSelfPermission(context,
@@ -67,7 +68,7 @@ public class AndroidExternalStoragePermission {
         }
     }
 
-    public void Call_Custom_Permission_Dailog() {
+    private void Call_Custom_Permission_Dailog() {
         final Dialog dialog = new Dialog(context);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.activity_custom_dialog_permission);

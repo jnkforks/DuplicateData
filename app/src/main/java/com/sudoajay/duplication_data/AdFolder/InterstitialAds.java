@@ -12,12 +12,10 @@ public class InterstitialAds {
 
     private InterstitialAd mInterstitialAd;
     private Context context;
-    private int type;
 
 
-    public InterstitialAds(final Context context, final int type) {
+    public InterstitialAds(final Context context) {
         this.context = context;
-        this.type = type;
         mInterstitialAd = newInterstitialAd();
         loadInterstitial();
     }

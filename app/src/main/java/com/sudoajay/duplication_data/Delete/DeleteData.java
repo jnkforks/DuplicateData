@@ -19,10 +19,8 @@ import java.util.Objects;
 public class DeleteData {
     private LinkedHashMap<String, List<String>> list_Header_Child, sdCardStore = new LinkedHashMap<>();
     private LinkedHashMap<Integer, List<Boolean>> checkBoxArray;
-    private SdCardPathSharedPreference sdCardPathSharedPreference;
     private DocumentFile sdCarddocumentFile;
     private String sdCardPath, sdCardUri;
-    private ShowDuplicate showDuplicate;
     private ShowDuplicate.MultiThreadingTask multiThreadingTask;
     private List<String> sdcard = new ArrayList<>(), pathStore = new ArrayList<>();
     private Boolean atBackground;
@@ -33,10 +31,9 @@ public class DeleteData {
         this.list_Header_Child = list_Header_Child;
         this.checkBoxArray = checkBoxArray;
         this.multiThreadingTask = multiThreadingTask;
-        this.showDuplicate = showDuplicate;
 
         // sd card path setup
-        sdCardPathSharedPreference = new SdCardPathSharedPreference(showDuplicate);
+        SdCardPathSharedPreference sdCardPathSharedPreference = new SdCardPathSharedPreference(showDuplicate);
         sdCardPath = sdCardPathSharedPreference.getSdCardPath();
         if (sdCardPathSharedPreference.getStringURI() != null) {
             sdCardUri = (sdCardPathSharedPreference.getStringURI());
@@ -82,7 +79,7 @@ public class DeleteData {
         DeleteTheDataFromExternalStorage();
     }
 
-    public void SeprateTheData(String path) {
+    private void SeprateTheData(String path) {
         if (path.contains(Environment.getExternalStorageDirectory().getAbsolutePath())) {
             DeleteTheDataFromInternalStorage(path);
             if(!atBackground) multiThreadingTask.onProgressUpdate();
@@ -91,14 +88,15 @@ public class DeleteData {
         }
 
     }
-    public static void DeleteTheDataFromInternalStorage(String path) {
+
+    private static void DeleteTheDataFromInternalStorage(String path) {
 
         File file = new File(path);
-        boolean isSuccesfull = file.delete();
+        file.delete();
         if (file.exists()) {
             try {
-                isSuccesfull = file.getCanonicalFile().delete();
-            } catch (IOException e) {
+                file.getCanonicalFile().delete();
+            } catch (IOException ignored) {
 
             }
         }
@@ -120,7 +118,7 @@ public class DeleteData {
         }
     }
 
-    public void DeleteTheDataFromExternalStorage() {
+    private void DeleteTheDataFromExternalStorage() {
         for (String getKey : sdCardStore.keySet()) {
             DocumentFile sdCardDocument = sdCarddocumentFile;
             if (sdCardDocument != null) {

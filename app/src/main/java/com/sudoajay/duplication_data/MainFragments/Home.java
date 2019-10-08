@@ -3,15 +3,16 @@ package com.sudoajay.duplication_data.MainFragments;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.sudoajay.duplication_data.MainActivity;
@@ -33,7 +34,6 @@ public class Home extends Fragment {
     private MainActivity main_navigation;
     private View layout;
     private CircularProgressBar circularProgressBarInternal, circularProgressBarExternal;
-    private final int animationDuration = 4000;
     private TextView textViewInternal2, textViewInternal3,
             textViewUsedSpaceSizeInternal, textViewInternal4, textViewInternal5,
             textViewUsedSpaceSizeExternal, textViewExternal2, textViewExternal4,
@@ -73,6 +73,7 @@ public class Home extends Fragment {
                 (ViewGroup) layout.findViewById(R.id.toastcustom));
 
         // custom progress bar
+        int animationDuration = 4000;
         circularProgressBarInternal.setProgressWithAnimation(Float.valueOf(storageInfo.getUsedInternalPercentage()), animationDuration); // Default duration = 1500ms
         circularProgressBarExternal.setProgressWithAnimation(Float.valueOf(storageInfo.getUsedExternalPercentage()), animationDuration);
 
@@ -227,7 +228,7 @@ public class Home extends Fragment {
         textViewExternal5.setText(usedExternalPercent + " % Free");
     }
 
-    public void Toast_It(String message) {
+    private void Toast_It(String message) {
         TextView toast_TextView = customToastLayout.findViewById(R.id.text);
         if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
             toast = new Toast(main_navigation.getApplicationContext());

@@ -53,7 +53,7 @@ public class WorkMangerTaskManager extends Worker {
 
 
         // Check for Date A Task
-        Date date = null;
+        Date date;
         try {
             date = dateFormat.parse(traceBackgroundService.getTaskA());
 

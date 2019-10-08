@@ -37,7 +37,7 @@ public class ForegroundDialog {
         }, 500);
     }
 
-    public void Call_Custom_Permission_Dailog() {
+    private void Call_Custom_Permission_Dailog() {
         final Dialog dialog = new Dialog(mContext);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.activity_custom_foreground_permission);
@@ -72,7 +72,7 @@ public class ForegroundDialog {
                     traceBackgroundService = new TraceBackgroundService(mContext);
                     traceBackgroundService.setForegroundServiceWorking(true);
 
-                    if (!isServiceRunningInForeground(mContext, Foreground.class)) {
+                    if (!isServiceRunningInForeground(mContext)) {
                         // call Foreground Thread();
                         Intent startIntent = new Intent(mContext, Foreground.class);
                         startIntent.putExtra("com.sudoajay.whatapp_media_mover_to_sdcard.ForegroundDialog"
@@ -124,11 +124,11 @@ public class ForegroundDialog {
         }
     }
 
-    public boolean isServiceRunningInForeground(Context context, Class<?> serviceClass) {
+    private boolean isServiceRunningInForeground(Context context) {
         try {
             ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
             for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-                if (serviceClass.getName().equals(service.service.getClassName())) {
+                if (Foreground.class.getName().equals(service.service.getClassName())) {
                     if (service.foreground) {
                         return true;
                     }
@@ -136,12 +136,11 @@ public class ForegroundDialog {
             }
             return false;
         } catch (Exception e) {
-            if (!ServicesWorking()) return true;
-            return false;
+            return !ServicesWorking();
         }
     }
 
-    public boolean ServicesWorking() {
+    private boolean ServicesWorking() {
         traceBackgroundService.isBackgroundWorking();
         return !traceBackgroundService.isBackgroundServiceWorking();
     }

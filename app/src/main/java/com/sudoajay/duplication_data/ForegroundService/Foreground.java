@@ -21,7 +21,6 @@ import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess2;
 import com.sudoajay.duplication_data.Database_Classes.BackgroundTimerDataBase;
 import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.R;
-import com.sudoajay.duplication_data.Receive_Boot_Completed.ForegroundServiceBoot;
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService;
 
 import java.text.DateFormat;
@@ -178,11 +177,6 @@ public class Foreground extends Service {
         super.onTaskRemoved(rootIntent);
     }
 
-    private void startForeground() {
-        Intent serviceIntent = new Intent(getApplicationContext(), ForegroundServiceBoot.class);
-        serviceIntent.setAction("RebootReceiver");
-        getApplication().startService(serviceIntent);
-    }
 
     @Nullable
     @Override
@@ -212,9 +206,7 @@ public class Foreground extends Service {
                     }
                 }
             }
-            if (format.format(todayDate).equals(format.format(curDate)))
-                return true;
-            return false;
+            return format.format(todayDate).equals(format.format(curDate));
         } catch (ParseException e) {
             return false;
         }
@@ -290,7 +282,7 @@ public class Foreground extends Service {
                             break;
                     }
 
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         }

@@ -16,7 +16,6 @@ import java.lang.reflect.Method;
 @SuppressLint("NewApi")
 public final class SdCardPath {
 
-    static String TAG = "TAG";
     private static final String PRIMARY_VOLUME_NAME = "primary";
 
     @Nullable

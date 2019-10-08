@@ -8,16 +8,12 @@ import java.text.DecimalFormat;
 
 public class StorageInfo {
 
-    private String sd_Card_Path_URL,availableInternalPercent,usedInternalPercent,
-            availableExternalPercent,usedExternalPercent;
+    private String sd_Card_Path_URL;
+    private String availableInternalPercent;
 
     private long internal_Available_Size , internal_Total_Size
             , external_Available_Size , external_Total_Size;
 
-    // default Constructor
-    public StorageInfo(){
-
-    }
 
     // get sd card path url constructor
     public StorageInfo(String sd_Card_Path_URL ){
@@ -28,11 +24,12 @@ public class StorageInfo {
     }
 
 
-    public  boolean externalMemoryAvailable() {
+    private boolean externalMemoryAvailable() {
 
         return new File(sd_Card_Path_URL).exists();
     }
-    public  void getAvailableInternalMemorySize() {
+
+    private void getAvailableInternalMemorySize() {
         try{
         File path = Environment.getExternalStorageDirectory();
         StatFs stat = new StatFs(path.getPath());
@@ -64,11 +61,11 @@ public class StorageInfo {
         return availableInternalPercent = GetDecimal2Round(((double)(internal_Available_Size*100)/internal_Total_Size));
     }
     public String getUsedInternalPercentage(){
-        return usedInternalPercent = GetDecimal2Round((((double)(internal_Total_Size - internal_Available_Size)*100)/internal_Total_Size));
+        return GetDecimal2Round((((double) (internal_Total_Size - internal_Available_Size) * 100) / internal_Total_Size));
     }
 
 
-    public  void getAvailableExternalMemorySize() {
+    private void getAvailableExternalMemorySize() {
         if (externalMemoryAvailable()) {
             StatFs stat = new StatFs(sd_Card_Path_URL);
             long blockSize = stat.getBlockSizeLong();
@@ -102,10 +99,10 @@ public class StorageInfo {
     }
 
     public String getAvailableExternalPercentage(){
-        return availableExternalPercent = GetDecimal2Round(((double)(external_Available_Size*100)/external_Total_Size));
+        return GetDecimal2Round(((double) (external_Available_Size * 100) / external_Total_Size));
     }
     public String getUsedExternalPercentage(){
-        return usedExternalPercent = GetDecimal2Round((((double)(external_Total_Size-external_Available_Size)*100)/external_Total_Size));
+        return GetDecimal2Round((((double) (external_Total_Size - external_Available_Size) * 100) / external_Total_Size));
     }
 
     public static   String Convert_It(long size) {
@@ -151,7 +148,7 @@ public class StorageInfo {
 //        return ret;
 //    }
 
-    public static  String GetDecimal2Round(double time){
+    private static String GetDecimal2Round(double time) {
         DecimalFormat df = new DecimalFormat("#.#");
         return Double.valueOf(df.format(time)).toString();
     }
@@ -176,7 +173,4 @@ public class StorageInfo {
         return availableInternalPercent;
     }
 
-    public String getUsedInternalPercent() {
-        return usedInternalPercent;
-    }
 }

@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +23,6 @@ import androidx.fragment.app.DialogFragment;
 import com.dpro.widgets.WeekdaysPicker;
 import com.sudoajay.duplication_data.Database_Classes.BackgroundTimerDataBase;
 import com.sudoajay.duplication_data.ForegroundService.ForegroundDialog;
-import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.R;
 import com.sudoajay.duplication_data.Toast.CustomToast;
 import com.sudoajay.duplication_data.sharedPreferences.BackgroundProcess;
@@ -47,16 +45,11 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
     private EditText endlesslyEditText;
     private String getSelectedEndlesslyDate = null;
     private BackgroundTimerDataBase backgroundTimerDataBase;
-    private MainActivity mainActivity;
 
     public CustomDialogForBackgroundTimer() {
 
     }
 
-    @SuppressLint("ValidFragment")
-    public CustomDialogForBackgroundTimer(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -294,7 +287,7 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
 
     }
 
-    public static int CountDay(int day, List<Integer> week_Days) {
+    private static int CountDay(int day, List<Integer> week_Days) {
         int temp = day, count = 0;
         do {
             count++;
@@ -339,7 +332,7 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
         weekdaysPicker.setSelectedDays(list);
     }
 
-    public String get_Repeat() {
+    private String get_Repeat() {
         if (repeatedlySpinner.getSelectedIndex() == 3) {
             List<Integer> weekday = weekdaysPicker.getSelectedDays();
             StringBuilder join = new StringBuilder();
@@ -365,7 +358,6 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
         DisplayMetrics dm = new DisplayMetrics();
         Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
-        int height = dm.heightPixels;
         // Travel up the tree until fail, modifying the LayoutParams
         do {
             // Get the parent
@@ -392,12 +384,12 @@ public class CustomDialogForBackgroundTimer extends DialogFragment implements Ad
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
 
         super.onDismiss(dialog);
     }
 
-    public void Dissmiss() {
+    private void Dissmiss() {
 
         this.dismiss();
     }

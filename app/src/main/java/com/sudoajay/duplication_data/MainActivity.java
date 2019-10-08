@@ -3,7 +3,6 @@ package com.sudoajay.duplication_data;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,11 +22,9 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.google.android.material.navigation.NavigationView;
-import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerProcess2;
 import com.sudoajay.duplication_data.BackgroundProcess.WorkMangerTaskManager;
 import com.sudoajay.duplication_data.Custom_Dialog.CustomDialogForBackgroundTimer;
 import com.sudoajay.duplication_data.Custom_Dialog.CustomDialogForForegroundService;
-import com.sudoajay.duplication_data.Database_Classes.BackgroundTimerDataBase;
 import com.sudoajay.duplication_data.ForegroundService.Foreground;
 import com.sudoajay.duplication_data.ForegroundService.ForegroundDialog;
 import com.sudoajay.duplication_data.MainFragments.Home;
@@ -36,16 +33,9 @@ import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.SdCard.SdCardPath;
 import com.sudoajay.duplication_data.Toast.CustomToast;
-import com.sudoajay.duplication_data.sharedPreferences.PrefManager;
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -203,7 +193,7 @@ public class MainActivity extends AppCompatActivity
         // local variable
         super.onActivityResult(requestCode, resultCode, resultData);
         Uri sd_Card_URL;
-        String sd_Card_Path_URL, string_URI = null;
+        String sd_Card_Path_URL, string_URI;
 
         if (resultCode != RESULT_OK)
             return;
@@ -213,6 +203,7 @@ public class MainActivity extends AppCompatActivity
         getContentResolver().takePersistableUriPermission(sd_Card_URL, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, MainActivity.this);
         string_URI = sd_Card_URL.toString();
+        assert sd_Card_Path_URL != null;
         sd_Card_Path_URL = Spilit_The_Path(string_URI, sd_Card_Path_URL);
 
         if (!isSelectSdRootDirectory(sd_Card_URL.toString()) || isSamePath(sd_Card_Path_URL)) {
@@ -229,8 +220,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private boolean isSelectSdRootDirectory(String path) {
-        if (path.substring(path.length() - 3).equals("%3A")) return true;
-        return false;
+        return path.substring(path.length() - 3).equals("%3A");
 
     }
     public String Spilit_The_Path(final String url,final String path) {
@@ -282,7 +272,6 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
 
@@ -290,7 +279,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -354,7 +342,7 @@ public class MainActivity extends AppCompatActivity
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         CustomDialogForBackgroundTimer customDialogForBackgroundTimer
-                = new CustomDialogForBackgroundTimer(this);
+                = new CustomDialogForBackgroundTimer();
         customDialogForBackgroundTimer.show(ft, "dialog");
     }
     public void CallCustomDailogForeground() {
@@ -406,8 +394,7 @@ public class MainActivity extends AppCompatActivity
             }
             return false;
         } catch (Exception e) {
-            if (!ServicesWorking()) return true;
-            return false;
+            return !ServicesWorking();
         }
     }
 

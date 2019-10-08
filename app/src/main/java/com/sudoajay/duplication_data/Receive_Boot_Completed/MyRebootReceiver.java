@@ -1,5 +1,6 @@
 package com.sudoajay.duplication_data.Receive_Boot_Completed;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService;
 
 public class MyRebootReceiver extends BroadcastReceiver {
 
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
 

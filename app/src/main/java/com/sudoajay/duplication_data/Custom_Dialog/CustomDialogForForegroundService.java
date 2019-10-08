@@ -159,7 +159,6 @@ public class CustomDialogForForegroundService extends DialogFragment implements 
         DisplayMetrics dm = new DisplayMetrics();
         Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
-        int height = dm.heightPixels;
         // Travel up the tree until fail, modifying the LayoutParams
         do {
             // Get the parent
@@ -186,26 +185,25 @@ public class CustomDialogForForegroundService extends DialogFragment implements 
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
 
         super.onDismiss(dialog);
     }
 
-    public void Dissmiss() {
+    private void Dissmiss() {
 
         this.dismiss();
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int position1 = position;
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-    public  boolean isServiceRunningInForeground(Context context, Class<?> serviceClass) {
+    private boolean isServiceRunningInForeground(Context context, Class<?> serviceClass) {
         try {
             if(traceBackgroundService.isForegroundServiceWorking()){
             ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -219,12 +217,11 @@ public class CustomDialogForForegroundService extends DialogFragment implements 
         }
             return false;
         }catch (Exception e){
-            if (!ServicesWorking()) return true;
-            return false;
+            return !ServicesWorking();
         }
     }
 
-    public  boolean ServicesWorking() {
+    private boolean ServicesWorking() {
         traceBackgroundService.isBackgroundWorking();
         return !traceBackgroundService.isBackgroundServiceWorking();
     }

@@ -6,11 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.MainActivity;
+import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.SdCard.SdCardDialog;
 import com.sudoajay.duplication_data.Toast.CustomToast;
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference;
@@ -76,7 +77,7 @@ public class AndroidSdCardPermission {
         }
     }
 
-    public void Call_Custom_Dailog_Changes() {
+    private void Call_Custom_Dailog_Changes() {
         try {
             FragmentTransaction ft = (((FragmentActivity) activity)).getSupportFragmentManager().beginTransaction();
             SdCardDialog sd_card_dialog = new SdCardDialog(this);
@@ -91,7 +92,7 @@ public class AndroidSdCardPermission {
                 new File(sd_Card_Path_URL).exists() && new File(sd_Card_Path_URL).listFiles() != null);
     }
 
-    public void Grab() {
+    private void Grab() {
         // gran the data from shared preference
         sdCardPathSharedPreference = new SdCardPathSharedPreference(context);
         try {

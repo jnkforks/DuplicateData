@@ -29,7 +29,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
-import com.sudoajay.duplication_data.AdFolder.InterstitialAds;
 import com.sudoajay.duplication_data.BuildConfig;
 import com.sudoajay.duplication_data.Delete.DeleteData;
 import com.sudoajay.duplication_data.MainActivity;
@@ -42,7 +41,6 @@ import com.sudoajay.duplication_data.Toast.CustomToast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +49,6 @@ import java.util.Objects;
 import dmax.dialog.SpotsDialog;
 
 public class ShowDuplicate extends AppCompatActivity {
-    private Toolbar toolbar;
     private ExpandableListView expandableListView;
     private List<Integer> arrow_Image_Resource = new ArrayList<>();
     private ExpandableDuplicateListAdapter expandableduplicatelistadapter;
@@ -72,7 +69,7 @@ public class ShowDuplicate extends AppCompatActivity {
     private List<String> unnecessaryList ;
     private ConstraintLayout nothingToShow_ConstraintsLayout;
     private ArrayList<String> Data;
-    private InterstitialAds interstitialAds;
+//    private InterstitialAds interstitialAds;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -82,7 +79,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
         setContentView(R.layout.activity_show_duplicate);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         reference();
@@ -91,7 +88,7 @@ public class ShowDuplicate extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         assert bundle != null;
         Data = bundle.getStringArrayList("Duplication_Class_Data");
-        int i = 0;
+        int i ;
         assert Data != null;
         if (Data.isEmpty()) {
             deleteDuplicateButton.setVisibility(View.INVISIBLE);
@@ -168,7 +165,7 @@ public class ShowDuplicate extends AppCompatActivity {
         });
         expandableListView.invalidate();
 
-        interstitialAds = new InterstitialAds(getApplicationContext(), 1);
+//        interstitialAds = new InterstitialAds(getApplicationContext());
     }
 
 
@@ -328,7 +325,7 @@ public class ShowDuplicate extends AppCompatActivity {
         button_Yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OpenAds();
+//                OpenAds();
                 multiThreadingtask.execute();
 
                 dialog.dismiss();
@@ -343,17 +340,17 @@ public class ShowDuplicate extends AppCompatActivity {
         dialog.show();
     }
 
-    public void OpenAds() {
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (interstitialAds.isLoaded())
-                    interstitialAds.getmInterstitialAd().show();
-            }
-        }, 3000);
-    }
+//    public void OpenAds() {
+//
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (interstitialAds.isLoaded())
+//                    interstitialAds.getmInterstitialAd().show();
+//            }
+//        }, 3000);
+//    }
 
     public void SendBack() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);

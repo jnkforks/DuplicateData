@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +15,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.sudoajay.duplication_data.DuplicationData.ScanDuplicateData;
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
@@ -182,7 +183,7 @@ public class Scan extends Fragment {
                 StorageInfo.Convert_It(totalSizeLong));
     }
 
-    public void Toast_It(String message) {
+    private void Toast_It(String message) {
         TextView toast_TextView = customToastLayout.findViewById(R.id.text);
         if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
             toast = new Toast(main_navigation.getApplicationContext());
@@ -201,7 +202,7 @@ public class Scan extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // local variable
         Uri sd_Card_URL ;
-        String sd_Card_Path_URL, string_URI = null;
+        String sd_Card_Path_URL, string_URI;
 
         if (resultCode != Activity.RESULT_OK)
             return;
@@ -212,7 +213,8 @@ public class Scan extends Fragment {
         sd_Card_Path_URL = SdCardPath.getFullPathFromTreeUri(sd_Card_URL, main_navigation);
 
         string_URI = sd_Card_URL.toString();
-            sd_Card_Path_URL = Spilit_The_Path(string_URI, sd_Card_Path_URL);
+        assert sd_Card_Path_URL != null;
+        sd_Card_Path_URL = Spilit_The_Path(string_URI, sd_Card_Path_URL);
 
         if (!isSelectSdRootDirectory(sd_Card_URL.toString()) || isSamePath(sd_Card_Path_URL)) {
                 CustomToast.ToastIt(getContext(), getResources().getString(R.string.errorMes));
@@ -223,17 +225,17 @@ public class Scan extends Fragment {
 
 
     }
-    public boolean isSamePath(String sd_Card_Path_URL) {
+
+    private boolean isSamePath(String sd_Card_Path_URL) {
         return androidExternalStoragePermission.getExternal_Path().equals(sd_Card_Path_URL);
     }
 
     private boolean isSelectSdRootDirectory(String path) {
-        if (path.substring(path.length() - 3).equals("%3A")) return true;
-        return false;
+        return path.substring(path.length() - 3).equals("%3A");
 
     }
 
-    public String Spilit_The_Path(final String url, final String path) {
+    private String Spilit_The_Path(final String url, final String path) {
         String[] spilt = url.split("%3A");
         String[] getPaths = spilt[0].split("/");
         String[] paths = path.split(getPaths[getPaths.length - 1]);
