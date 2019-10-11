@@ -22,9 +22,6 @@
             android:id="@+id/nav_Foreground_Setting"
             android:icon="@drawable/foreground_icon"
             android:title="@string/nav_Foreground_Setting" />
-    </group>
-
-    <group android:id="@+id/grp1" android:checkableBehavior="single"  >
 
         <item
             android:id="@+id/nav_Share"
@@ -35,11 +32,22 @@
             android:icon="@drawable/rate_icon"
             android:title="@string/nav_rate_Us_Item" />
 
-        <item
-            android:id="@+id/nav_Contact_Me"
-            android:icon="@drawable/contact_icon"
-            android:title="@string/nav_contact_Item" />
 
     </group>
 
+    <group
+        android:id="@+id/grp1"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_Send_Feedback"
+            android:icon="@drawable/send_feedback_icon"
+            android:title="@string/nav_Send_Feedback" />
+
+        <item
+            android:id="@+id/nav_Help"
+            android:icon="@drawable/help_icon"
+            android:title="@string/nav_Help" />
+
+    </group>
 </menu>

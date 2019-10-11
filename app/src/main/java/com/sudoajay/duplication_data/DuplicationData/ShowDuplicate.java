@@ -35,7 +35,6 @@ import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.Notification.NotifyNotification;
 import com.sudoajay.duplication_data.Permission.NotificationPermissionCheck;
 import com.sudoajay.duplication_data.R;
-import com.sudoajay.duplication_data.StorageStats.StorageInfo;
 import com.sudoajay.duplication_data.Toast.CustomToast;
 
 import java.io.File;
@@ -112,7 +111,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
         }
 
-        deleteDuplicateButton.setText("Delete (" + StorageInfo.Convert_It(total_Size) + ")");
+        deleteDuplicateButton.setText("Delete ");
         // Listview Group click listener
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
@@ -374,7 +373,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
             alertDialog.show();
             SendBack();
-            CustomToast.ToastIt(getApplicationContext(), "Deletion");
+            CustomToast.ToastIt(getApplicationContext(), "Progress Shown In Notification Bar");
 
             totalCount =0 ;
             for (Map.Entry<Integer, List<Boolean>> entry : expandableduplicatelistadapter.getCheckBoxArray().entrySet()) {
@@ -452,8 +451,8 @@ public class ShowDuplicate extends AppCompatActivity {
             public void run() {
                 notificationManager.cancel(1);
                 NotifyNotification notifyNotification = new NotifyNotification(getApplicationContext());
-                notifyNotification.notify("You Have Saved " + Convert_It(total_Size) + " Of Data ", getResources().getString(R.string.delete_Done_title));
-                CustomToast.ToastIt(getApplicationContext(), "Successfully Data Deleted");
+                notifyNotification.notify("Successfully Duplicate Data Deleted", getResources().getString(R.string.delete_Done_title));
+                CustomToast.ToastIt(getApplicationContext(), "Now Your Phone Run Faster");
 
             }
         }, 2000);

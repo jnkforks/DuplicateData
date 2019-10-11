@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_Rate_Us) {
             Rate_Us();
 
-        } else if (id == R.id.nav_Contact_Me) {
+        } else if (id == R.id.nav_Send_Feedback) {
             Open_Email();
         }
         Replace_Fragments();

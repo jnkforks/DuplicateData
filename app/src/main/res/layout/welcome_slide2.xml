@@ -39,7 +39,7 @@
             android:text="@string/slide_2_desc"
             android:textAlignment="center"
             android:textColor="#be000000"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 
