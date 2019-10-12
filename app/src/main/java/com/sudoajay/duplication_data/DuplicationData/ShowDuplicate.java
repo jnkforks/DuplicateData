@@ -99,7 +99,7 @@ public class ShowDuplicate extends AppCompatActivity {
             OnRefresh(true);
         }
 
-        expandableduplicatelistadapter = new ExpandableDuplicateListAdapter(this, list_Header, list_Header_Child, arrow_Image_Resource
+        expandableduplicatelistadapter = new ExpandableDuplicateListAdapter(ShowDuplicate.this, list_Header, list_Header_Child, arrow_Image_Resource
                 , checkBoxArray);
         expandableListView.setAdapter(expandableduplicatelistadapter);
 
@@ -111,7 +111,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
         }
 
-        deleteDuplicateButton.setText("Delete ");
+
         // Listview Group click listener
         expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
@@ -163,6 +163,8 @@ public class ShowDuplicate extends AppCompatActivity {
             }
         });
         expandableListView.invalidate();
+
+        deleteDuplicateButton.setText("Delete (" + Convert_It(total_Size) + ")");
 
 //        interstitialAds = new InterstitialAds(getApplicationContext());
     }
@@ -451,8 +453,8 @@ public class ShowDuplicate extends AppCompatActivity {
             public void run() {
                 notificationManager.cancel(1);
                 NotifyNotification notifyNotification = new NotifyNotification(getApplicationContext());
-                notifyNotification.notify("Successfully Duplicate Data Deleted", getResources().getString(R.string.delete_Done_title));
-                CustomToast.ToastIt(getApplicationContext(), "Now Your Phone Run Faster");
+                notifyNotification.notify("You Have Saved " + Convert_It(total_Size) + " Of Data ", getResources().getString(R.string.delete_Done_title));
+                CustomToast.ToastIt(getApplicationContext(), "Successfully Duplicate Data Deleted");
 
             }
         }, 2000);
@@ -520,5 +522,13 @@ public class ShowDuplicate extends AppCompatActivity {
         startActivity(Intent.createChooser(i, "Share via"));
     }
 
-
+    @SuppressLint("SetTextI18n")
+    public void setTotal_Size(final String type, final long size) {
+        if (type.equals("add")) {
+            total_Size += size;
+        } else {
+            total_Size -= size;
+        }
+        deleteDuplicateButton.setText("Delete (" + Convert_It(total_Size) + ")");
+    }
 }

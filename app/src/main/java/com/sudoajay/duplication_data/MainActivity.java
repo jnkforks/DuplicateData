@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -307,6 +308,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_Send_Feedback) {
             Open_Email();
+        }else if(id == R.id.nav_Help){
+            Toast.makeText(getApplicationContext(),"Coming Soon",Toast.LENGTH_LONG).show();
         }
         Replace_Fragments();
 

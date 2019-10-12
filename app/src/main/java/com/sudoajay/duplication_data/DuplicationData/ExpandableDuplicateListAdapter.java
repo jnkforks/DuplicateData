@@ -35,10 +35,12 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
     private LinkedHashMap<String, List<String>> list_Header_Child;
     private List<Integer> arrow_Image_Resource;
     private LinkedHashMap<Integer, List<Boolean>> checkBoxArray;
+    private ShowDuplicate showDuplicate;
 
-    ExpandableDuplicateListAdapter(Context context, List<String> list_Header, LinkedHashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource,
+    ExpandableDuplicateListAdapter(final ShowDuplicate showDuplicate, List<String> list_Header, LinkedHashMap<String, List<String>> list_Header_Child, List<Integer> arrow_Image_Resource,
                                    final LinkedHashMap<Integer, List<Boolean>> checkBoxArray) {
-        this.context = context;
+        this.showDuplicate = showDuplicate;
+        this.context = showDuplicate.getApplicationContext();
         this.list_Header = list_Header;
         this.list_Header_Child = list_Header_Child;
         this.arrow_Image_Resource = arrow_Image_Resource;
@@ -88,6 +90,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infaltInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert infaltInflater != null;
             convertView = infaltInflater.inflate(R.layout.activity_duplication_list_view, null);
         }
         ImageView arrow_Image_View = convertView.findViewById(R.id.arrow_Image_View);
@@ -119,6 +122,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infaltInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert infaltInflater != null;
             convertView = infaltInflater.inflate(R.layout.activity_duplication_under_list_view, null);
         }
         final TextView nameTextView = convertView.findViewById(R.id.nameTextView);
@@ -137,10 +141,12 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
                 if (!checkBoxView.isChecked()) {
                     checkBoxView.setChecked(false);
                     Objects.requireNonNull(checkBoxArray.get(groupPosition)).set(childPosition, false);
+                    showDuplicate.setTotal_Size("sub", new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)).length());
 
                 } else {
                     checkBoxView.setChecked(true);
                     Objects.requireNonNull(checkBoxArray.get(groupPosition)).set(childPosition, true);
+                    showDuplicate.setTotal_Size("add", new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)).length());
                 }
             }
         });
@@ -163,7 +169,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
                 return f.length();
             } else if (f.isDirectory()) {
                 File[] contents = f.listFiles();
-                for (File content : contents) {
+                for (File content : Objects.requireNonNull(contents)) {
                     if (content.isFile()) {
                         ret += content.length();
                     } else if (content.isDirectory())
@@ -277,7 +283,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
                 cursor.close();
             }
         } catch (Exception e) {
-            Log.e("Exception", e.getMessage());
+            Log.e("Exception", Objects.requireNonNull(e.getMessage()));
         }
     }
 
