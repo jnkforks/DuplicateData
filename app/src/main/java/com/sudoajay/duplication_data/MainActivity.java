@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private AndroidSdCardPermission androidSdCardPermission;
     private AndroidExternalStoragePermission androidExternalStoragePermission;
-    private final String rating_link = "https://play.google.com/store/apps/details?id=com.sudoajay.whatsapp_media_mover";
+    private final String rating_link = "https://play.google.com/store/apps/details?id=com.sudoajay.duplication_data";
     private TraceBackgroundService traceBackgroundService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
