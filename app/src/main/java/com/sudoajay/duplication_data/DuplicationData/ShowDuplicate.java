@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -493,6 +494,13 @@ public class ShowDuplicate extends AppCompatActivity {
         String title = this.getString(R.string.duplicate_title); // Default Channel
         NotificationCompat.Builder mBuilder;
 
+        Intent intent;
+
+        // setup intent and passing value
+        intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("passing", "DuplicateData");
+
+
         contentView = new RemoteViews(getPackageName(), R.layout.activity_custom_notification);
         contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher);
         contentView.setTextViewText(R.id.title, "Deletion...");
@@ -519,6 +527,13 @@ public class ShowDuplicate extends AppCompatActivity {
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .setLights(Color.parseColor("#075e54"), 3000, 3000);
+
+        mBuilder.setContentIntent(
+                PendingIntent.getActivity(
+                        getApplicationContext(),
+                        0,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT));
 
         notification = mBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
