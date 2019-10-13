@@ -98,7 +98,7 @@ public class ScanDuplicateData {
 
     private void WhatsappDatabase(File database_File) {
         try{
-            List<File> files = new ArrayList<>(Arrays.asList(database_File.listFiles()));
+            List<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(database_File.listFiles())));
             Convert_Into_Last_Modified(files);
             if (files.size() > 1) {
                 for (int i = files.size() - 1; i >= 1; i--) {
@@ -129,7 +129,7 @@ public class ScanDuplicateData {
 
     private void DigDeep(final String folder){
         File[] files = new File(folder).listFiles();
-        if (files.length != 0) {
+        if (Objects.requireNonNull(files).length != 0) {
             for (File data : files) {
                 dataStore.add(data.getAbsolutePath());
             }
@@ -156,7 +156,7 @@ public class ScanDuplicateData {
                     for (File file : filesList) {
                         if (file.isDirectory()) {
                             if (new File(file.getAbsolutePath() + "/cache/").exists()) {
-                                SaveCacheFiles(new File(file.getAbsolutePath() + "/cache/").listFiles());
+                                SaveCacheFiles(Objects.requireNonNull(new File(file.getAbsolutePath() + "/cache/").listFiles()));
                             }
 
                         }
@@ -171,7 +171,7 @@ public class ScanDuplicateData {
     private void SaveCacheFiles(final File[] file) {
         for (File getFile : file) {
             if (getFile.isDirectory()) {
-                SaveCacheFiles(getFile.listFiles());
+                SaveCacheFiles(Objects.requireNonNull(getFile.listFiles()));
             } else {
                 dataStore.add(getFile.getAbsolutePath());
             }
@@ -253,7 +253,7 @@ public class ScanDuplicateData {
     }
 
     private void Get_All_Path(File directory) {
-        for (File child : directory.listFiles()) {
+        for (File child : Objects.requireNonNull(directory.listFiles())) {
             if (child.isDirectory()) {
                 Get_All_Path(child);
             } else {
@@ -263,7 +263,7 @@ public class ScanDuplicateData {
         }
     }
 
-    public ArrayList<String> getList() {
+    public  ArrayList<String> getList() {
         return dataStore;
     }
 

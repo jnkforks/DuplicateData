@@ -258,14 +258,13 @@ public class Scan extends Fragment {
 
             alertDialog.show();
 
-
-
             // create object
             scanDuplicateData = new ScanDuplicateData(getContext());
 
             super.onPreExecute();
         }
 
+        @SuppressLint("WrongThread")
         @Override
         protected String doInBackground(String... strings) {
             scanDuplicateData.Duplication(androidExternalStoragePermission.getExternal_Path(),
@@ -284,8 +283,11 @@ public class Scan extends Fragment {
         protected void onPostExecute(String s) {
             alertDialog.dismiss();
 
+//            ShowDuplicate.Data = ScanDuplicateData.getList();
             Intent intent = new Intent(main_navigation, ShowDuplicate.class);
-            intent.putExtra("Duplication_Class_Data", scanDuplicateData.getList());
+            // To speed things up :)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            ShowDuplicate.DataHolder.setData(scanDuplicateData.getList());
             startActivity(intent);
             super.onPostExecute(s);
 

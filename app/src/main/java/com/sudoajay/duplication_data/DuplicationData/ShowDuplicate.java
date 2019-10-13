@@ -67,8 +67,31 @@ public class ShowDuplicate extends AppCompatActivity {
     private NotificationManager notificationManager;
     private List<String> unnecessaryList ;
     private ConstraintLayout nothingToShow_ConstraintsLayout;
-    private ArrayList<String> Data;
+    public  ArrayList<String> Data;
 //    private InterstitialAds interstitialAds;
+
+
+    public enum DataHolder {
+        INSTANCE;
+
+        private ArrayList<String> mObjectList;
+
+        public static boolean hasData() {
+            return INSTANCE.mObjectList != null;
+        }
+
+        public static void setData(final ArrayList<String> objectList) {
+            INSTANCE.mObjectList = objectList;
+        }
+
+        public static ArrayList<String> getData() {
+            final ArrayList<String> retList = INSTANCE.mObjectList;
+            INSTANCE.mObjectList = null;
+            return retList;
+        }
+    }
+
+
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -83,10 +106,14 @@ public class ShowDuplicate extends AppCompatActivity {
 
         reference();
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        assert bundle != null;
-        Data = bundle.getStringArrayList("Duplication_Class_Data");
+
+        // And we retrieve large data from enum
+        if (DataHolder.hasData()) {
+            Data = DataHolder.getData();
+        }
+//        Bundle bundle = intent.getExtras();
+//        assert bundle != null;
+//        Data = bundle.getStringArrayList("Duplication_Class_Data");
         int i ;
         assert Data != null;
         if (Data.isEmpty()) {
