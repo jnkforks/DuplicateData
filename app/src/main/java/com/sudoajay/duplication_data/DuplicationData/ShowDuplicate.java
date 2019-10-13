@@ -505,7 +505,7 @@ public class ShowDuplicate extends AppCompatActivity {
             notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_LOW;
             assert notificationManager != null;
             NotificationChannel mChannel = notificationManager.getNotificationChannel(id);
             if (mChannel == null) {
