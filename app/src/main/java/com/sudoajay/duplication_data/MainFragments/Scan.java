@@ -2,10 +2,8 @@ package com.sudoajay.duplication_data.MainFragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.sudoajay.duplication_data.DuplicationData.ScanDuplicateData;
 import com.sudoajay.duplication_data.DuplicationData.ShowDuplicate;
 import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
@@ -29,7 +26,7 @@ import com.sudoajay.duplication_data.SdCard.SdCardPath;
 import com.sudoajay.duplication_data.StorageStats.StorageInfo;
 import com.sudoajay.duplication_data.Toast.CustomToast;
 
-import dmax.dialog.SpotsDialog;
+
 
 
 /**
@@ -108,8 +105,7 @@ public class Scan extends Fragment {
                     Toast_It("You Supposed To Select Something");
                 else {
                     try {
-                        MultiThreadingTask multiThreadingTask = new MultiThreadingTask();
-                        multiThreadingTask.execute();
+                        SendForward();
                     } catch (Exception ignored) {
                     }
 
@@ -241,58 +237,13 @@ public class Scan extends Fragment {
         String[] paths = path.split(getPaths[getPaths.length - 1]);
         return paths[0] + getPaths[getPaths.length - 1];
     }
-    @SuppressLint("StaticFieldLeak")
-    public class MultiThreadingTask extends AsyncTask<String, String, String> {
-
-        private AlertDialog alertDialog;
-        private ScanDuplicateData scanDuplicateData;
-
-        @Override
-        protected void onPreExecute() {
-            alertDialog = new SpotsDialog.Builder()
-                    .setContext(main_navigation)
-                    .setMessage("Scanning...")
-                    .setCancelable(false)
-                    .setTheme(R.style.Custom)
-                    .build();
-
-            alertDialog.show();
-
-            // create object
-            scanDuplicateData = new ScanDuplicateData(getContext());
-
-            super.onPreExecute();
-        }
-
-        @SuppressLint("WrongThread")
-        @Override
-        protected String doInBackground(String... strings) {
-            scanDuplicateData.Duplication(androidExternalStoragePermission.getExternal_Path(),
-                    androidSdCardPermission.getSd_Card_Path_URL(),
-                    internal_Check.getVisibility(), external_Check.getVisibility());
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            alertDialog.dismiss();
-
-//            ShowDuplicate.Data = ScanDuplicateData.getList();
-            Intent intent = new Intent(main_navigation, ShowDuplicate.class);
-            // To speed things up :)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            ShowDuplicate.DataHolder.setData(scanDuplicateData.getList());
-            startActivity(intent);
-            super.onPostExecute(s);
 
 
-        }
+    private void SendForward() {
+        Intent intent = new Intent(main_navigation, ShowDuplicate.class);
+        intent.putExtra("internalCheck", internal_Check.getVisibility());
+        intent.putExtra("externalCheck", external_Check.getVisibility());
+        startActivity(intent);
 
     }
 }

@@ -21,21 +21,21 @@ public class DeleteData {
     private LinkedHashMap<Integer, List<Boolean>> checkBoxArray;
     private DocumentFile sdCarddocumentFile;
     private String sdCardPath, sdCardUri;
-    private ShowDuplicate.MultiThreadingTask multiThreadingTask;
+    private ShowDuplicate.MultiThreadingTask2 multiThreadingTask2;
     private List<String> sdcard = new ArrayList<>(), pathStore = new ArrayList<>();
     private Boolean atBackground;
 
 
     public DeleteData(final ShowDuplicate showDuplicate, final LinkedHashMap<String, List<String>> list_Header_Child, final LinkedHashMap<Integer, List<Boolean>> checkBoxArray,
-                      final ShowDuplicate.MultiThreadingTask multiThreadingTask) {
+                      final ShowDuplicate.MultiThreadingTask2 multiThreadingTask2) {
         this.list_Header_Child = list_Header_Child;
         this.checkBoxArray = checkBoxArray;
-        this.multiThreadingTask = multiThreadingTask;
+        this.multiThreadingTask2 = multiThreadingTask2;
 
         // sd card path setup
         SdCardPathSharedPreference sdCardPathSharedPreference = new SdCardPathSharedPreference(showDuplicate);
         sdCardPath = sdCardPathSharedPreference.getSdCardPath();
-        if (sdCardPathSharedPreference.getStringURI() != null) {
+        if (!sdCardPathSharedPreference.getStringURI().isEmpty()) {
             sdCardUri = (sdCardPathSharedPreference.getStringURI());
             Uri sd_Card_URL = Uri.parse(sdCardUri);
             sdCarddocumentFile = DocumentFile.fromTreeUri(showDuplicate, sd_Card_URL);
@@ -74,15 +74,16 @@ public class DeleteData {
             j = 0;
             i++;
         }
-
         SeprateTheSDCardPath();
         DeleteTheDataFromExternalStorage();
     }
 
     private void SeprateTheData(String path) {
         if (path.contains(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+
             DeleteTheDataFromInternalStorage(path);
-            if(!atBackground) multiThreadingTask.onProgressUpdate();
+
+            if (!atBackground) multiThreadingTask2.onProgressUpdate();
         } else {
             sdcard.add(path);
         }
@@ -90,7 +91,6 @@ public class DeleteData {
     }
 
     private static void DeleteTheDataFromInternalStorage(String path) {
-
         File file = new File(path);
         file.delete();
         if (file.exists()) {
@@ -107,7 +107,7 @@ public class DeleteData {
         for (String path : sdcard) {
             pathStore.clear();
             File file = new File(path);
-            String parentPath = file.getParentFile().toString();
+            String parentPath = Objects.requireNonNull(file.getParentFile()).toString();
             String filePathName = file.getName();
 
             if (sdCardStore.get(parentPath) != null)
@@ -136,7 +136,7 @@ public class DeleteData {
                     DocumentFile save = sdCardDocument.findFile(value);
                     assert save != null;
                     save.delete();
-                    if(!atBackground) multiThreadingTask.onProgressUpdate();
+                    if (!atBackground) multiThreadingTask2.onProgressUpdate();
                 }
             }
         }

@@ -72,8 +72,6 @@
         tools:ignore="InnerclassSeparator" />
 
 
-
-
         <service android:name=".Receive_Boot_Completed.ForegroundServiceBoot"
             tools:ignore="InnerclassSeparator" />
 

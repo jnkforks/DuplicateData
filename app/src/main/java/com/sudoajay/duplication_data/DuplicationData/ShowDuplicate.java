@@ -1,7 +1,6 @@
 package com.sudoajay.duplication_data.DuplicationData;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -34,9 +33,12 @@ import com.sudoajay.duplication_data.BuildConfig;
 import com.sudoajay.duplication_data.Delete.DeleteData;
 import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.Notification.NotifyNotification;
+import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
+import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.Permission.NotificationPermissionCheck;
 import com.sudoajay.duplication_data.R;
 import com.sudoajay.duplication_data.Toast.CustomToast;
+import com.sudoajay.lodinganimation.LoadingAnimation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,8 +47,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import dmax.dialog.SpotsDialog;
 
 public class ShowDuplicate extends AppCompatActivity {
     private ExpandableListView expandableListView;
@@ -62,35 +62,36 @@ public class ShowDuplicate extends AppCompatActivity {
     private RemoteViews contentView;
     private long total_Size,totalCount=0;
     private ImageView refreshImage_View;
-    private MultiThreadingTask multiThreadingtask;
+    private static MultiThreadingTask2 multiThreadingtask2;
     private NotificationPermissionCheck notificationPermissionCheck;
     private Notification notification;
-    private NotificationManager notificationManager;
+    private static NotificationManager notificationManager;
     private List<String> unnecessaryList ;
     private ConstraintLayout nothingToShow_ConstraintsLayout;
-    public  ArrayList<String> Data;
+    private ArrayList<String> Data = new ArrayList<>();
+    private int internalCheck, externalCheck;
 //    private InterstitialAds interstitialAds;
 
 
-    public enum DataHolder {
-        INSTANCE;
-
-        private ArrayList<String> mObjectList;
-
-        public static boolean hasData() {
-            return INSTANCE.mObjectList != null;
-        }
-
-        public static void setData(final ArrayList<String> objectList) {
-            INSTANCE.mObjectList = objectList;
-        }
-
-        public static ArrayList<String> getData() {
-            final ArrayList<String> retList = INSTANCE.mObjectList;
-            INSTANCE.mObjectList = null;
-            return retList;
-        }
-    }
+//    public enum DataHolder {
+//        INSTANCE;
+//
+//        private ArrayList<String> mObjectList;
+//
+//        public static boolean hasData() {
+//            return INSTANCE.mObjectList != null;
+//        }
+//
+//        public static void setData(final ArrayList<String> objectList) {
+//            INSTANCE.mObjectList = objectList;
+//        }
+//
+//        public static ArrayList<String> getData() {
+//            final ArrayList<String> retList = INSTANCE.mObjectList;
+//            INSTANCE.mObjectList = null;
+//            return retList;
+//        }
+//    }
 
 
 
@@ -105,25 +106,85 @@ public class ShowDuplicate extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = getIntent();
+        if (intent != null) {
+            if (Objects.requireNonNull(getIntent().getExtras()).get("internalCheck") != null
+                    && Objects.requireNonNull(getIntent().getExtras()).get("externalCheck") != null) {
+                internalCheck = getIntent().getExtras().getInt("internalCheck");
+                externalCheck = getIntent().getExtras().getInt("externalCheck");
+            }
+        }
+
+        MultiThreadingTask1 multiThreadingTask1 = new MultiThreadingTask1();
+        multiThreadingTask1.execute();
+
+
+    }
+
+
+    @SuppressLint("StaticFieldLeak")
+    public class MultiThreadingTask1 extends AsyncTask<String, String, String> {
+
+
+        private ScanDuplicateData scanDuplicateData;
+        private AndroidExternalStoragePermission androidExternalStoragePermission;
+        private AndroidSdCardPermission androidSdCardPermission;
+        private LoadingAnimation loadingAnimation;
+
+        @Override
+        protected void onPreExecute() {
+
+            loadingAnimation = findViewById(R.id.loadingAnimation);
+            loadingAnimation.start();
+
+            // create object
+            scanDuplicateData = new ScanDuplicateData(getApplicationContext());
+            androidExternalStoragePermission = new
+                    AndroidExternalStoragePermission(getApplicationContext(), ShowDuplicate.this);
+
+            androidSdCardPermission = new AndroidSdCardPermission(getApplicationContext());
+            super.onPreExecute();
+        }
+
+        @SuppressLint("WrongThread")
+        @Override
+        protected String doInBackground(String... strings) {
+            scanDuplicateData.Duplication(androidExternalStoragePermission.getExternal_Path(),
+                    androidSdCardPermission.getSd_Card_Path_URL(), internalCheck, externalCheck);
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            loadingAnimation.stop();
+            Data = scanDuplicateData.getList();
+            AfterLoading();
+            super.onPostExecute(s);
+
+
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void AfterLoading() {
+
         reference();
 
-
-        // And we retrieve large data from enum
-        if (DataHolder.hasData()) {
-            Data = DataHolder.getData();
-        }
-//        Bundle bundle = intent.getExtras();
-//        assert bundle != null;
-//        Data = bundle.getStringArrayList("Duplication_Class_Data");
-        int i ;
+        int i;
         assert Data != null;
         if (Data.isEmpty()) {
-            deleteDuplicateButton.setVisibility(View.INVISIBLE);
-            deleteDuplicateButton1.setVisibility(View.INVISIBLE);
             nothingToShow_ConstraintsLayout.setVisibility(View.VISIBLE);
 
         } else {
-
+            deleteDuplicateButton.setVisibility(View.VISIBLE);
+            deleteDuplicateButton1.setVisibility(View.VISIBLE);
             OnRefresh(true);
         }
 
@@ -196,8 +257,6 @@ public class ShowDuplicate extends AppCompatActivity {
 
 //        interstitialAds = new InterstitialAds(getApplicationContext());
     }
-
-
     private void reference() {
 
         // reference
@@ -209,7 +268,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
 
         // create object
-        multiThreadingtask = new MultiThreadingTask();
+        multiThreadingtask2 = new MultiThreadingTask2();
         notificationPermissionCheck = new NotificationPermissionCheck(ShowDuplicate.this);
 
         // add unnecessary data
@@ -236,7 +295,7 @@ public class ShowDuplicate extends AppCompatActivity {
                 Share();
                 break;
             case R.id.refreshImage_View:
-                if (refreshImage_View.getRotation() % 360 == 0) {
+                if (refreshImage_View != null && refreshImage_View.getRotation() % 360 == 0) {
                     refreshImage_View.animate().rotationBy(360f).setDuration(1000);
                     OnRefresh(false);
                     expandableListView.invalidate();
@@ -355,7 +414,7 @@ public class ShowDuplicate extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 //                OpenAds();
-                multiThreadingtask.execute();
+                multiThreadingtask2.execute();
 
                 dialog.dismiss();
             }
@@ -388,23 +447,15 @@ public class ShowDuplicate extends AppCompatActivity {
 
     }
 
+
     @SuppressLint("StaticFieldLeak")
-    public class MultiThreadingTask extends AsyncTask<String, String, String> {
+    public class MultiThreadingTask2 extends AsyncTask<String, String, String> {
         int progress = 0;
 
         @Override
         protected void onPreExecute() {
-            AlertDialog alertDialog = new SpotsDialog.Builder()
-                    .setContext(ShowDuplicate.this)
-                    .setMessage("Delete....")
-                    .setCancelable(false)
-                    .setTheme(R.style.Custom)
-                    .build();
-
-            alertDialog.show();
             SendBack();
             CustomToast.ToastIt(getApplicationContext(), "Progress Shown In Notification Bar");
-
             totalCount =0 ;
             for (Map.Entry<Integer, List<Boolean>> entry : expandableduplicatelistadapter.getCheckBoxArray().entrySet()) {
                 for (Boolean checked : entry.getValue()) {
@@ -436,7 +487,7 @@ public class ShowDuplicate extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             Notification();
          new DeleteData(ShowDuplicate.this, list_Header_Child,
-                 expandableduplicatelistadapter.getCheckBoxArray(), multiThreadingtask);
+                 expandableduplicatelistadapter.getCheckBoxArray(), multiThreadingtask2);
             return null;
         }
     }
@@ -494,11 +545,9 @@ public class ShowDuplicate extends AppCompatActivity {
         String title = this.getString(R.string.duplicate_title); // Default Channel
         NotificationCompat.Builder mBuilder;
 
-        Intent intent;
+        Intent closeButton = new Intent();
+        closeButton.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        // setup intent and passing value
-        intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("passing", "DuplicateData");
 
 
         contentView = new RemoteViews(getPackageName(), R.layout.activity_custom_notification);
@@ -508,6 +557,7 @@ public class ShowDuplicate extends AppCompatActivity {
         contentView.setProgressBar(R.id.progressBar, 100, 0, false);
         contentView.setTextViewText(R.id.size_Title, "0/" + totalCount);
         contentView.setTextViewText(R.id.percent_Text, "00%");
+
 
         if (notificationManager == null) {
             notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -528,12 +578,14 @@ public class ShowDuplicate extends AppCompatActivity {
                 .setOngoing(true)
                 .setLights(Color.parseColor("#075e54"), 3000, 3000);
 
+
         mBuilder.setContentIntent(
                 PendingIntent.getActivity(
                         getApplicationContext(),
                         0,
-                        intent,
+                        closeButton,
                         PendingIntent.FLAG_UPDATE_CURRENT));
+
 
         notification = mBuilder.build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
@@ -573,4 +625,6 @@ public class ShowDuplicate extends AppCompatActivity {
         }
         deleteDuplicateButton.setText("Delete (" + Convert_It(total_Size) + ")");
     }
+
+
 }

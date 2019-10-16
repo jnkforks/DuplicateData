@@ -30,6 +30,3 @@
 # for DexGuard only
 #-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
-#-keep class dmax.dialog.** {
-#    *;
-#}
