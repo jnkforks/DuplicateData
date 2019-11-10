@@ -129,7 +129,7 @@
     <Button
         android:id="@+id/scan_Button"
         style="@style/Widget.AppCompat.Button"
-        android:layout_width="@dimen/scan_button_layout_width"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="1"
         android:background="@drawable/button_background_no_effects"

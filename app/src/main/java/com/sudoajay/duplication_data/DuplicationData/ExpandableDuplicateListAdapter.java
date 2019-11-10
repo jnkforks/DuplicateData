@@ -4,10 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -118,6 +121,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
 
         final String headerTitle = (String) getChild(groupPosition, childPosition);
+        String getName;
 
         if (convertView == null) {
             LayoutInflater infaltInflater = (LayoutInflater) this.context
@@ -132,9 +136,24 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
         File file = new File(headerTitle);
         pathTextView.setText(headerTitle);
-        nameTextView.setText(file.getName());
-        Check_For_Extension(headerTitle, coverImageView);
 
+        getName = isMatchWithData(file.getAbsolutePath());
+        if (getName.equals("")) {
+            nameTextView.setText(file.getName());
+            Check_For_Extension(headerTitle, coverImageView);
+        } else {
+            if (getName.contains("WhatsApp")) getName = " " + getName.split("/")[2];
+            else if (getName.equalsIgnoreCase("/Android/data/")) {
+                getName = file.getAbsolutePath().split("/Android/data/")[1];
+
+                getName = getName.split("/")[0];
+                Check_For_Extension(getName, coverImageView);
+                getName = getApplicationName(getName);
+
+            }
+            nameTextView.setText(getName);
+
+        }
         checkBoxView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,45 +230,76 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
     }
 
-    private void Check_For_Extension(String path, ImageView imageView) {
-        int i = path.lastIndexOf('.');
-        String extension = "";
-        if (i > 0) {
-            extension = path.substring(i + 1);
+    private String getApplicationName(final String name){
+        final PackageManager pm = context.getPackageManager();
+        ApplicationInfo ai;
+        try {
+            ai = pm.getApplicationInfo( name, 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            ai = null;
         }
-        switch (extension) {
-            case "jpg":
-            case "mp4":
-            case "jpeg":
-            case "png":
-            case "gif":
-            case "webp":
-                // Images || Videos
-                Glide.with(context)
-                        .asBitmap()
-                        .load(Uri.fromFile(new File(path)))
-                        .into(imageView);
-                break;
-            case "mp3":
-            case "m4a":
-            case "amr":
-            case "aac":
-                // Audiio
-                getAudioAlbumImageContentUri(imageView, path);
+        return (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
 
-                break;
-            case "pptx":
-            case "pdf":
-            case "docx":
-            case "txt":
-                imageView.setImageResource(R.drawable.document_icon);
-                break;
-            case "opus":
-                imageView.setImageResource(R.drawable.voice_icon);
-                break;
-            default:
+    }
+
+    private String isMatchWithData(final String path) {
+        String androidPath = "/Android/data/";
+        if (path.contains(androidPath)) return androidPath;
+        return "";
+    }
+    private void Check_For_Extension(String path, ImageView imageView) {
+
+        if (!path.contains("com.")) {
+            int i = path.lastIndexOf('.');
+            String extension = "";
+            if (i > 0) {
+                extension = path.substring(i + 1);
+            }
+            switch (extension) {
+                case "jpg":
+                case "mp4":
+                case "jpeg":
+                case "png":
+                case "gif":
+                case "webp":
+                    // Images || Videos
+                    Glide.with(context)
+                            .asBitmap()
+                            .load(Uri.fromFile(new File(path)))
+                            .into(imageView);
+                    break;
+                case "mp3":
+                case "m4a":
+                case "amr":
+                case "aac":
+                    // Audiio
+                    getAudioAlbumImageContentUri(imageView, path);
+
+                    break;
+                case "pptx":
+                case "pdf":
+                case "docx":
+                case "txt":
+                    imageView.setImageResource(R.drawable.document_icon);
+                    break;
+                case "opus":
+                    imageView.setImageResource(R.drawable.voice_icon);
+                    break;
+                default:
+                    imageView.setImageResource(R.drawable.file_icon);
+                    break;
+            }
+        } else {
+            try {
+                Drawable appIcon = showDuplicate.getPackageManager().getApplicationIcon(path);
+                Log.e("Check_For_Extension", path);
+                imageView.setImageDrawable(appIcon);
+            } catch (PackageManager.NameNotFoundException e) {
+                Log.e("Check_For_Extension", e.getLocalizedMessage() + " - " + e.getMessage());
                 imageView.setImageResource(R.drawable.file_icon);
-                break;
+            }
+
+
         }
 
     }
@@ -322,6 +372,10 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
     }
 
 
+    private String camelCase(String name) {
+        String spilt = name.split("")[1];
+        return (spilt.toUpperCase() + name.substring(1));
+    }
 
 
 }

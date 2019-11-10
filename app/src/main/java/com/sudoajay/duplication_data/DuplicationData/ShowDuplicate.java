@@ -62,7 +62,7 @@ public class ShowDuplicate extends AppCompatActivity {
     private RemoteViews contentView;
     private long total_Size,totalCount=0;
     private ImageView refreshImage_View;
-    private static MultiThreadingTask2 multiThreadingtask2;
+    private MultiThreadingTask2 multiThreadingtask2;
     private NotificationPermissionCheck notificationPermissionCheck;
     private Notification notification;
     private static NotificationManager notificationManager;
@@ -177,7 +177,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
         reference();
 
-        int i;
+
         assert Data != null;
         if (Data.isEmpty()) {
             nothingToShow_ConstraintsLayout.setVisibility(View.VISIBLE);
@@ -187,7 +187,7 @@ public class ShowDuplicate extends AppCompatActivity {
             deleteDuplicateButton1.setVisibility(View.VISIBLE);
             OnRefresh(true);
         }
-
+        int i;
         expandableduplicatelistadapter = new ExpandableDuplicateListAdapter(ShowDuplicate.this, list_Header, list_Header_Child, arrow_Image_Resource
                 , checkBoxArray);
         expandableListView.setAdapter(expandableduplicatelistadapter);
@@ -195,7 +195,8 @@ public class ShowDuplicate extends AppCompatActivity {
         for (i = 0; i < list_Header.size(); i++) {
             expandableListView.collapseGroup(i);
             for (int j = 0; j < Objects.requireNonNull(list_Header_Child.get(list_Header.get(i))).size(); j++) {
-                total_Size += new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(i))).get(j)).length();
+                if (Objects.requireNonNull(checkBoxArray.get(i)).get(j))
+                    total_Size += new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(i))).get(j)).length();
             }
 
         }
@@ -215,7 +216,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
             @Override
             public void onGroupExpand(int groupPosition) {
-                arrow_Image_Resource.set(groupPosition, R.drawable.arrow_up_icon);
+                arrow_Image_Resource.set(groupPosition, R.drawable.arrow_down_icon);
 
             }
         });
@@ -225,7 +226,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
             @Override
             public void onGroupCollapse(int groupPosition) {
-                arrow_Image_Resource.set(groupPosition, R.drawable.arrow_down_icon);
+                arrow_Image_Resource.set(groupPosition, R.drawable.arrow_up_icon);
             }
         });
 
@@ -316,6 +317,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
     private void OnRefresh(final boolean whenStart) {
         int i;
+        String heading = null;
         if (!whenStart) {
 
             for (i = 0; i < list_Header.size(); i++) {
@@ -332,10 +334,21 @@ public class ShowDuplicate extends AppCompatActivity {
 
         for (String get : Data) {
 
-            if (get.equalsIgnoreCase("And")) {
+            if (get.equalsIgnoreCase("And") || get.equalsIgnoreCase("WhatsApp Unnecessary Data") || get.equalsIgnoreCase("App Memory")) {
                 if (!sets.isEmpty()) {
+                    switch (get) {
+                        case "And":
+                            heading = "Group " + (i + 1);
+                            break;
+                        case "WhatsApp Unnecessary Data":
+                            heading = "WhatsApp (Cache)";
+                            break;
+                        case "App Memory":
+                            heading = "App (Memory)";
+                            break;
 
-                    list_Header.add("Group " + (i + 1));
+                    }
+                    list_Header.add(heading);
                     arrow_Image_Resource.add(R.drawable.arrow_up_icon);
 
                     list_Header_Child.put(list_Header.get(i), new ArrayList<>(sets));
@@ -357,13 +370,15 @@ public class ShowDuplicate extends AppCompatActivity {
         }
 
     }
-    private boolean IsMatchUnnecessary(final String path){
+
+    public boolean IsMatchUnnecessary(final String path) {
 
         for(String gets:unnecessaryList){
             if(path.contains(gets)) return true;
         }
         return false;
     }
+
     public void open_With(File file) {
         MimeTypeMap myMime = MimeTypeMap.getSingleton();
         Intent newIntent = new Intent(Intent.ACTION_VIEW);
