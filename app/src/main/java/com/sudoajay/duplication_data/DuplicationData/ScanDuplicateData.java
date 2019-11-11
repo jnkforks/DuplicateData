@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
@@ -31,8 +30,7 @@ public class ScanDuplicateData {
     @SuppressLint("StaticFieldLeak")
     private static Context context;
     private String external_Path_Url, whatsapp_Path, sd_Card_dir;
-    private ArrayList<String> rejectedFolder = new ArrayList<>();
-
+    private ArrayList<String> rejectedFolder = new ArrayList<>(), apkFile = new ArrayList<>();
 
     public ScanDuplicateData(final Context context) {
         ScanDuplicateData.context = context;
@@ -86,37 +84,45 @@ public class ScanDuplicateData {
                 dataStore.add("And");
             }
         }
-
+        ApkFile();
         CacheData(external_dir, sd_Card_dir, internal_Visible, external_Visible);
     }
 
     private void whatsappUnnecessaryData() {
 
+        int size = 0;
         String path = external_Path_Url;
-
-        for (int i = 0; i < 2; i++) {
-            if (new File(path + whatsapp_Path + ".Shared/").exists())
-                DigDeep(path + whatsapp_Path + ".Shared/");
-            if (new File(path + whatsapp_Path + ".Trash").exists())
-                DigDeep(path + whatsapp_Path + ".Trash/");
-            if (new File(path + whatsapp_Path + "cache").exists())
-                DigDeep(path + whatsapp_Path + "cache/");
-            if (new File(path + whatsapp_Path + "Theme").exists())
-                DigDeep(path + whatsapp_Path + "Theme/");
-            if (new File(path + whatsapp_Path + ".Thumbs").exists())
-                DigDeep(path + whatsapp_Path + ".Thumbs/");
-            if (new File(path + whatsapp_Path + "Databases").exists())
-                WhatsappDatabase(new File(path + whatsapp_Path + "Databases/"));
-
-            rejectedFolder.add(path + whatsapp_Path + ".Shared");
-            rejectedFolder.add(path + whatsapp_Path + ".Trash");
-            rejectedFolder.add(path + whatsapp_Path + "cache");
-            rejectedFolder.add(path + whatsapp_Path + ".Thumbs");
-            rejectedFolder.add(path + whatsapp_Path + "Databases");
-
+        ArrayList<String> folderName = new ArrayList<>(Arrays.asList(".Shared", ".Trash", "cache", ".Thumbs", "Backups","Databases"));
+        for (int i = 0; i <= 1; i++) {
+            for (int j = 0; j <= 5; j++) {
+                File file = new File(path + whatsapp_Path + folderName.get(j));
+                if (j == 5) size = 1;
+                if (file.exists() && Objects.requireNonNull(file.listFiles()).length > size) {
+                    dataStore.add(file.getAbsolutePath());
+                    rejectedFolder.add(file.getAbsolutePath());
+                }
+            }
             path = sd_Card_dir;
         }
-
+//            if (new File(path + whatsapp_Path + ".Shared/").exists())
+//                DigDeep(path + whatsapp_Path + ".Shared/");
+//            if (new File(path + whatsapp_Path + ".Trash").exists())
+//                DigDeep(path + whatsapp_Path + ".Trash/");
+//            if (new File(path + whatsapp_Path + "cache").exists())
+//                DigDeep(path + whatsapp_Path + "cache/");
+//            if (new File(path + whatsapp_Path + "Theme").exists())
+//                DigDeep(path + whatsapp_Path + "Theme/");
+//            if (new File(path + whatsapp_Path + ".Thumbs").exists())
+//                DigDeep(path + whatsapp_Path + ".Thumbs/");
+//            if (new File(path + whatsapp_Path + "Databases").exists())
+//                WhatsappDatabase(new File(path + whatsapp_Path + "Databases/"));
+//
+//
+//            rejectedFolder.add(path + whatsapp_Path + ".Trash");
+//            rejectedFolder.add(path + whatsapp_Path + "cache");
+//            rejectedFolder.add(path + whatsapp_Path + ".Thumbs");
+//            rejectedFolder.add(path + whatsapp_Path + "Databases");
+        dataStore.add("WhatsApp Unnecessary Data");
     }
 
     private void WhatsappDatabase(File database_File) {
@@ -177,8 +183,9 @@ public class ScanDuplicateData {
                 if (filesList != null) {
                     for (File file : filesList) {
                         if (file.isDirectory()) {
-                            if (new File(file.getAbsolutePath() + "/cache/").exists()) {
-                                SaveCacheFiles(Objects.requireNonNull(new File(file.getAbsolutePath() + "/cache/").listFiles()));
+                            File file1 = new File(file.getAbsolutePath() + "/cache/");
+                            if (file1.exists() && Objects.requireNonNull(file1.listFiles()).length > 0) {
+                                dataStore.add(file.getAbsolutePath());
                             }
 
                         }
@@ -190,15 +197,15 @@ public class ScanDuplicateData {
             dataStore.add("App Memory");
     }
 
-    private void SaveCacheFiles(final File[] file) {
-        for (File getFile : file) {
-            if (getFile.isDirectory()) {
-                SaveCacheFiles(Objects.requireNonNull(getFile.listFiles()));
-            } else {
-                dataStore.add(getFile.getAbsolutePath());
-            }
-        }
-    }
+//    private void SaveCacheFiles(final File[] file) {
+//        for (File getFile : file) {
+//            if (getFile.isDirectory()) {
+//                SaveCacheFiles(Objects.requireNonNull(getFile.listFiles()));
+//            } else {
+//                dataStore.add(getFile.getAbsolutePath());
+//            }
+//        }
+//    }
 
     private void DuplicatedFilesUsingLength() {
         ArrayList<Long> getAllDataLength = new ArrayList<>();
@@ -275,12 +282,18 @@ public class ScanDuplicateData {
     }
 
     private void Get_All_Path(File directory) {
+        String getname, getExt;
         for (File child : Objects.requireNonNull(directory.listFiles())) {
             if (child.isDirectory() && !isRejectedFolder(child.getAbsolutePath())) {
                 Get_All_Path(child);
             } else {
-                if (!child.getName().equals(".nomedia"))
+                getname = child.getName();
+                getExt = getExtension(getname);
+                if (getExt.equals("apk"))
+                    apkFile.add(child.getAbsolutePath());
+                else if (!getname.equals(".nomedia"))
                     getAllData.add(child);
+
             }
         }
     }
@@ -295,6 +308,19 @@ public class ScanDuplicateData {
         return false;
     }
 
+    private void ApkFile() {
+        dataStore.addAll(apkFile);
+        dataStore.add("Apk");
+    }
+
+    private String getExtension(final String path) {
+        int i = path.lastIndexOf('.');
+        String extension = "";
+        if (i > 0) {
+            extension = path.substring(i + 1);
+        }
+        return extension;
+    }
     public  ArrayList<String> getList() {
         return dataStore;
     }

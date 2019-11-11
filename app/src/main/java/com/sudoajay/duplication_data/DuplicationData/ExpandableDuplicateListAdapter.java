@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -48,6 +49,8 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         this.list_Header_Child = list_Header_Child;
         this.arrow_Image_Resource = arrow_Image_Resource;
         this.checkBoxArray = checkBoxArray;
+
+
     }
 
     @Override
@@ -137,19 +140,23 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         File file = new File(headerTitle);
         pathTextView.setText(headerTitle);
 
-        getName = isMatchWithData(file.getAbsolutePath());
+        getName = showDuplicate.isMatchWithData(file.getAbsolutePath());
         if (getName.equals("")) {
             nameTextView.setText(file.getName());
             Check_For_Extension(headerTitle, coverImageView);
         } else {
-            if (getName.contains("WhatsApp")) getName = " " + getName.split("/")[2];
-            else if (getName.equalsIgnoreCase("/Android/data/")) {
+            if (getName.contains("/WhatsApp/")) {
+                getName = " " + getName.split("/WhatsApp/")[1].replace("/", "");
+                Check_For_Extension(getName, coverImageView);
+            } else if (getName.equalsIgnoreCase("/Android/data/")) {
                 getName = file.getAbsolutePath().split("/Android/data/")[1];
 
                 getName = getName.split("/")[0];
                 Check_For_Extension(getName, coverImageView);
                 getName = getApplicationName(getName);
 
+            } else if (getName.equals(".apk")) {
+                getName = getImageFromApk(file.getAbsolutePath(), coverImageView);
             }
             nameTextView.setText(getName);
 
@@ -160,12 +167,12 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
                 if (!checkBoxView.isChecked()) {
                     checkBoxView.setChecked(false);
                     Objects.requireNonNull(checkBoxArray.get(groupPosition)).set(childPosition, false);
-                    showDuplicate.setTotal_Size("sub", new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)).length());
+                    showDuplicate.setTotal_Size("sub", getFileSizeInBytes(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)));
 
                 } else {
                     checkBoxView.setChecked(true);
                     Objects.requireNonNull(checkBoxArray.get(groupPosition)).set(childPosition, true);
-                    showDuplicate.setTotal_Size("add", new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)).length());
+                    showDuplicate.setTotal_Size("add", getFileSizeInBytes(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)));
                 }
             }
         });
@@ -180,7 +187,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private static long getFileSizeInBytes(String fileName) {
+    public static long getFileSizeInBytes(String fileName) {
         long ret = 0;
         File f = new File(fileName);
         if (f.exists()) {
@@ -242,11 +249,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
     }
 
-    private String isMatchWithData(final String path) {
-        String androidPath = "/Android/data/";
-        if (path.contains(androidPath)) return androidPath;
-        return "";
-    }
+
     private void Check_For_Extension(String path, ImageView imageView) {
 
         if (!path.contains("com.")) {
@@ -292,10 +295,8 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         } else {
             try {
                 Drawable appIcon = showDuplicate.getPackageManager().getApplicationIcon(path);
-                Log.e("Check_For_Extension", path);
                 imageView.setImageDrawable(appIcon);
             } catch (PackageManager.NameNotFoundException e) {
-                Log.e("Check_For_Extension", e.getLocalizedMessage() + " - " + e.getMessage());
                 imageView.setImageResource(R.drawable.file_icon);
             }
 
@@ -304,6 +305,24 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
 
     }
 
+    private String getImageFromApk(final String APKFilePath, final ImageView imageView) {
+
+        PackageManager pm = context.getPackageManager();
+        PackageInfo pi = pm.getPackageArchiveInfo(APKFilePath, 0);
+
+        // the secret are these two lines....
+        assert pi != null;
+        pi.applicationInfo.sourceDir = APKFilePath;
+        pi.applicationInfo.publicSourceDir = APKFilePath;
+        //
+
+        Drawable APKicon = pi.applicationInfo.loadIcon(pm);
+        String AppName = (String) pi.applicationInfo.loadLabel(pm);
+
+        imageView.setImageDrawable(APKicon);
+        return AppName;
+
+    }
     private void getAudioAlbumImageContentUri(ImageView imageView, String filePath) {
         try {
             Uri audioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -370,12 +389,5 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
     LinkedHashMap<Integer, List<Boolean>> getCheckBoxArray() {
         return checkBoxArray;
     }
-
-
-    private String camelCase(String name) {
-        String spilt = name.split("")[1];
-        return (spilt.toUpperCase() + name.substring(1));
-    }
-
 
 }

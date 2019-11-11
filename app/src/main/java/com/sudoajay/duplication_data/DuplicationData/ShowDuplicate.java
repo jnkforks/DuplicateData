@@ -42,6 +42,7 @@ import com.sudoajay.lodinganimation.LoadingAnimation;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -196,7 +197,7 @@ public class ShowDuplicate extends AppCompatActivity {
             expandableListView.collapseGroup(i);
             for (int j = 0; j < Objects.requireNonNull(list_Header_Child.get(list_Header.get(i))).size(); j++) {
                 if (Objects.requireNonNull(checkBoxArray.get(i)).get(j))
-                    total_Size += new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(i))).get(j)).length();
+                    total_Size += ExpandableDuplicateListAdapter.getFileSizeInBytes(Objects.requireNonNull(list_Header_Child.get(list_Header.get(i))).get(j));
             }
 
         }
@@ -275,13 +276,15 @@ public class ShowDuplicate extends AppCompatActivity {
         // add unnecessary data
         String whatsapp_Path = "/WhatsApp/";
         unnecessaryList = new ArrayList<>();
-        unnecessaryList.add(whatsapp_Path + ".Shared/");
-        unnecessaryList.add(whatsapp_Path + ".Trash/");
-        unnecessaryList.add(whatsapp_Path + "cache/");
-        unnecessaryList.add(whatsapp_Path + "Theme/");
-        unnecessaryList.add(whatsapp_Path + ".Thumbs/");
+        unnecessaryList.add(whatsapp_Path + ".Shared");
+        unnecessaryList.add(whatsapp_Path + ".Trash");
+        unnecessaryList.add(whatsapp_Path + "cache");
+        unnecessaryList.add(whatsapp_Path + "Theme");
+        unnecessaryList.add(whatsapp_Path + ".Thumbs");
+        unnecessaryList.add(whatsapp_Path + "Backups");
         unnecessaryList.add(whatsapp_Path + "Databases");
         unnecessaryList.add("/Android/data/");
+        unnecessaryList.add(".apk");
 
 
     }
@@ -316,7 +319,10 @@ public class ShowDuplicate extends AppCompatActivity {
     }
 
     private void OnRefresh(final boolean whenStart) {
-        int i;
+        ArrayList<String> separateList = new ArrayList<>(Arrays.asList("And", "WhatsApp Unnecessary Data", "App Memory",
+                "Apk"));
+
+        int i, j = 0;
         String heading = null;
         if (!whenStart) {
 
@@ -334,11 +340,13 @@ public class ShowDuplicate extends AppCompatActivity {
 
         for (String get : Data) {
 
-            if (get.equalsIgnoreCase("And") || get.equalsIgnoreCase("WhatsApp Unnecessary Data") || get.equalsIgnoreCase("App Memory")) {
+            if (get.equals(separateList.get(0)) || get.equals(separateList.get(1)) || get.equals(separateList.get(2))
+                    || get.equals(separateList.get(3))) {
                 if (!sets.isEmpty()) {
                     switch (get) {
                         case "And":
-                            heading = "Group " + (i + 1);
+                            j++;
+                            heading = "Duplicate (" + j + ")";
                             break;
                         case "WhatsApp Unnecessary Data":
                             heading = "WhatsApp (Cache)";
@@ -346,7 +354,9 @@ public class ShowDuplicate extends AppCompatActivity {
                         case "App Memory":
                             heading = "App (Memory)";
                             break;
-
+                        case "Apk":
+                            heading = separateList.get(3);
+                            break;
                     }
                     list_Header.add(heading);
                     arrow_Image_Resource.add(R.drawable.arrow_up_icon);
@@ -359,9 +369,10 @@ public class ShowDuplicate extends AppCompatActivity {
                 }
             } else {
                 sets.add(get);
-                if (setsBoolean.size() == 0 && !IsMatchUnnecessary(get)) {
+                if (setsBoolean.isEmpty() && !IsMatchUnnecessary(get)) {
                     setsBoolean.add(false);
                 } else {
+
                     setsBoolean.add(true);
                 }
             }
@@ -372,23 +383,32 @@ public class ShowDuplicate extends AppCompatActivity {
     }
 
     public boolean IsMatchUnnecessary(final String path) {
-
         for(String gets:unnecessaryList){
             if(path.contains(gets)) return true;
         }
         return false;
     }
 
+    public String isMatchWithData(final String path) {
+        for (String gets : unnecessaryList) {
+            if (path.contains(gets)) return gets;
+        }
+        return "";
+    }
+
+
     public void open_With(File file) {
-        MimeTypeMap myMime = MimeTypeMap.getSingleton();
-        Intent newIntent = new Intent(Intent.ACTION_VIEW);
-        String mimeType = myMime.getMimeTypeFromExtension(Objects.requireNonNull(fileExt(file.getAbsolutePath())).substring(1));
-        Uri URI = FileProvider.getUriForFile(getApplicationContext(),
-                BuildConfig.APPLICATION_ID + ".provider",
-                file);
-        newIntent.setDataAndType(URI, mimeType);
-        newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
+            if (file.isDirectory()) file = Objects.requireNonNull(file.listFiles())[0];
+            MimeTypeMap myMime = MimeTypeMap.getSingleton();
+            Intent newIntent = new Intent(Intent.ACTION_VIEW);
+            String mimeType = myMime.getMimeTypeFromExtension(Objects.requireNonNull(fileExt(file.getAbsolutePath())).substring(1));
+            Uri URI = FileProvider.getUriForFile(getApplicationContext(),
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    file);
+            newIntent.setDataAndType(URI, mimeType);
+            newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
             this.startActivity(newIntent);
         } catch (Exception e) {
             CustomToast.ToastIt(getApplicationContext(), "No handler for this type of file_icon.");
