@@ -47,6 +47,26 @@ public class DeleteData {
 
     }
 
+//        public enum DataHolder {
+//        INSTANCE;
+//
+//        private ArrayList<String> mObjectList;
+//
+//        public static boolean hasData() {
+//            return INSTANCE.mObjectList != null;
+//        }
+//
+//        public static void setData(final ArrayList<String> objectList) {
+//            INSTANCE.mObjectList = objectList;
+//        }
+//
+//        public static ArrayList<String> getData() {
+//            final ArrayList<String> retList = INSTANCE.mObjectList;
+//            INSTANCE.mObjectList = null;
+//            return retList;
+//        }
+//    }
+
     public DeleteData(final Context context,final LinkedHashMap<String, List<String>> list_Header_Child, final LinkedHashMap<Integer, List<Boolean>> checkBoxArray,final String sdCardPath,
                       final String sdCardUri){
 

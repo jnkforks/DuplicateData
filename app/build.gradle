@@ -6,15 +6,38 @@ android {
         applicationId "com.sudoajay.duplication_data"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 6
-        versionName "1.8"
+        versionCode 7
+        versionName "2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            shrinkResources false
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // When building Android App Bundles, the splits block is ignored.
+    splits {"/home/sudoajay/Dropbox/Done Project/Duplication_Data/app/src/main/res/drawable-ldpi/steps.webp"
+    "app/src/main/res/mipmap-hdpi/ic_launcher_round.webp"}
+
+    // Instead, use the bundle block to control which types of configuration APKs
+    // you want your app bundle to support.
+    bundle {
+        language {
+            // Specifies that the app bundle should not support
+            // configuration APKs for language resources. These
+            // resources are instead packaged with each base and
+            // dynamic feature APK.
+        }
+        density {
+            // This property is set to true by default.
+            enableSplit = true
+        }
+        abi {
+            // This property is set to true by default.
+            enableSplit = true
         }
     }
 }

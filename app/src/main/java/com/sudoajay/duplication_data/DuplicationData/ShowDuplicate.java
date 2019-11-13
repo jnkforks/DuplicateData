@@ -82,28 +82,6 @@ public class ShowDuplicate extends AppCompatActivity {
     //    private InterstitialAds interstitialAds;
 
 
-//    public enum DataHolder {
-//        INSTANCE;
-//
-//        private ArrayList<String> mObjectList;
-//
-//        public static boolean hasData() {
-//            return INSTANCE.mObjectList != null;
-//        }
-//
-//        public static void setData(final ArrayList<String> objectList) {
-//            INSTANCE.mObjectList = objectList;
-//        }
-//
-//        public static ArrayList<String> getData() {
-//            final ArrayList<String> retList = INSTANCE.mObjectList;
-//            INSTANCE.mObjectList = null;
-//            return retList;
-//        }
-//    }
-
-
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

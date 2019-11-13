@@ -105,17 +105,21 @@ public class StorageInfo {
         return GetDecimal2Round((((double) (external_Total_Size - external_Available_Size) * 100) / external_Total_Size));
     }
 
-    public static   String Convert_It(long size) {
-        if (size > (1024 * 1024 * 1024)) {
-            // GB
-            return GetDecimal2Round((double) size / (1024 * 1024 * 1024)) + " GB";
-        } else if (size > (1024 * 1024)) {
-            // MB
-            return GetDecimal2Round((double) size / (1024 * 1024)) + " MB";
+    public static String Convert_It(long size) {
+        try {
+            if (size > (1024 * 1024 * 1024)) {
+                // GB
+                return GetDecimal2Round((double) size / (1024 * 1024 * 1024)) + " GB";
+            } else if (size > (1024 * 1024)) {
+                // MB
+                return GetDecimal2Round((double) size / (1024 * 1024)) + " MB";
 
-        } else {
-            // KB
-            return GetDecimal2Round((double) size / (1024)) + " KB";
+            } else {
+                // KB
+                return GetDecimal2Round((double) size / (1024)) + " KB";
+            }
+        }catch (Exception e){
+            return "";
         }
 
     }

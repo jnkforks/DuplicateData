@@ -217,26 +217,30 @@ public class ScanDuplicateData {
     }
 
     private void Get_All_Path(File directory) {
-        String getname, getExt;
+        try {
+            String getname, getExt;
 
-        for (File child : Objects.requireNonNull(directory.listFiles())) {
-            if (child.isDirectory()) {
-                if (Objects.requireNonNull(child.listFiles()).length == 0) {
-                    emptyFolder.add(child.getAbsolutePath());
-                } else if (child.getName().contains("log") || child.getName().contains("Log")) {
-                    logFolder.add(child.getAbsolutePath());
-                } else if (!isRejectedFolder(child.getAbsolutePath())) {
-                    Get_All_Path(child);
+            for (File child : Objects.requireNonNull(directory.listFiles())) {
+                if (child.isDirectory()) {
+                    if (Objects.requireNonNull(child.listFiles()).length == 0) {
+                        emptyFolder.add(child.getAbsolutePath());
+                    } else if (child.getName().contains("log") || child.getName().contains("Log")) {
+                        logFolder.add(child.getAbsolutePath());
+                    } else if (!isRejectedFolder(child.getAbsolutePath())) {
+                        Get_All_Path(child);
+                    }
+                } else {
+                    getname = child.getName();
+                    getExt = getExtension(getname);
+                    if (getExt.equals("apk"))
+                        apkFile.add(child.getAbsolutePath());
+                    else if (!getname.equals(".nomedia"))
+                        getAllData.add(child);
+
                 }
-            } else {
-                getname = child.getName();
-                getExt = getExtension(getname);
-                if (getExt.equals("apk"))
-                    apkFile.add(child.getAbsolutePath());
-                else if (!getname.equals(".nomedia"))
-                    getAllData.add(child);
-
             }
+        } catch (Exception ignored) {
+
         }
     }
 
