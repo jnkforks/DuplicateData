@@ -31,7 +31,8 @@
             app:layout_constraintHorizontal_bias="0.51"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.361" />
+            app:layout_constraintVertical_bias="0.361"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/textView9"
@@ -98,7 +99,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/back_arrow_icon"
-                tools:ignore="RtlSymmetry" />
+                tools:ignore="ContentDescription,RtlSymmetry" />
 
             <TextView
                 android:id="@+id/toolbartitle"
@@ -123,7 +124,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/shareImageView"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/refresh_arrow_icon" />
+                app:srcCompat="@drawable/refresh_arrow_icon"
+                tools:ignore="ContentDescription" />
 
             <ImageView
                 android:id="@+id/shareImageView"
@@ -134,7 +136,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/share_icon_white" />
+                app:srcCompat="@drawable/share_icon_white"
+                tools:ignore="ContentDescription" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>

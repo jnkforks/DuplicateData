@@ -164,4 +164,19 @@
 
     <string name="setting_Updated">Setting Updated</string>
 
+    <!--Info Layout-->
+    <string name="info_NameText">Name : </string>
+    <string name="info_LocationText">Location : </string>
+    <string name="info_SizeText">Size : </string>
+    <string name="info_TypeText">Type : </string>
+    <string name="info_ExtText">Ext : </string>
+    <string name="info_CreatedText">Created : </string>
+    <string name="open_text">Open</string>
+
+<!--    dialog more option-->
+    <string name="option_fileName">File Name</string>
+    <string name="option_openFile">Open File</string>
+    <string name="option_viewFolder">View in folder</string>
+    <string name="option_moreInfo">More Information</string>
+
 </resources>

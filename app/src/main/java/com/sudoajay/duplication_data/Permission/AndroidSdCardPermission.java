@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.SdCard.SdCardDialog;
-import com.sudoajay.duplication_data.Toast.CustomToast;
+import com.sudoajay.duplication_data.HelperClass.CustomToast;
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference;
 
 import java.io.File;

@@ -33,7 +33,7 @@ import com.sudoajay.duplication_data.MainFragments.Scan;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.SdCard.SdCardPath;
-import com.sudoajay.duplication_data.Toast.CustomToast;
+import com.sudoajay.duplication_data.HelperClass.CustomToast;
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService;
 
 import java.util.List;

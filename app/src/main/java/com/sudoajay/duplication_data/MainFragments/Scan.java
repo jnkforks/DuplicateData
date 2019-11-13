@@ -24,7 +24,7 @@ import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.R;
 import com.sudoajay.duplication_data.SdCard.SdCardPath;
 import com.sudoajay.duplication_data.StorageStats.StorageInfo;
-import com.sudoajay.duplication_data.Toast.CustomToast;
+import com.sudoajay.duplication_data.HelperClass.CustomToast;
 
 
 

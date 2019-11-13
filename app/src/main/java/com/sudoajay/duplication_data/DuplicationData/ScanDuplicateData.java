@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
-import com.sudoajay.duplication_data.Toast.CustomToast;
+import com.sudoajay.duplication_data.HelperClass.CustomToast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +17,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class ScanDuplicateData {
     @SuppressLint("StaticFieldLeak")
     private static Context context;
     private String external_Path_Url, whatsapp_Path, sd_Card_dir;
-    private ArrayList<String> rejectedFolder = new ArrayList<>(), apkFile = new ArrayList<>();
+    private ArrayList<String> rejectedFolder = new ArrayList<>(), apkFile = new ArrayList<>(), emptyFolder = new ArrayList<>(), logFolder = new ArrayList<>();
 
     public ScanDuplicateData(final Context context) {
         ScanDuplicateData.context = context;
@@ -86,6 +85,7 @@ public class ScanDuplicateData {
         }
         ApkFile();
         CacheData(external_dir, sd_Card_dir, internal_Visible, external_Visible);
+        EmptyFolder();
     }
 
     private void whatsappUnnecessaryData() {
@@ -104,66 +104,10 @@ public class ScanDuplicateData {
             }
             path = sd_Card_dir;
         }
-//            if (new File(path + whatsapp_Path + ".Shared/").exists())
-//                DigDeep(path + whatsapp_Path + ".Shared/");
-//            if (new File(path + whatsapp_Path + ".Trash").exists())
-//                DigDeep(path + whatsapp_Path + ".Trash/");
-//            if (new File(path + whatsapp_Path + "cache").exists())
-//                DigDeep(path + whatsapp_Path + "cache/");
-//            if (new File(path + whatsapp_Path + "Theme").exists())
-//                DigDeep(path + whatsapp_Path + "Theme/");
-//            if (new File(path + whatsapp_Path + ".Thumbs").exists())
-//                DigDeep(path + whatsapp_Path + ".Thumbs/");
-//            if (new File(path + whatsapp_Path + "Databases").exists())
-//                WhatsappDatabase(new File(path + whatsapp_Path + "Databases/"));
-//
-//
-//            rejectedFolder.add(path + whatsapp_Path + ".Trash");
-//            rejectedFolder.add(path + whatsapp_Path + "cache");
-//            rejectedFolder.add(path + whatsapp_Path + ".Thumbs");
-//            rejectedFolder.add(path + whatsapp_Path + "Databases");
-        dataStore.add("WhatsApp Unnecessary Data");
+        if (!dataStore.isEmpty())
+            dataStore.add("WhatsApp Unnecessary Data");
     }
 
-    private void WhatsappDatabase(File database_File) {
-        try{
-            List<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(database_File.listFiles())));
-            Convert_Into_Last_Modified(files);
-            if (files.size() > 1) {
-                for (int i = files.size() - 1; i >= 1; i--) {
-                    dataStore.add(files.get(i).getAbsolutePath());
-                }
-                dataStore.add("WhatsApp Unnecessary Data");
-            }
-        } catch (Exception ignored) {
-
-        }
-    }
-
-    private void Convert_Into_Last_Modified(List<File> files) {
-        File temp_File;
-        for (int i = 0 ; i < files.size();i++){
-            for (int j = i ; j < files.size()-1;j++){
-                Date date1 = new Date(files.get(i).lastModified());
-                Date date2 = new Date(files.get(j+1).lastModified());
-                if(date1.compareTo(date2) < 0){
-                    temp_File=files.get(i);
-                    files.set(i,files.get(j+1));
-                    files.set(j+1,temp_File);
-                }
-            }
-        }
-    }
-
-
-    private void DigDeep(final String folder){
-        File[] files = new File(folder).listFiles();
-        if (Objects.requireNonNull(files).length != 0) {
-            for (File data : files) {
-                dataStore.add(data.getAbsolutePath());
-            }
-        }
-    }
 
     private void CacheData(final String external_dir, final String sd_Card_dir, final int internal_Visible,
                            final int external_Visible) {
@@ -197,15 +141,6 @@ public class ScanDuplicateData {
             dataStore.add("App Memory");
     }
 
-//    private void SaveCacheFiles(final File[] file) {
-//        for (File getFile : file) {
-//            if (getFile.isDirectory()) {
-//                SaveCacheFiles(Objects.requireNonNull(getFile.listFiles()));
-//            } else {
-//                dataStore.add(getFile.getAbsolutePath());
-//            }
-//        }
-//    }
 
     private void DuplicatedFilesUsingLength() {
         ArrayList<Long> getAllDataLength = new ArrayList<>();
@@ -283,9 +218,16 @@ public class ScanDuplicateData {
 
     private void Get_All_Path(File directory) {
         String getname, getExt;
+
         for (File child : Objects.requireNonNull(directory.listFiles())) {
-            if (child.isDirectory() && !isRejectedFolder(child.getAbsolutePath())) {
-                Get_All_Path(child);
+            if (child.isDirectory()) {
+                if (Objects.requireNonNull(child.listFiles()).length == 0) {
+                    emptyFolder.add(child.getAbsolutePath());
+                } else if (child.getName().contains("log") || child.getName().contains("Log")) {
+                    logFolder.add(child.getAbsolutePath());
+                } else if (!isRejectedFolder(child.getAbsolutePath())) {
+                    Get_All_Path(child);
+                }
             } else {
                 getname = child.getName();
                 getExt = getExtension(getname);
@@ -308,9 +250,16 @@ public class ScanDuplicateData {
         return false;
     }
 
+    private void EmptyFolder() {
+        dataStore.addAll(logFolder);
+        dataStore.addAll(emptyFolder);
+        if (!dataStore.isEmpty())
+            dataStore.add("Obsolete Folder");
+    }
     private void ApkFile() {
         dataStore.addAll(apkFile);
-        dataStore.add("Apk");
+        if (!dataStore.isEmpty())
+            dataStore.add("Apk");
     }
 
     private String getExtension(final String path) {

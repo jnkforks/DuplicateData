@@ -14,12 +14,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
@@ -28,16 +30,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.sudoajay.duplication_data.BuildConfig;
+import com.sudoajay.duplication_data.Custom_Dialog.Dialog_InformationData;
 import com.sudoajay.duplication_data.Delete.DeleteData;
+import com.sudoajay.duplication_data.HelperClass.CustomToast;
 import com.sudoajay.duplication_data.MainActivity;
 import com.sudoajay.duplication_data.Notification.NotifyNotification;
 import com.sudoajay.duplication_data.Permission.AndroidExternalStoragePermission;
 import com.sudoajay.duplication_data.Permission.AndroidSdCardPermission;
 import com.sudoajay.duplication_data.Permission.NotificationPermissionCheck;
 import com.sudoajay.duplication_data.R;
-import com.sudoajay.duplication_data.Toast.CustomToast;
 import com.sudoajay.lodinganimation.LoadingAnimation;
 
 import java.io.File;
@@ -71,7 +76,10 @@ public class ShowDuplicate extends AppCompatActivity {
     private ConstraintLayout nothingToShow_ConstraintsLayout;
     private ArrayList<String> Data = new ArrayList<>();
     private int internalCheck, externalCheck;
-//    private InterstitialAds interstitialAds;
+    private BottomSheetDialog mBottomSheetDialog;
+    private String onClickPath;
+    private LinearLayout fragment_history_bottom_sheet_openFile;
+    //    private InterstitialAds interstitialAds;
 
 
 //    public enum DataHolder {
@@ -178,7 +186,9 @@ public class ShowDuplicate extends AppCompatActivity {
 
         reference();
 
-
+        for (String get : Data) {
+            Log.e("AfterLoading", get);
+        }
         assert Data != null;
         if (Data.isEmpty()) {
             nothingToShow_ConstraintsLayout.setVisibility(View.VISIBLE);
@@ -239,8 +249,16 @@ public class ShowDuplicate extends AppCompatActivity {
                                         int groupPosition, int childPosition, long id) {
                 // TODO Auto-generated method stub
 
-                open_With(new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)));
-                expandableduplicatelistadapter.getChildView(groupPosition, childPosition, false, v, parent);
+//                open_With(new File(Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition)));
+//                expandableduplicatelistadapter.getChildView(groupPosition, childPosition, false, v, parent);
+                onClickPath = Objects.requireNonNull(list_Header_Child.get(list_Header.get(groupPosition))).get(childPosition);
+                if (new File(onClickPath).isDirectory())
+                    fragment_history_bottom_sheet_openFile.setVisibility(View.GONE);
+                else {
+                    fragment_history_bottom_sheet_openFile.setVisibility(View.VISIBLE);
+
+                }
+                mBottomSheetDialog.show();
 
                 return true;
             }
@@ -269,6 +287,7 @@ public class ShowDuplicate extends AppCompatActivity {
         deleteDuplicateButton1 = findViewById(R.id.deleteDuplicateButton1);
 
 
+
         // create object
         multiThreadingtask2 = new MultiThreadingTask2();
         notificationPermissionCheck = new NotificationPermissionCheck(ShowDuplicate.this);
@@ -287,7 +306,21 @@ public class ShowDuplicate extends AppCompatActivity {
         unnecessaryList.add(".apk");
 
 
+        mBottomSheetDialog = new BottomSheetDialog(ShowDuplicate.this);
+        @SuppressLint("InflateParams") View sheetView = getLayoutInflater().inflate(R.layout.layout_dialog_moreoption, null);
+        mBottomSheetDialog.setContentView(sheetView);
+
+        fragment_history_bottom_sheet_openFile = sheetView.findViewById(R.id.fragment_history_bottom_sheet_openFile);
+        fragment_history_bottom_sheet_openFile.setOnClickListener(new Onclick());
+        LinearLayout fragment_history_bottom_sheet_viewFolder = sheetView.findViewById(R.id.fragment_history_bottom_sheet_viewFolder);
+        fragment_history_bottom_sheet_viewFolder.setOnClickListener(new Onclick());
+        LinearLayout fragment_history_bottom_sheet_moreInfo = sheetView.findViewById(R.id.fragment_history_bottom_sheet_moreInfo);
+        fragment_history_bottom_sheet_moreInfo.setOnClickListener(new Onclick());
+
+
+
     }
+
 
     public void OnClick(final View v) {
 
@@ -320,7 +353,7 @@ public class ShowDuplicate extends AppCompatActivity {
 
     private void OnRefresh(final boolean whenStart) {
         ArrayList<String> separateList = new ArrayList<>(Arrays.asList("And", "WhatsApp Unnecessary Data", "App Memory",
-                "Apk"));
+                "Apk", "Obsolete Folder"));
 
         int i, j = 0;
         String heading = null;
@@ -341,7 +374,7 @@ public class ShowDuplicate extends AppCompatActivity {
         for (String get : Data) {
 
             if (get.equals(separateList.get(0)) || get.equals(separateList.get(1)) || get.equals(separateList.get(2))
-                    || get.equals(separateList.get(3))) {
+                    || get.equals(separateList.get(3)) || get.equals(separateList.get(4))) {
                 if (!sets.isEmpty()) {
                     switch (get) {
                         case "And":
@@ -356,6 +389,9 @@ public class ShowDuplicate extends AppCompatActivity {
                             break;
                         case "Apk":
                             heading = separateList.get(3);
+                            break;
+                        case "Obsolete Folder":
+                            heading = separateList.get(4);
                             break;
                     }
                     list_Header.add(heading);
@@ -383,8 +419,14 @@ public class ShowDuplicate extends AppCompatActivity {
     }
 
     public boolean IsMatchUnnecessary(final String path) {
+
         for(String gets:unnecessaryList){
             if(path.contains(gets)) return true;
+            else if (new File(path).isDirectory()) {
+                if (Objects.requireNonNull(new File(path).listFiles()).length == 0
+                        || new File(path).getName().contains("log") || new File(path).getName().contains("Log"))
+                    return true;
+            }
         }
         return false;
     }
@@ -662,4 +704,41 @@ public class ShowDuplicate extends AppCompatActivity {
     }
 
 
+    public void Dialog_InformationData() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Dialog_InformationData information_data = new Dialog_InformationData(onClickPath, ShowDuplicate.this);
+        information_data.show(ft, "dialog");
+    }
+
+    private void SpecificFolder() {
+        String getPath = onClickPath.replace("/" + new File(onClickPath).getName(), "");
+        Uri selectedUri = Uri.parse(getPath);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri, "resource/folder");
+
+        if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+            startActivity(intent);
+        } else {
+            CustomToast.ToastIt(getApplicationContext(), "No file explorer found");
+        }
+    }
+
+    class Onclick implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.fragment_history_bottom_sheet_openFile:
+                    open_With(new File(onClickPath));
+                    break;
+                case R.id.fragment_history_bottom_sheet_viewFolder:
+                    SpecificFolder();
+                    break;
+                case R.id.fragment_history_bottom_sheet_moreInfo:
+                    Dialog_InformationData();
+                    mBottomSheetDialog.dismiss();
+                    break;
+            }
+        }
+    }
 }

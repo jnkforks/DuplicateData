@@ -1,4 +1,4 @@
-package com.sudoajay.duplication_data.Toast;
+package com.sudoajay.duplication_data.HelperClass;
 
 import android.content.Context;
 import android.graphics.PorterDuff;

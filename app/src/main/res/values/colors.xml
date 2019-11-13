@@ -56,4 +56,8 @@
     <color name="textColorOnCustomSpinner">#000000</color>
     <string name="endlessly_Date">Endlessly</string>
     <string name="repeatedly_Text">Repeatedly Timer</string>
+
+    <!--Info Layout -->
+    <color name="infoLayout_BackColor">#2546ABEB</color>
+    <color name="tabBackgroundColor">#ffffff</color>
 </resources>

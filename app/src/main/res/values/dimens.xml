@@ -34,6 +34,7 @@
     <dimen name="slide_Text_Gap">10dp</dimen>
     <dimen name="design_navigation_icon_size" tools:override="true">20dp</dimen>
     <dimen name="btn_skip_textSize">18sp</dimen>
-
+    <dimen name="bottom_sheet_corner_radius">16dp</dimen>
+    <dimen name="bottom_sheet_top_padding">8dp</dimen>
 
 </resources>

@@ -147,7 +147,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         } else {
             if (getName.contains("/WhatsApp/")) {
                 getName = " " + getName.split("/WhatsApp/")[1].replace("/", "");
-                Check_For_Extension(getName, coverImageView);
+                Check_For_Extension(file.getAbsolutePath(), coverImageView);
             } else if (getName.equalsIgnoreCase("/Android/data/")) {
                 getName = file.getAbsolutePath().split("/Android/data/")[1];
 
@@ -187,7 +187,7 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public static long getFileSizeInBytes(String fileName) {
+    static long getFileSizeInBytes(String fileName) {
         long ret = 0;
         File f = new File(fileName);
         if (f.exists()) {
@@ -248,8 +248,6 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
         return (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
 
     }
-
-
     private void Check_For_Extension(String path, ImageView imageView) {
 
         if (!path.contains("com.")) {
@@ -258,39 +256,44 @@ public class ExpandableDuplicateListAdapter extends BaseExpandableListAdapter {
             if (i > 0) {
                 extension = path.substring(i + 1);
             }
-            switch (extension) {
-                case "jpg":
-                case "mp4":
-                case "jpeg":
-                case "png":
-                case "gif":
-                case "webp":
-                    // Images || Videos
-                    Glide.with(context)
-                            .asBitmap()
-                            .load(Uri.fromFile(new File(path)))
-                            .into(imageView);
-                    break;
-                case "mp3":
-                case "m4a":
-                case "amr":
-                case "aac":
-                    // Audiio
-                    getAudioAlbumImageContentUri(imageView, path);
+            if(new File(path).isDirectory())
+                imageView.setImageResource(R.drawable.folder_icon);
+            else {
+                switch (extension) {
 
-                    break;
-                case "pptx":
-                case "pdf":
-                case "docx":
-                case "txt":
-                    imageView.setImageResource(R.drawable.document_icon);
-                    break;
-                case "opus":
-                    imageView.setImageResource(R.drawable.voice_icon);
-                    break;
-                default:
-                    imageView.setImageResource(R.drawable.file_icon);
-                    break;
+                    case "jpg":
+                    case "mp4":
+                    case "jpeg":
+                    case "png":
+                    case "gif":
+                    case "webp":
+                        // Images || Videos
+                        Glide.with(context)
+                                .asBitmap()
+                                .load(Uri.fromFile(new File(path)))
+                                .into(imageView);
+                        break;
+                    case "mp3":
+                    case "m4a":
+                    case "amr":
+                    case "aac":
+                        // Audiio
+                        getAudioAlbumImageContentUri(imageView, path);
+
+                        break;
+                    case "pptx":
+                    case "pdf":
+                    case "docx":
+                    case "txt":
+                        imageView.setImageResource(R.drawable.document_icon);
+                        break;
+                    case "opus":
+                        imageView.setImageResource(R.drawable.voice_icon);
+                        break;
+                    default:
+                        imageView.setImageResource(R.drawable.file_icon);
+                        break;
+                }
             }
         } else {
             try {

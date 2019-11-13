@@ -24,7 +24,7 @@ import com.dpro.widgets.WeekdaysPicker;
 import com.sudoajay.duplication_data.Database_Classes.BackgroundTimerDataBase;
 import com.sudoajay.duplication_data.ForegroundService.ForegroundDialog;
 import com.sudoajay.duplication_data.R;
-import com.sudoajay.duplication_data.Toast.CustomToast;
+import com.sudoajay.duplication_data.HelperClass.CustomToast;
 import com.sudoajay.duplication_data.sharedPreferences.BackgroundProcess;
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService;
 

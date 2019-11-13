@@ -12,6 +12,8 @@ import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreferenc
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -80,9 +82,11 @@ public class DeleteData {
 
     private void SeprateTheData(String path) {
         if (path.contains(Environment.getExternalStorageDirectory().getAbsolutePath())) {
-
-            DeleteTheDataFromInternalStorage(path);
-
+            if (path.contains("/WhatsApp/Databases")) {
+                WhatsappDatabase(new File(path));
+            } else {
+                DeleteTheDataFromInternalStorage(path);
+            }
             if (!atBackground) multiThreadingTask2.onProgressUpdate();
         } else {
             sdcard.add(path);
@@ -90,14 +94,21 @@ public class DeleteData {
 
     }
 
-    private static void DeleteTheDataFromInternalStorage(String path) {
+    private void DeleteTheDataFromInternalStorage(String path) {
         File file = new File(path);
-        file.delete();
-        if (file.exists()) {
-            try {
-                file.getCanonicalFile().delete();
-            } catch (IOException ignored) {
+        if (file.isDirectory()) {
+            for (File child : Objects.requireNonNull(file.listFiles())) {
+                DeleteTheDataFromInternalStorage(child.getAbsolutePath());
+            }
+            if (Objects.requireNonNull(file.listFiles()).length == 0) file.delete();
+        } else {
+            file.delete();
+            if (file.exists()) {
+                try {
+                    file.getCanonicalFile().delete();
+                } catch (IOException ignored) {
 
+                }
             }
         }
 
@@ -135,8 +146,48 @@ public class DeleteData {
                 for (String value : Objects.requireNonNull(sdCardStore.get(getKey))) {
                     DocumentFile save = sdCardDocument.findFile(value);
                     assert save != null;
+                    if (!save.isDirectory()) {
+                        save.delete();
+                    } else {
+                        for (DocumentFile get : save.listFiles()) {
+                            DocumentFile file = save.findFile(Objects.requireNonNull(get.getName()));
+                            assert file != null;
+                            file.delete();
+                        }
+                    }
                     save.delete();
+
                     if (!atBackground) multiThreadingTask2.onProgressUpdate();
+                }
+            }
+        }
+    }
+
+    private void WhatsappDatabase(File database_File) {
+        try {
+            List<File> files = new ArrayList<>(Arrays.asList(Objects.requireNonNull(database_File.listFiles())));
+            Convert_Into_Last_Modified(files);
+            if (files.size() > 1) {
+                for (int i = files.size() - 1; i >= 1; i--) {
+                    DeleteTheDataFromInternalStorage(files.get(i).getAbsolutePath());
+                }
+
+            }
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    private void Convert_Into_Last_Modified(List<File> files) {
+        File temp_File;
+        for (int i = 0; i < files.size(); i++) {
+            for (int j = i; j < files.size() - 1; j++) {
+                Date date1 = new Date(files.get(i).lastModified());
+                Date date2 = new Date(files.get(j + 1).lastModified());
+                if (date1.compareTo(date2) < 0) {
+                    temp_File = files.get(i);
+                    files.set(i, files.get(j + 1));
+                    files.set(j + 1, temp_File);
                 }
             }
         }
