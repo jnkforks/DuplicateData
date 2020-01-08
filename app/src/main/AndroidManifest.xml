@@ -19,7 +19,7 @@
 
         <!-- Main Launcher Class -->
         <activity
-            android:name=".IntroSceen.WelcomeActivity"
+            android:name=".introSceen.WelcomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SplashScreen.Splash"
+        <activity android:name=".splashScreen.Splash"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             tools:ignore="InnerclassSeparator" />
@@ -42,7 +42,7 @@
 
         <activity
             android:screenOrientation="portrait"
-            android:name=".DuplicationData.ShowDuplicate"
+            android:name=".duplicationData.ShowDuplicate"
             tools:ignore="InnerclassSeparator" />
 
         <meta-data
@@ -61,7 +61,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <service android:name="com.sudoajay.duplication_data.Firebase_Message_Config.MyFireBaseInstanceMessageService"
+        <service android:name="com.sudoajay.duplication_data.fireBaseMessageConfig.MyFireBaseInstanceMessageService"
             tools:ignore="InnerclassSeparator"
             android:stopWithTask="false"
             android:exported="false">
@@ -69,14 +69,17 @@
 
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service> <service android:enabled="true" android:name=".ForegroundService.Foreground"
+        </service>
+
+        <service android:enabled="true" android:name=".foregroundService.Foreground"
         tools:ignore="InnerclassSeparator" />
-
-
-        <service android:name=".Receive_Boot_Completed.ForegroundServiceBoot"
+        <service android:enabled="true" android:name=".service.ScanningService"
             tools:ignore="InnerclassSeparator" />
 
-        <receiver android:name=".Receive_Boot_Completed.MyRebootReceiver"
+        <service android:name=".receiveBootCompleted.ForegroundServiceBoot"
+            tools:ignore="InnerclassSeparator" />
+
+        <receiver android:name=".receiveBootCompleted.MyRebootReceiver"
             tools:ignore="InnerclassSeparator">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

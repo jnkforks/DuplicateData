@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    tools:context=".DuplicationData.ShowDuplicate">
+    tools:context=".duplicationData.ShowDuplicate">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nothingToShow_ConstraintsLayout"
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="OnClick"
+                android:onClick="onClick"
                 android:paddingTop="2dp"
                 android:paddingEnd="6dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -120,7 +120,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/refresh_ImageView_Margin_Right"
-                android:onClick="OnClick"
+                android:onClick="onClick"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/shareImageView"
                 app:layout_constraintTop_toTopOf="parent"
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/share_ImageView_Margin_Right"
-                android:onClick="OnClick"
+                android:onClick="onClick"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -159,7 +159,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/activity_bottom_button_color"
-        android:onClick="OnClick"
+        android:onClick="onClick"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -175,7 +175,7 @@
         android:background="@drawable/button_background_no_effects"
         android:drawableStart="@drawable/delete_icon"
         android:fontFamily="sans-serif-smallcaps"
-        android:onClick="OnClick"
+        android:onClick="onClick"
         android:text="@string/delete_Duplicate_Button_text"
         android:textAllCaps="false"
         android:textColor="#000000"

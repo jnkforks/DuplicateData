@@ -38,7 +38,10 @@
     <group
         android:id="@+id/grp1"
         android:checkableBehavior="single">
-
+        <item
+            android:id="@+id/nav_More_Apps"
+            android:icon="@drawable/more_apps_icon"
+            android:title="@string/nav_More_Apps" />
         <item
             android:id="@+id/nav_Send_Feedback"
             android:icon="@drawable/send_feedback_icon"
