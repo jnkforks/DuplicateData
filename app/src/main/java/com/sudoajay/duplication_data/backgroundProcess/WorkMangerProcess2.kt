@@ -12,11 +12,10 @@ import com.sudoajay.duplication_data.delete.DeleteDataUsingFile
 import com.sudoajay.duplication_data.duplicationData.ExpandableDuplicateListAdapter
 import com.sudoajay.duplication_data.duplicationData.ScanDuplicateDataWithDoc
 import com.sudoajay.duplication_data.duplicationData.ScanDuplicateDataWithFile
-import com.sudoajay.duplication_data.duplicationData.ShowDuplicate.Companion.convertIt
+import com.sudoajay.duplication_data.helperClass.FileSize
 import com.sudoajay.duplication_data.notification.NotifyNotification
 import com.sudoajay.duplication_data.permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.permission.AndroidSdCardPermission
-import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService.Companion.nextDate
 import java.io.File
@@ -47,8 +46,8 @@ class WorkMangerProcess2(context: Context, workerParams: WorkerParameters) : Wor
             if (androidSdCardPermission.isSdStorageWritable) sdcardCheck = View.VISIBLE
 
 
-            // Its supports till android 9 & api 28
-            listHeaderChild = if (Build.VERSION.SDK_INT <= 22) {
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            listHeaderChild = if (Build.VERSION.SDK_INT <= 29) {
                 val scanDuplicateDataWithFile = ScanDuplicateDataWithFile(context)
                 scanDuplicateDataWithFile.duplication(internalCheck, sdcardCheck)
                 scanDuplicateDataWithFile.listHeaderChild
@@ -65,7 +64,8 @@ class WorkMangerProcess2(context: Context, workerParams: WorkerParameters) : Wor
                 }
             }
 
-            if (Build.VERSION.SDK_INT <= 22) {
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            if (Build.VERSION.SDK_INT <= 29) {
                 DeleteDataUsingFile(context, deletedList)
             } else {
                 DeleteDataUsingDoc(context, deletedList)
@@ -74,7 +74,7 @@ class WorkMangerProcess2(context: Context, workerParams: WorkerParameters) : Wor
 
             if (fileSize != 0L) {
                 val notifyNotification = NotifyNotification(context)
-                notifyNotification.notify("You Have Saved " + convertIt(fileSize) +
+                notifyNotification.notify("You Have Saved " + FileSize.convertIt(fileSize) +
                         " Of Data ", context.resources.getString(R.string.delete_Done_title))
                 // this is just for backup plan
                 getNextDate(context)

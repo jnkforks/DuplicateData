@@ -41,7 +41,7 @@ class DeleteDataUsingDoc {
         val sdCardPathSharedPreference = SdCardPathSharedPreference(mContext!!)
         val externalPathSharedPreference = ExternalPathSharedPreference(mContext!!)
 
-        sdCardPath = sdCardPathSharedPreference.sdCardPath!!
+        sdCardPath = sdCardPathSharedPreference.sdCardPath
         sdCardDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(sdCardPathSharedPreference.stringURI))
 
         externalPath = externalPathSharedPreference.externalPath!!
@@ -55,7 +55,7 @@ class DeleteDataUsingDoc {
     }
 
     private fun separateTheData(uriPath: String) {
-        val path = FileUtils.replaceSdCardPath(mContext, FileUtils.getPath(mContext, Uri.parse(uriPath)))
+        val path = FileUtils.replaceSdCardPath(mContext, FileUtils.getPath(mContext!!, Uri.parse(uriPath)).toString())
         if (path.contains(externalPath)) {
             deleteTheData(path, 1)
         } else {
@@ -66,20 +66,23 @@ class DeleteDataUsingDoc {
 
     private fun deleteTheData(path: String, type: Int) {
         var documentFile: DocumentFile
+        try {
+            val spilt: String
+            if (type == 1) {
+                spilt = externalPath
+                documentFile = externalDocumentFile!!
+            } else {
+                spilt = sdCardPath
+                documentFile = sdCardDocumentFile!!
+            }
+            val list = path.split(spilt)[1].split("/")
+            for (file in list) {
+                documentFile = documentFile.findFile(file)!!
+            }
+            deleteIt(documentFile)
+        } catch (ignored: Exception) {
 
-        val spilt: String
-        if (type == 1) {
-            spilt = externalPath
-            documentFile = externalDocumentFile!!
-        } else {
-            spilt = sdCardPath
-            documentFile = sdCardDocumentFile!!
         }
-        val list = path.split(spilt)[1].split("/")
-        for (file in list) {
-            documentFile = documentFile.findFile(file)!!
-        }
-        deleteIt(documentFile)
 
     }
 

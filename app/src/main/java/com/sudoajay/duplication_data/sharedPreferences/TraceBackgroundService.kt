@@ -10,8 +10,7 @@ import java.util.*
 /**
  * Created by Lincoln on 05/05/16.
  */
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class TraceBackgroundService @SuppressLint("CommitPrefEdits")
+class TraceBackgroundService
 constructor(private val _context: Context) {
     private val pref: SharedPreferences
     private val editor: SharedPreferences.Editor
@@ -56,7 +55,7 @@ constructor(private val _context: Context) {
             @SuppressLint("SimpleDateFormat") val dateFormat = SimpleDateFormat("dd-MM-yyyy")
             isBackgroundServiceWorking = try {
                 if (taskB != "" || taskB != "Empty" || taskB != null) {
-                    val getDate = dateFormat.parse(taskB)
+                    val getDate = dateFormat.parse(taskB.toString())
                     !yesterday.after(getDate)
                 } else {
                     true

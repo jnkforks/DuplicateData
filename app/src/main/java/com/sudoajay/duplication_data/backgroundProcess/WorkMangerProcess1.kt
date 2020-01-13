@@ -1,6 +1,5 @@
 package com.sudoajay.duplication_data.backgroundProcess
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.view.View
@@ -10,7 +9,7 @@ import com.sudoajay.duplication_data.R
 import com.sudoajay.duplication_data.duplicationData.ExpandableDuplicateListAdapter
 import com.sudoajay.duplication_data.duplicationData.ScanDuplicateDataWithDoc
 import com.sudoajay.duplication_data.duplicationData.ScanDuplicateDataWithFile
-import com.sudoajay.duplication_data.duplicationData.ShowDuplicate.Companion.convertIt
+import com.sudoajay.duplication_data.helperClass.FileSize
 import com.sudoajay.duplication_data.notification.NotifyNotification
 import com.sudoajay.duplication_data.permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.permission.AndroidSdCardPermission
@@ -25,7 +24,6 @@ class WorkMangerProcess1(context: Context, workerParams: WorkerParameters) : Wor
     }
 
     companion object {
-        @SuppressLint("ObsoleteSdkInt")
         fun getWorkDone(context: Context) { // local variable
             var sdcardCheck = View.INVISIBLE
             var internalCheck = View.INVISIBLE
@@ -41,8 +39,8 @@ class WorkMangerProcess1(context: Context, workerParams: WorkerParameters) : Wor
             if (androidSdCardPermission.isSdStorageWritable) sdcardCheck = View.VISIBLE
 
 
-            //  Its supports till android 9 & api 28
-            listHeaderChild = if (Build.VERSION.SDK_INT <= context.getString(R.string.apiLevel).toInt()) {
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            listHeaderChild = if (Build.VERSION.SDK_INT <= 29) {
                 val scanDuplicateDataWithFile = ScanDuplicateDataWithFile(context)
                 scanDuplicateDataWithFile.duplication(internalCheck, sdcardCheck)
                 scanDuplicateDataWithFile.listHeaderChild
@@ -61,7 +59,7 @@ class WorkMangerProcess1(context: Context, workerParams: WorkerParameters) : Wor
             }
 
             if (fileSize != 0L) {
-                textPass = "We Have Found " + convertIt(fileSize) + " Of unnecessary Files"
+                textPass = "We Have Found " + FileSize.convertIt(fileSize) + " Of unnecessary Files"
                 val notifyNotification = NotifyNotification(context)
                 notifyNotification.notify(textPass, context.getString(R.string.file_found_title))
             }

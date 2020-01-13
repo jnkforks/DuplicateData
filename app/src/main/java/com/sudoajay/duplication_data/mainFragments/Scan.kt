@@ -2,23 +2,24 @@ package com.sudoajay.duplication_data.mainFragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.sudoajay.duplication_data.MainActivity
 import com.sudoajay.duplication_data.R
 import com.sudoajay.duplication_data.duplicationData.ShowDuplicate
-import com.sudoajay.duplication_data.helperClass.CustomToast
+import com.sudoajay.duplication_data.helperClass.FileSize
 import com.sudoajay.duplication_data.permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.permission.AndroidSdCardPermission
 import com.sudoajay.duplication_data.sharedPreferences.ExternalPathSharedPreference
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import com.sudoajay.duplication_data.storageStats.StorageInfo
-import com.sudoajay.duplication_data.storageStats.StorageInfo.Companion.convertIt
-import java.io.File
 
 /**
  * A simple [Fragment] subclass.
@@ -37,6 +38,8 @@ class Scan : Fragment() {
     private var fileSizeText: Button? = null
     private var totalSizeLong: Long = 0
     private var customToastLayout: View? = null
+    private var customToast: Toast? = null
+
     fun createInstance(main_navigation: MainActivity?): Scan {
         this.mainNavigation = main_navigation
         return this
@@ -72,7 +75,9 @@ class Scan : Fragment() {
         when (v.id) {
             R.id.scan_Button, R.id.scan_Button1 ->  // if nothing check
                 if (internalCheck!!.visibility == View.GONE &&
-                        externalCheck!!.visibility == View.GONE) CustomToast.toastIt(context, getString(R.string.selectStorageText)) else {
+                        externalCheck!!.visibility == View.GONE)
+                    customToastForSelect()
+                else {
                     try {
                         sendForward()
                     } catch (ignored: Exception) {
@@ -110,7 +115,7 @@ class Scan : Fragment() {
                 }
             }
         }
-        fileSizeText!!.text = resources.getString(R.string.file_Size_Text, convertIt(totalSizeLong))
+        fileSizeText!!.text = resources.getString(R.string.file_Size_Text, FileSize.convertIt(totalSizeLong))
     }
 
 
@@ -128,7 +133,7 @@ class Scan : Fragment() {
             storageInfo!!.totalExternalMemorySize
             totalSizeLong += storageInfo!!.externalTotalSize - storageInfo!!.externalAvailableSize
         }
-        fileSizeText!!.text = resources.getString(R.string.file_Size_Text, convertIt(totalSizeLong))
+        fileSizeText!!.text = resources.getString(R.string.file_Size_Text, FileSize.convertIt(totalSizeLong))
     }
 
     private fun sendForward() {
@@ -136,5 +141,20 @@ class Scan : Fragment() {
         intent.putExtra("internalCheck", internalCheck!!.visibility)
         intent.putExtra("externalCheck", externalCheck!!.visibility)
         startActivity(intent)
+    }
+
+    private fun customToastForSelect() {
+        val toastTextView = customToastLayout!!.findViewById<TextView>(R.id.text)
+        if (customToast == null || customToast!!.view.windowVisibility != View.VISIBLE) {
+            customToast = Toast(context)
+            customToast!!.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+            customToast!!.duration = Toast.LENGTH_LONG
+            customToast!!.view = customToastLayout
+            toastTextView.text = getString(R.string.selectStorageText)
+            customToast!!.show()
+        } else {
+            customToast!!.cancel()
+        }
+
     }
 }

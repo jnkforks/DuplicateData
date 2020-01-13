@@ -3,11 +3,12 @@ package com.sudoajay.duplication_data.storageStats
 import android.content.Context
 import android.os.Build
 import android.os.StatFs
+import com.sudoajay.duplication_data.helperClass.FileSize
 import com.sudoajay.duplication_data.permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.permission.AndroidSdCardPermission
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import java.io.File
-import java.text.DecimalFormat
+
 
 class StorageInfo(val context: Context) {
     private var sdCardPath: String = ""
@@ -29,59 +30,73 @@ class StorageInfo(val context: Context) {
     private val availableInternalMemorySize: Unit
         get() {
             try {
-
-                val path = AndroidExternalStoragePermission.getExternalPath(context)
-                val stat = StatFs(path)
-                val blockSize = stat.blockSizeLong
-                val availableBlocks = stat.availableBlocksLong
-                internalAvailableSize = availableBlocks * blockSize
+                val externalPath = AndroidExternalStoragePermission.getExternalPath(context)
+                internalAvailableSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    val stat = StatFs(externalPath)
+                    val blockSize = stat.blockSizeLong
+                    val availableBlocks = stat.availableBlocksLong
+                    availableBlocks * blockSize
+                } else {
+                    val file = File(externalPath.toString())
+                    file.freeSpace
+                }
             } catch (ignored: Exception) {
             }
         }
 
     val usedInternalMemorySize: String
         get() = try {
-            convertIt(internalTotalSize - internalAvailableSize)
+            FileSize.convertIt(internalTotalSize - internalAvailableSize)
         } catch (ignored: Exception) {
             "0.00 GB"
         }
 
     val totalInternalMemorySize: String
         get() {
-            val path: String? = AndroidExternalStoragePermission.getExternalPath(context)
-            val stat = StatFs(path)
-            val blockSize = stat.blockSizeLong
-            val totalBlocks = stat.blockCountLong
-            internalTotalSize = totalBlocks * blockSize
-            return convertIt(internalTotalSize)
+            val externalPath: String? = AndroidExternalStoragePermission.getExternalPath(context)
+            internalTotalSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                val stat = StatFs(externalPath)
+                val blockSize = stat.blockSizeLong
+                val totalBlocks = stat.blockCountLong
+                totalBlocks * blockSize
+            } else {
+                val file = File(externalPath.toString())
+                file.totalSpace
+            }
+            return FileSize.convertIt(internalTotalSize)
         }
 
     val availableInternalPercentage: String
-        get() = getDecimal2Round((internalAvailableSize * 100).toDouble() / internalTotalSize).also { availableInternalPercent = it }
+        get() = FileSize.getDecimal2Round((internalAvailableSize * 100).toDouble() / internalTotalSize).also { availableInternalPercent = it }
 
     val usedInternalPercentage: String
-        get() = getDecimal2Round((internalTotalSize - internalAvailableSize).toDouble() * 100 / internalTotalSize)
+        get() = FileSize.getDecimal2Round((internalTotalSize - internalAvailableSize).toDouble() * 100 / internalTotalSize)
 
     private val availableExternalMemorySize: Unit
         get() {
-            externalAvailableSize = if (externalMemoryExist()) {
+            if (externalMemoryExist()) {
                 try {
                     sdCardPath = sdCardPathSharedPreference.sdCardPath.toString()
-                    val stat = StatFs(sdCardPath)
-                    val blockSize = stat.blockSizeLong
-                    val availableBlocks = stat.availableBlocksLong
-                    availableBlocks * blockSize
+                    externalAvailableSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                        val stat = StatFs(sdCardPath)
+                        val blockSize = stat.blockSizeLong
+                        val availableBlocks = stat.availableBlocksLong
+                        availableBlocks * blockSize
+                    } else {
+                        val file = File(sdCardPath)
+                        file.freeSpace
+                    }
                 } catch (ignored: Exception) {
-                    0
-                } as Long
+                    externalAvailableSize = 0
+                }
             } else {
-                0
+                externalAvailableSize = 0
             }
         }
 
     val usedExternalMemorySize: String
         get() = try {
-            if (externalMemoryExist()) convertIt(externalTotalSize - externalAvailableSize) else {
+            if (externalMemoryExist()) FileSize.convertIt(externalTotalSize - externalAvailableSize) else {
                 "0.00 GB"
             }
         } catch (ignored: Exception) {
@@ -92,11 +107,16 @@ class StorageInfo(val context: Context) {
         get() = if (externalMemoryExist()) {
             try {
                 sdCardPath = sdCardPathSharedPreference.sdCardPath.toString()
-                val stat = StatFs(sdCardPath)
-                val blockSize = stat.blockSizeLong
-                val totalBlocks = stat.blockCountLong
-                externalTotalSize = totalBlocks * blockSize
-                convertIt(externalTotalSize)
+                externalTotalSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    val stat = StatFs(sdCardPath)
+                    val blockSize = stat.blockSizeLong
+                    val totalBlocks = stat.blockCountLong
+                    totalBlocks * blockSize
+                } else {
+                    val file = File(sdCardPath)
+                    file.totalSpace
+                }
+                FileSize.convertIt(externalTotalSize)
             } catch (ignored: Exception) {
                 "0.0 GB"
             }
@@ -105,37 +125,12 @@ class StorageInfo(val context: Context) {
         }
 
     val availableExternalPercentage: String
-        get() = getDecimal2Round((externalAvailableSize * 100).toDouble() / externalTotalSize)
+        get() = FileSize.getDecimal2Round((externalAvailableSize * 100).toDouble() / externalTotalSize)
 
     val usedExternalPercentage: String
-        get() = getDecimal2Round((externalTotalSize - externalAvailableSize).toDouble() * 100 / externalTotalSize)
-
-    companion object {
-        @JvmStatic
-        fun convertIt(size: Long): String {
-            return try {
-                when {
-                    size > 1024 * 1024 * 1024 -> { // GB
-                        getDecimal2Round(size.toDouble() / (1024 * 1024 * 1024)) + " GB"
-                    }
-                    size > 1024 * 1024 -> { // MB
-                        getDecimal2Round(size.toDouble() / (1024 * 1024)) + " MB"
-                    }
-                    else -> { // KB
-                        getDecimal2Round(size.toDouble() / 1024) + " KB"
-                    }
-                }
-            } catch (e: Exception) {
-                ""
-            }
-        }
+        get() = FileSize.getDecimal2Round((externalTotalSize - externalAvailableSize).toDouble() * 100 / externalTotalSize)
 
 
-        private fun getDecimal2Round(time: Double): String {
-            val df = DecimalFormat("#.#")
-            return java.lang.Double.valueOf(df.format(time)).toString()
-        }
-    }
 
     // get sd card path url constructor
     init {

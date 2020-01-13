@@ -44,12 +44,12 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
             //                chooseSpinner.setSelectedIndex(cursor.getInt(1));
             repeatedlySpinner!!.selectedIndex = cursor.getInt(1)
             if (cursor.getInt(2) == 3) {
-                filltheselectedWeekdays(cursor.getString(2))
+                fillTheSelectedWeekdays(cursor.getString(2))
                 weekdaysPicker!!.visibility = View.VISIBLE
             }
             try {
                 val calendar = Calendar.getInstance()
-                @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
+                 val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                 simpleDateFormat.calendar = calendar
                 if (cursor.getString(3).equals(simpleDateFormat.format(calendar.time), ignoreCase = true)) {
                     endlesslyEditText!!.setText(resources.getText(R.string.today_Date))
@@ -128,7 +128,7 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
         })
     }
 
-    @SuppressLint("SetTextI18n", "SimpleDateFormat")
+    @SuppressLint("SetTextI18n")
     private fun getEndlesslyDate() {
         val c = Calendar.getInstance()
         val cYear = c[Calendar.YEAR]
@@ -136,18 +136,22 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
         val cDay = c[Calendar.DAY_OF_MONTH]
         val datePickerDialog: DatePickerDialog
         // Theme
-        val theme1 = android.R.style.Theme_Material_Light_Dialog
+        val theme1 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            android.R.style.Theme_Material_Light_Dialog
+        } else {
+            R.style.AppTheme
+        }
         datePickerDialog = DatePickerDialog(this.context!!, theme1,
                 OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                     endlesslyEditText!!.setText(dayOfMonth.toString() + "-" + (monthOfYear + 1) + "-" + year)
                     val calendar = Calendar.getInstance()
                     calendar[year, monthOfYear] = dayOfMonth
-                    val getEndlesslyDate = SimpleDateFormat("dd-MM-yyyy")
+                    val getEndlesslyDate = SimpleDateFormat("dd-MM-yyyy",Locale.getDefault())
                     getSelectedEndlesslyDate = getEndlesslyDate.format(calendar.time)
                     // check for today date
                     try {
                         val calendars = Calendar.getInstance()
-                        @SuppressLint("SimpleDateFormat") val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
+                         val simpleDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                         simpleDateFormat.calendar = calendars
                         if (getSelectedEndlesslyDate.equals(simpleDateFormat.format(calendars.time), ignoreCase = true)) {
                             endlesslyEditText!!.setText(resources.getText(R.string.today_Date))
@@ -211,7 +215,7 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
     }
 
     // week days selected
-    private fun filltheselectedWeekdays(week: String) {
+    private fun fillTheSelectedWeekdays(week: String) {
         val split = week.split("").toTypedArray()
         val list: MutableList<Int> = ArrayList()
         for (weeks_Days in split) {
@@ -267,7 +271,7 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {}
     override fun onNothingSelected(parent: AdapterView<*>?) {}
-    // only for forground service
+    // only for foreground service
     private fun checkingAndSetting() {
         val traceBackgroundService = TraceBackgroundService(this.context!!)
         if (!traceBackgroundService.isBackgroundServiceWorking

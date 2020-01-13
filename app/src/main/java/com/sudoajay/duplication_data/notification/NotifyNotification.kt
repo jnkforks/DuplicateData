@@ -42,10 +42,10 @@ class NotifyNotification
 // Constructor
 (private val context: Context) {
     private var notificationManager: NotificationManager? = null
-    fun notify(textPass: String?, notficationHint: String) { // local variable
+    fun notify(textPass: String?, notificationHint: String) { // local variable
         // setup intent and passing value
-        val intent: Intent = Intent(context, MainActivity::class.java)
-        if (notficationHint.equals(context.getString(R.string.delete_Done_title), ignoreCase = true)) intent.putExtra("passing", "DuplicateData")
+        val intent = Intent(context, MainActivity::class.java)
+        if (notificationHint.equals(context.getString(R.string.delete_Done_title), ignoreCase = true)) intent.putExtra("passing", "DuplicateData")
         // setup according Which Type
 // if There is no data match with query
         val channelId: String = context.getString(R.string.transfer_Done_Id) // channel_id
@@ -59,7 +59,7 @@ class NotifyNotification
             assert(notificationManager != null)
             var mChannel = notificationManager!!.getNotificationChannel(channelId)
             if (mChannel == null) {
-                mChannel = NotificationChannel(channelId, notficationHint, importance)
+                mChannel = NotificationChannel(channelId, notificationHint, importance)
                 notificationManager!!.createNotificationChannel(mChannel)
             }
         }
@@ -69,7 +69,7 @@ class NotifyNotification
 // and vibration.
                 .setDefaults(Notification.DEFAULT_ALL) // Set required fields, including the small icon, the
 // notification title, and text.
-                .setContentTitle(notficationHint)
+                .setContentTitle(notificationHint)
                 .setContentText(textPass) // All fields below this line are optional.
 // Use a default priority (recognized on devices running Android
 // 4.1 or later)
@@ -77,7 +77,7 @@ class NotifyNotification
                 .setSound(uri) // Provide a large icon, shown with the notification in the
 // notification drawer on devices running Android 3.0 or later.
 // Set ticker text (preview) information for this notification.
-                .setTicker(notficationHint) // Show a number. This is useful when stacking notifications of
+                .setTicker(notificationHint) // Show a number. This is useful when stacking notifications of
 // a single type.
                 .setNumber(1)
                 .setSmallIcon(R.drawable.data_deleted_icon)

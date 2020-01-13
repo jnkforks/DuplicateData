@@ -1,6 +1,5 @@
 package com.sudoajay.duplication_data.databaseClasses
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -34,9 +33,10 @@ class BackgroundTimerDataBase(context: Context?) : SQLiteOpenHelper(context, DAT
 
     fun checkForEmpty(): Boolean {
         val sqLiteDatabase = this.writableDatabase
-        @SuppressLint("Recycle") val cursor = sqLiteDatabase.rawQuery("select * from $DATABASE_TABLE_NAME", null)
+        val cursor = sqLiteDatabase.rawQuery("select * from $DATABASE_TABLE_NAME", null)
         cursor.moveToFirst()
         val count = cursor.count
+        cursor.close()
         return count <= 0
     }
 

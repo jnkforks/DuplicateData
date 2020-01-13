@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@color/background_Color">
 
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,13 +33,16 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/linearLayout"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="ContentDescription"
+                />
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -54,7 +56,9 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/coverImageView"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintVertical_bias="0.0"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp">
 
                 <TextView
                     android:id="@+id/nameTextView"
@@ -92,20 +96,19 @@
 
             </LinearLayout>
 
-
             <CheckBox
                 android:id="@+id/checkBoxView"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
                 android:checked="true"
                 android:focusable="false"
-                android:buttonTint="@color/colorPrimary"
+                android:theme="@style/MyCheckBox"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

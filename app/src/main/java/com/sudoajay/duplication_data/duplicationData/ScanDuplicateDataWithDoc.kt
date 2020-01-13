@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.webkit.MimeTypeMap
 import androidx.documentfile.provider.DocumentFile
@@ -19,7 +18,6 @@ import java.security.NoSuchAlgorithmException
 import java.util.*
 import kotlin.collections.ArrayList
 
-@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ScanDuplicateDataWithDoc(private var context: Context?) {
     private val getAllData: MutableList<DocumentFile> = LinkedList()
     private val listPath: MutableList<String> = ArrayList()
@@ -133,7 +131,7 @@ class ScanDuplicateDataWithDoc(private var context: Context?) {
                 }
 
             }
-            Log.e("GotSomething", type.toString() + " --- " + separateList[type - 1])
+
             checkBoxArray[countAll] = ArrayList(setsBoolean)
             arrowImageResource.add(R.drawable.arrow_up_icon)
             storingSizeArray[countAll] = ArrayList(longSize)
@@ -233,7 +231,6 @@ class ScanDuplicateDataWithDoc(private var context: Context?) {
         }
     }
 
-    @SuppressLint("DefaultLocale")
     private fun getMimeType(uri: Uri): String? {
         val mimeType: String?
         mimeType = if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
@@ -243,7 +240,7 @@ class ScanDuplicateDataWithDoc(private var context: Context?) {
             val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
                     .toString())
             MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                    fileExtension.toLowerCase())
+                    fileExtension.toLowerCase(Locale.getDefault()))
         }
         return mimeType
     }
@@ -273,7 +270,7 @@ class ScanDuplicateDataWithDoc(private var context: Context?) {
                 getChildUri = child.uri.toString()
                 if (child.isDirectory) {
                     if (!isRejectedFolder(getChildUri)) {
-                        if (child.listFiles().isEmpty()) {
+                        if (child.listFiles().isNullOrEmpty()) {
                             emptyFolder.add(getChildUri)
                         } else {
                             when (checkForLogCache(child.name.toString())) {

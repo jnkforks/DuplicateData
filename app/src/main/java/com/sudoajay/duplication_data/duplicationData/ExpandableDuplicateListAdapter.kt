@@ -23,11 +23,11 @@ import androidx.documentfile.provider.DocumentFile
 import com.bumptech.glide.Glide
 import com.sudoajay.duplication_data.R
 import com.sudoajay.duplication_data.helperClass.DocumentHelperClass
+import com.sudoajay.duplication_data.helperClass.FileSize
 import com.sudoajay.duplication_data.helperClass.FileUtils
 import java.io.File
 
 
-@Suppress("NAME_SHADOWING", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "ObsoleteSdkInt")
 class ExpandableDuplicateListAdapter internal constructor(private val showDuplicate: ShowDuplicate, private val listHeader: MutableList<String>, private val listHeaderChild: LinkedHashMap<Int, List<String>>, private val arrowImageResource: List<Int>,
                                                           val checkBoxArray: MutableMap<Int, List<Boolean>>, private var storingSizeArray: MutableMap<Int, List<Long>>) : BaseExpandableListAdapter() {
     private val context: Context = showDuplicate.applicationContext
@@ -60,15 +60,15 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
         return false
     }
 
-    @SuppressLint("SetTextI18n", "InflateParams")
-    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
+    @SuppressLint("SetTextI18n")
+    override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convert: View?, parent: ViewGroup): View {
 
-        var convertView = convertView
+        var convertView = convert
         val headerTitle = getGroup(groupPosition) as String
         if (convertView == null) {
             val inflateInflater = this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertView = inflateInflater.inflate(R.layout.activity_duplication_list_view, null)
+            convertView = inflateInflater.inflate(R.layout.activity_duplication_list_view, parent, false)
         }
 
 
@@ -87,25 +87,24 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
         for (i in storingSizeArray[groupPosition]!!.indices) {
             dataSize += storingSizeArray[groupPosition]!![i]
         }
-        if (dataSize == -1L) {
+        if (dataSize < 0L) {
             groupSizeTextView!!.text = "( Calc...  )"
         } else {
-            groupSizeTextView!!.text = "(" + convertIt(dataSize) + ")"
+            groupSizeTextView!!.text = "(" + FileSize.convertIt(dataSize) + ")"
         }
 
         return convertView
     }
 
-    @SuppressLint("InflateParams")
-    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
-        var convertView = convertView
+    override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convert: View?, parent: ViewGroup): View {
+        var convertView = convert
         val headerTitle = getGroup(groupPosition) as String
         val headerChildren = getChild(groupPosition, childPosition) as String
 
         if (convertView == null) {
             val inflateInflater = this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertView = inflateInflater.inflate(R.layout.activity_duplication_under_list_view, null)
+            convertView = inflateInflater.inflate(R.layout.activity_duplication_under_list_view, parent, false)
         }
         var getName: String?
 
@@ -115,8 +114,8 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
         val checkBoxView = convertView.findViewById<CheckBox>(R.id.checkBoxView)
         var changeValue: MutableList<Boolean>
 
-        //      Its supports till android 9 & api 28
-        if (Build.VERSION.SDK_INT <= showDuplicate.getString(R.string.apiLevel).toInt()) {
+        //  Here use of DocumentFile in android 10 not File is using anymore
+        if (Build.VERSION.SDK_INT <= 28) {
             val file = File(headerChildren)
             pathTextView.text = headerChildren
 
@@ -138,17 +137,17 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
             val fileUri = Uri.parse(headerChildren)
             val file = DocumentFile.fromSingleUri(context, fileUri)
 
-            pathTextView.text = FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, fileUri))
+            pathTextView.text = FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, fileUri).toString())
 
 
             when (headerTitle) {
                 showDuplicate.scanDuplicateDataWithDoc!!.separateList[3] -> {
-                    getName = FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, fileUri)).split("/Android/data/")[1]
+                    getName = FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, fileUri).toString()).split("/Android/data/")[1]
                     getName = getName.split("/")[0]
                     nameTextView.text = getApplicationName(getName)
                     appIcon(getName, coverImageView)
                 }
-                showDuplicate.scanDuplicateDataWithDoc!!.separateList[2] -> nameTextView.text = getImageFromApk(FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, fileUri)), coverImageView)
+                showDuplicate.scanDuplicateDataWithDoc!!.separateList[2] -> nameTextView.text = getImageFromApk(FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, fileUri).toString()), coverImageView)
 
                 else -> {
                     nameTextView.text = file!!.name
@@ -188,32 +187,7 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
         return true
     }
 
-    private fun convertIt(size: Long): String {
-        return when {
-            size > 1024 * 1024 * 1024 -> { // GB
-                convertToDecimal(size.toFloat() / (1024 * 1024 * 1024)) + " GB"
-            }
-            size > 1024 * 1024 -> { // MB
-                convertToDecimal(size.toFloat() / (1024 * 1024)) + " MB"
-            }
-            else -> { // KB
-                convertToDecimal(size.toFloat() / 1024) + " KB"
-            }
-        }
-    }
 
-    private fun convertToDecimal(value: Float): String {
-        val size = value.toString() + ""
-        return if (value >= 1000) {
-            size.substring(0, 4)
-        } else if (value >= 100) {
-            size.substring(0, 3)
-        } else {
-            if (size.length == 2 || size.length == 3) {
-                size.substring(0, 1)
-            } else size.substring(0, 4)
-        }
-    }
 
     private fun getApplicationName(name: String): String {
         val pm = context.packageManager
@@ -228,8 +202,8 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
 
 
     private fun getExtension(path: String, imageView: ImageView) {
-        //      Its supports till android 9 & api 28
-        if (Build.VERSION.SDK_INT <= showDuplicate.getString(R.string.apiLevel).toInt()) {
+        //  Here use of DocumentFile in android 10 not File is using anymore
+        if (Build.VERSION.SDK_INT <= 28) {
             checkForExtensionFile(path, imageView)
         } else {
             checkForExtensionDoc(path, imageView)
@@ -260,7 +234,7 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
     }
 
     private fun checkForExtensionDoc(uri: String, imageView: ImageView) {
-        val path = FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, Uri.parse(uri)))
+        val path = FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, Uri.parse(uri)).toString())
 
         val i = path.lastIndexOf('.')
         var extension = ""
@@ -364,12 +338,11 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
         fun getFileSizeInBytes(fileName: String?, context: Context): Long {
 
             val documentHelperClass = DocumentHelperClass(context)
-            Log.e("GotSomething", fileName)
-            //      Its supports till android 9 & api 28
-            return if (Build.VERSION.SDK_INT <= context.getString(R.string.apiLevel).toInt()) {
-                getFileSizeInBytesFile(File(fileName))
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            return if (Build.VERSION.SDK_INT <= 28) {
+                getFileSizeInBytesFile(File(fileName.toString()))
             } else {
-                val documentFile = documentHelperClass.separatePath(FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, Uri.parse(fileName))))
+                val documentFile = documentHelperClass.separatePath(FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, Uri.parse(fileName)).toString()))
 
                 getFileSizeInBytesDoc(documentFile)
 
@@ -385,10 +358,12 @@ class ExpandableDuplicateListAdapter internal constructor(private val showDuplic
                     return f.length()
                 } else if (f.isDirectory) {
                     val contents = f.listFiles()
-                    for (content in contents) {
-                        if (content.isFile) {
-                            ret += content.length()
-                        } else if (content.isDirectory) ret += getFileSizeInBytesFile(content)
+                    if (!contents.isNullOrEmpty()) {
+                        for (content in contents) {
+                            if (content.isFile) {
+                                ret += content.length()
+                            } else if (content.isDirectory) ret += getFileSizeInBytesFile(content)
+                        }
                     }
                 }
             }

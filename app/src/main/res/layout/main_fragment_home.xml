@@ -62,7 +62,8 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.609" />
+                    app:layout_constraintVertical_bias="0.609"
+                    android:layout_marginLeft="10dp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -97,7 +98,8 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.025" />
+                    app:layout_constraintVertical_bias="0.025"
+                    android:layout_marginLeft="10dp" />
 
                 <TextView
                     android:id="@+id/textViewUsedSpaceSizeInternal"
@@ -114,7 +116,8 @@
                     app:layout_constraintHorizontal_bias="0.131"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.333" />
+                    app:layout_constraintVertical_bias="0.333"
+                    android:layout_marginLeft="40dp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -193,7 +196,8 @@
                         android:layout_marginStart="60dp"
                         android:background="@color/used_progressBarColor"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/circularProgressBarInternal" />
+                        app:layout_constraintTop_toBottomOf="@+id/circularProgressBarInternal"
+                        android:layout_marginLeft="60dp" />
 
                     <TextView
                         android:id="@+id/textViewInternal4"
@@ -208,7 +212,8 @@
                         app:layout_constraintBottom_toBottomOf="@+id/myRectangleViewInternal1"
                         app:layout_constraintStart_toEndOf="@+id/myRectangleViewInternal1"
                         app:layout_constraintTop_toTopOf="@+id/myRectangleViewInternal1"
-                        tools:ignore="RtlHardcoded" />
+                        tools:ignore="RtlHardcoded"
+                        android:layout_marginLeft="14dp" />
 
                     <View
                         android:id="@+id/dividerInternal"
@@ -223,7 +228,9 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/myRectangleViewInternal1"
                         app:layout_constraintVertical_bias="0.533"
-                        tools:ignore="RtlHardcoded" />
+                        tools:ignore="RtlHardcoded"
+                        android:layout_marginRight="@dimen/divider_margin_right"
+                        android:layout_marginLeft="50dp" />
 
                     <View
                         android:id="@+id/myRectangleViewInternal2"
@@ -233,7 +240,8 @@
                         android:layout_marginTop="16dp"
                         android:background="@color/free_progressBarColor"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/myRectangleViewInternal1" />
+                        app:layout_constraintTop_toBottomOf="@+id/myRectangleViewInternal1"
+                        android:layout_marginLeft="60dp" />
 
                     <TextView
                         android:id="@+id/textViewInternal5"
@@ -247,7 +255,8 @@
                         app:layout_constraintBottom_toBottomOf="@+id/myRectangleViewInternal2"
                         app:layout_constraintStart_toEndOf="@+id/myRectangleViewInternal2"
                         app:layout_constraintTop_toTopOf="@+id/myRectangleViewInternal2"
-                        app:layout_constraintVertical_bias="0.242" />
+                        app:layout_constraintVertical_bias="0.242"
+                        android:layout_marginLeft="14dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
@@ -297,7 +306,8 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.609" />
+                    app:layout_constraintVertical_bias="0.609"
+                    android:layout_marginLeft="10dp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -434,7 +444,8 @@
                         android:layout_marginTop="8dp"
                         android:background="@color/used_progressBarColor"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/circularProgressBarExternal" />
+                        app:layout_constraintTop_toBottomOf="@+id/circularProgressBarExternal"
+                        android:layout_marginLeft="60dp" />
 
                     <TextView
                         android:id="@+id/textViewExternal4"
@@ -446,7 +457,8 @@
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/myRectangleViewExternal1"
                         app:layout_constraintStart_toEndOf="@+id/myRectangleViewExternal1"
-                        app:layout_constraintTop_toTopOf="@+id/myRectangleViewExternal1" />
+                        app:layout_constraintTop_toTopOf="@+id/myRectangleViewExternal1"
+                        android:layout_marginLeft="14dp" />
 
 
                     <View
@@ -462,7 +474,9 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/myRectangleViewExternal1"
                         app:layout_constraintVertical_bias="0.514"
-                        tools:ignore="RtlHardcoded" />
+                        tools:ignore="RtlHardcoded"
+                        android:layout_marginLeft="50dp"
+                        android:layout_marginRight="@dimen/divider_margin_right" />
 
                     <View
                         android:id="@+id/myRectangleViewExternal2"
@@ -472,7 +486,8 @@
                         android:layout_marginTop="16dp"
                         android:background="@color/free_progressBarColor"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/myRectangleViewExternal1" />
+                        app:layout_constraintTop_toBottomOf="@+id/myRectangleViewExternal1"
+                        android:layout_marginLeft="60dp" />
 
 
                     <TextView
@@ -485,7 +500,8 @@
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/myRectangleViewExternal2"
                         app:layout_constraintStart_toEndOf="@+id/myRectangleViewExternal2"
-                        app:layout_constraintTop_toTopOf="@+id/myRectangleViewExternal2" />
+                        app:layout_constraintTop_toTopOf="@+id/myRectangleViewExternal2"
+                        android:layout_marginLeft="14dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

@@ -12,7 +12,6 @@ import com.sudoajay.duplication_data.sharedPreferences.ExternalPathSharedPrefere
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import java.io.File
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "ObsoleteSdkInt", "Registered")
 class AndroidSdCardPermission {
     private var context: Context
     private var activity: Activity? = null
@@ -37,16 +36,22 @@ class AndroidSdCardPermission {
         if (!isSdStorageWritable) {
             val handler = Handler()
             handler.postDelayed({
-                CustomToast.toastIt(context, context.getString(R.string.errorMesSdCard))
-                storageAccessFrameWork()
+                // Its Support from Lollipop
+                if (Build.VERSION.SDK_INT >= 21) {
+                    CustomToast.toastIt(context, context.getString(R.string.errorMesSdCard))
+                    storageAccessFrameWork()
+                } else {
+                    CustomToast.toastIt(context, context.getString(R.string.supportAboveSdCard))
+                }
             }, 500)
         }
     }
 
-    fun storageAccessFrameWork() {
+    private fun storageAccessFrameWork() {
         try {
             val intent: Intent
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Its Support from Lollipop
+            if (Build.VERSION.SDK_INT >= 21) {
                 intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                 val requestCode = 42
                 activity!!.startActivityForResult(intent, requestCode)
@@ -59,12 +64,12 @@ class AndroidSdCardPermission {
     val isSdStorageWritable: Boolean
         get() {
             return when {
-                //             Its supports till android 9 & api 28
-                Build.VERSION.SDK_INT <= context.getString(R.string.apiLevel).toInt() -> {
-                    File(sdCardPathSharedPreference!!.sdCardPath).exists() && sdCardPathSharedPreference!!.sdCardPath!! != AndroidExternalStoragePermission.getExternalPath(context)
+                //  Here use of DocumentFile in android 10 not File is using anymore
+                Build.VERSION.SDK_INT <= 28 -> {
+                    File(sdCardPathSharedPreference!!.sdCardPath).exists() && sdCardPathSharedPreference!!.sdCardPath != AndroidExternalStoragePermission.getExternalPath(context)
                 }
                 else -> {
-                    sdCardPathSharedPreference!!.stringURI.toString().isNotEmpty() && sdCardPathSharedPreference!!.sdCardPath!! != AndroidExternalStoragePermission.getExternalPath(context) && !isSameUri
+                    sdCardPathSharedPreference!!.stringURI.toString().isNotEmpty() && sdCardPathSharedPreference!!.sdCardPath != AndroidExternalStoragePermission.getExternalPath(context) && !isSameUri
                 }
             }
         }
@@ -83,10 +88,6 @@ class AndroidSdCardPermission {
 
         } catch (ignored: Exception) {
         }
-    }
-
-    fun getSdCardPathURL(): String? {
-        return sdCardPathSharedPreference!!.sdCardPath
     }
 }
 

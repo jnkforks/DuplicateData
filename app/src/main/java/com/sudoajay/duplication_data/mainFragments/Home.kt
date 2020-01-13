@@ -11,16 +11,15 @@ import androidx.fragment.app.Fragment
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 import com.sudoajay.duplication_data.MainActivity
 import com.sudoajay.duplication_data.R
+import com.sudoajay.duplication_data.helperClass.FileSize
 import com.sudoajay.duplication_data.permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.permission.AndroidSdCardPermission
-import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import com.sudoajay.duplication_data.storageStats.StorageInfo
-import com.sudoajay.duplication_data.storageStats.StorageInfo.Companion.convertIt
-
 
 /**
  * A simple [Fragment] subclass.
  */
+@SuppressLint("SetTextI18n")
 class Home : Fragment() {
     // global variable
     private var mainActivity: MainActivity? = null
@@ -40,13 +39,13 @@ class Home : Fragment() {
     private var storageInfo: StorageInfo? = null
     private var externalStoragePermission: AndroidExternalStoragePermission? = null
     private var sdCardPermission: AndroidSdCardPermission? = null
-    private var customToastLayout: View? = null
+
+
     fun createInstance(mainActivity: MainActivity?): Home {
         this.mainActivity = mainActivity
         return this
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? { // Inflate the layout for this fragment
         layout = inflater.inflate(R.layout.main_fragment_home, container, false)
@@ -55,9 +54,7 @@ class Home : Fragment() {
         //Set Storage Stats
         setInternalStorageStats()
         setExternalStorageStats()
-        val inflaters = layoutInflater
-        customToastLayout = inflaters.inflate(R.layout.activity_custom_toast,
-                layout!!.findViewById<View>(R.id.toastcustom) as? ViewGroup)
+
         // custom progress bar
         val animationDuration = 4000
         circularProgressBarInternal!!.setProgressWithAnimation(java.lang.Float.valueOf(storageInfo!!.usedInternalPercentage), animationDuration) // Default duration = 1500ms
@@ -95,14 +92,14 @@ class Home : Fragment() {
                     circularProgressBarInternal!!.color = ContextCompat.getColor(mainActivity!!, R.color.free_progressBarColor)
                     circularProgressBarInternal!!.setProgressWithAnimation(java.lang.Float.valueOf(storageInfo!!.availableInternalPercent)
                             , 0) // Default duration = 1500ms
-                    textViewInternal2!!.text = convertIt(storageInfo!!.internalAvailableSize)
+                    textViewInternal2!!.text = FileSize.convertIt(storageInfo!!.internalAvailableSize)
                     textViewInternal3!!.text = resources.getString(R.string.text_Free)
                 } else {
                     circularProgressBarInternal!!.backgroundColor = ContextCompat.getColor(mainActivity!!, R.color.free_progressBarColor)
                     circularProgressBarInternal!!.color = ContextCompat.getColor(mainActivity!!, R.color.used_progressBarColor)
                     circularProgressBarInternal!!.setProgressWithAnimation(java.lang.Float.valueOf(storageInfo!!.usedInternalPercentage)
                             , 0) // Default duration = 1500ms
-                    textViewInternal2!!.text = convertIt(storageInfo!!.internalTotalSize -
+                    textViewInternal2!!.text = FileSize.convertIt(storageInfo!!.internalTotalSize -
                             storageInfo!!.internalAvailableSize)
                     textViewInternal3!!.text = resources.getString(R.string.text_Used)
                 }
@@ -116,13 +113,13 @@ class Home : Fragment() {
                     circularProgressBarExternal!!.setProgressWithAnimation(java.lang.Float.valueOf(storageInfo!!.availableExternalPercentage)
                             , 0) // Default duration = 1500ms
                     textViewExternal3!!.text = resources.getString(R.string.text_Free)
-                    textViewExternal2!!.text = convertIt(storageInfo!!.externalAvailableSize)
+                    textViewExternal2!!.text = FileSize.convertIt(storageInfo!!.externalAvailableSize)
                 } else {
                     circularProgressBarExternal!!.backgroundColor = ContextCompat.getColor(mainActivity!!, R.color.free_progressBarColor)
                     circularProgressBarExternal!!.color = ContextCompat.getColor(mainActivity!!, R.color.used_progressBarColor)
                     circularProgressBarExternal!!.setProgressWithAnimation(java.lang.Float.valueOf(storageInfo!!.usedExternalPercentage)
                             , 0) // Default duration = 1500ms
-                    textViewExternal2!!.text = convertIt(storageInfo!!.externalTotalSize -
+                    textViewExternal2!!.text = FileSize.convertIt(storageInfo!!.externalTotalSize -
                             storageInfo!!.externalAvailableSize)
                     textViewExternal3!!.text = resources.getString(R.string.text_Used)
                 }
@@ -132,7 +129,7 @@ class Home : Fragment() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
+
     private fun setInternalStorageStats() {
         val totalInternal = storageInfo!!.totalInternalMemorySize
         val availableInternal = storageInfo!!.usedInternalMemorySize
@@ -147,7 +144,7 @@ class Home : Fragment() {
         textViewInternal5!!.text = "$usedInternalPercent % Free"
     }
 
-    @SuppressLint("SetTextI18n")
+
     private fun setExternalStorageStats() {
         val totalExternal = storageInfo!!.totalExternalMemorySize
         val availableExternal = storageInfo!!.usedExternalMemorySize
@@ -161,5 +158,4 @@ class Home : Fragment() {
         textViewExternal4!!.text = "$availableExternalPercent % Used"
         textViewExternal5!!.text = "$usedExternalPercent % Free"
     }
-
 }

@@ -13,6 +13,8 @@ class DocumentHelperClass(private var context: Context) {
     private var sdCardPathSharedPreference: SdCardPathSharedPreference? = null
 
     fun separatePath(path: String): DocumentFile {
+
+
         val externalPath: String = AndroidExternalStoragePermission.getExternalPath(context).toString()
         var spilt: String
         val documentFile: DocumentFile

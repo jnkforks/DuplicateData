@@ -35,7 +35,6 @@ import com.sudoajay.duplication_data.sdCard.SdCardPath
 import com.sudoajay.duplication_data.sharedPreferences.ExternalPathSharedPreference
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -56,8 +55,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_navigation)
 
-
-
         // get data from intent
         val extras = intent.extras
         extras?.getString("passing")
@@ -75,7 +72,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView!!.menu.getItem(1).isChecked = true
         onNavigationItemSelected(navigationView!!.menu.getItem(1))
         if (intent.action != null) {
-            if (Objects.requireNonNull(intent.action).equals("Stop_Foreground(Setting)", ignoreCase = true)) {
+            if (intent.action.equals("Stop_Foreground(Setting)", ignoreCase = true)) {
                 navigationView!!.menu.getItem(1).isChecked = true
                 onNavigationItemSelected(navigationView!!.menu.getItem(3))
             }
@@ -173,7 +170,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val sdCardURL: Uri? = resultData!!.data
 
             grantUriPermission(this@MainActivity.packageName, sdCardURL, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            this@MainActivity.contentResolver.takePersistableUriPermission(sdCardURL!!, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                this@MainActivity.contentResolver.takePersistableUriPermission(sdCardURL!!, Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            }
 
             sdCardPathURL = SdCardPath.getFullPathFromTreeUri(sdCardURL, this@MainActivity)
             stringURI = sdCardURL.toString()
@@ -212,10 +211,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun spiltThePath(url: String, path: String?): String {
-        val spilt = url.split("%3A").toTypedArray()
-        val getPaths = spilt[0].split("/").toTypedArray()
-        val paths = path!!.split(getPaths[getPaths.size - 1]).toTypedArray()
-        return paths[0] + getPaths[getPaths.size - 1] + "/"
+
+        val spilt = url.split("%3A")
+        val getPaths = spilt[0].split("/")
+        val specificName = getPaths[getPaths.size - 1] + "/"
+        val paths: List<String>
+        paths = path!!.split(getPaths[getPaths.size - 1])
+        return paths[0] + specificName
 
     }
 
@@ -308,7 +310,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val i = Intent(Intent.ACTION_SEND)
         i.type = "text/plain"
         i.putExtra(Intent.EXTRA_SUBJECT, "Link-Share")
-        i.putExtra(Intent.EXTRA_TEXT, R.string.share_info.toString() + ratingLink)
+        i.putExtra(Intent.EXTRA_TEXT, getString(R.string.shareMessage) + " - git " + ratingLink)
         startActivity(Intent.createChooser(i, "Share via"))
     }
 
@@ -326,7 +328,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun openEmail() {
         try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + "sudoajay@gmail.com"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + "devsudoajay@gmail.com"))
             intent.putExtra(Intent.EXTRA_SUBJECT, "")
             intent.putExtra(Intent.EXTRA_TEXT, "")
             startActivity(intent)

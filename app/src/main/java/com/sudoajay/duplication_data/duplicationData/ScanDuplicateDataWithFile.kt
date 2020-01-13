@@ -62,7 +62,7 @@ class ScanDuplicateDataWithFile(var context: Context?) {
             if (File(externalPath).exists()) getAllPath(File(externalPath))
         }
         if (external_Visible == View.VISIBLE) {
-            sdCardDir = sdCardPathSharedPreference.sdCardPath.toString()
+            sdCardDir = sdCardPathSharedPreference.sdCardPath
 
             whatsAppUnnecessaryData(sdCardDir)
 
@@ -125,7 +125,6 @@ class ScanDuplicateDataWithFile(var context: Context?) {
                 }
 
             }
-            Log.e("GotSomething", type.toString() + " --- " + separateList[type - 1])
             checkBoxArray[countAll] = ArrayList(setsBoolean)
             arrowImageResource.add(R.drawable.arrow_up_icon)
             storingSizeArray[countAll] = ArrayList(longSize)
@@ -222,7 +221,7 @@ class ScanDuplicateDataWithFile(var context: Context?) {
         }
     }
 
-    @SuppressLint("DefaultLocale")
+
     private fun getMimeType(uri: Uri): String? {
         val mimeType: String?
         mimeType = if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
@@ -232,7 +231,7 @@ class ScanDuplicateDataWithFile(var context: Context?) {
             val fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
                     .toString())
             MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                    fileExtension.toLowerCase())
+                    fileExtension.toLowerCase(Locale.getDefault()))
         }
         return mimeType
     }
@@ -262,7 +261,7 @@ class ScanDuplicateDataWithFile(var context: Context?) {
             for (child in directory.listFiles()!!) {
                 if (child.isDirectory) {
                     if (!isRejectedFolder(child.absolutePath)) {
-                        if (child.listFiles()!!.isEmpty()) {
+                        if (child.listFiles().isNullOrEmpty()) {
                             emptyFolder.add(child.absolutePath)
                         } else {
                             when (checkForLogCache(child.name)) {
@@ -276,7 +275,9 @@ class ScanDuplicateDataWithFile(var context: Context?) {
                     getname = child.name
                     getExt = getExtension(getname)
                     if (getExt == "apk") apkFile.add(child.absolutePath)
-                    else if (getname != ".nomedia") getAllData.add(child)
+                    else if (getname != ".nomedia") {
+                        getAllData.add(child)
+                    }
                 }
             }
         } catch (ignored: Exception) {

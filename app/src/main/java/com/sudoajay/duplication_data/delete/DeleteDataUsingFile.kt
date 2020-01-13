@@ -2,12 +2,14 @@ package com.sudoajay.duplication_data.delete
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import com.sudoajay.duplication_data.duplicationData.ShowDuplicate
 import com.sudoajay.duplication_data.permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import java.io.File
 import java.io.IOException
+import java.lang.Exception
 import java.util.*
 
 class DeleteDataUsingFile {
@@ -39,7 +41,7 @@ class DeleteDataUsingFile {
     private fun getThePath() {
 
         val sdCardPathSharedPreference = SdCardPathSharedPreference(mContext!!)
-        sdCardPath = sdCardPathSharedPreference.sdCardPath!!
+        sdCardPath = sdCardPathSharedPreference.sdCardPath
         sdCardDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(sdCardPathSharedPreference.stringURI))
 
         externalPath = AndroidExternalStoragePermission.getExternalPath(showDuplicate!!.applicationContext)!!
@@ -67,10 +69,12 @@ class DeleteDataUsingFile {
     private fun deleteTheDataFromInternalStorage(path: String) {
         val file = File(path)
         if (file.isDirectory) {
-            for (child in file.listFiles()!!) {
-                deleteTheDataFromInternalStorage(child.absolutePath)
+            if (!file.listFiles().isNullOrEmpty()) {
+                for (child in file.listFiles()!!) {
+                    deleteTheDataFromInternalStorage(child.absolutePath)
+                }
             }
-            if (file.listFiles()!!.isEmpty()) file.delete()
+            if (file.listFiles().isNullOrEmpty()) file.delete()
         } else {
             file.delete()
             if (file.exists()) {
@@ -85,12 +89,17 @@ class DeleteDataUsingFile {
     private fun deleteTheDataFromExternal(path: String) {
         val spilt: String = sdCardPath
         var documentFile: DocumentFile = sdCardDocumentFile!!
+        try {
+            val list = path.split(spilt)[1].split("/")
 
-        val list = path.split(spilt)[1].split("/")
-        for (file in list) {
-            documentFile = documentFile.findFile(file)!!
+            for (file in list) {
+                documentFile = documentFile.findFile(file)!!
+            }
+            deleteIt(documentFile)
+        }catch (ignored :Exception){
+
         }
-        deleteIt(documentFile)
+
     }
 
     private fun deleteIt(documentFile: DocumentFile) {

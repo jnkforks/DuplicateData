@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.documentfile.provider.DocumentFile
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -29,6 +31,7 @@ import com.sudoajay.duplication_data.delete.DeleteDataUsingDoc
 import com.sudoajay.duplication_data.delete.DeleteDataUsingFile
 import com.sudoajay.duplication_data.helperClass.CustomToast
 import com.sudoajay.duplication_data.helperClass.DocumentHelperClass
+import com.sudoajay.duplication_data.helperClass.FileSize
 import com.sudoajay.duplication_data.helperClass.FileUtils
 import com.sudoajay.duplication_data.notification.NotifyNotification
 import com.sudoajay.duplication_data.permission.NotificationPermissionCheck
@@ -37,7 +40,6 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-@SuppressLint("ObsoleteSdkInt")
 class ShowDuplicate : AppCompatActivity() {
     private var expandableListView: ExpandableListView? = null
     private var expandableduplicatelistadapter: ExpandableDuplicateListAdapter? = null
@@ -75,9 +77,12 @@ class ShowDuplicate : AppCompatActivity() {
                 externalCheck = getIntent().extras!!.getInt("externalCheck")
             }
         }
+        refreshEverything()
+    }
 
-        //  Its supports till android 9 & api 28
-        if (Build.VERSION.SDK_INT <= getString(R.string.apiLevel).toInt()) {
+    private fun refreshEverything() {
+        //  Here use of DocumentFile in android 10 not File is using anymore
+        if (Build.VERSION.SDK_INT <= 28) {
             scanDuplicateDataWithFile = ScanDuplicateDataWithFile(applicationContext)
         } else {
             scanDuplicateDataWithDoc = ScanDuplicateDataWithDoc(applicationContext)
@@ -99,8 +104,8 @@ class ShowDuplicate : AppCompatActivity() {
         }
 
         override fun doInBackground(vararg p0: String?): String? {
-            //             Its supports till android 9 & api 28
-            if (Build.VERSION.SDK_INT <= showDuplicate.getString(R.string.apiLevel).toInt()) {
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            if (Build.VERSION.SDK_INT <= 28) {
                 showDuplicate.scanDuplicateDataWithFile!!.duplication(internalCheck, externalCheck)
             } else {
                 showDuplicate.scanDuplicateDataWithDoc!!.duplication(internalCheck, externalCheck)
@@ -126,8 +131,8 @@ class ShowDuplicate : AppCompatActivity() {
             deleteDuplicateButton!!.visibility = View.VISIBLE
             deleteDuplicateButton1!!.visibility = View.VISIBLE
         }
-        // Its supports till android 9 & api 28
-        expandableduplicatelistadapter = if (Build.VERSION.SDK_INT <= getString(R.string.apiLevel).toInt()) {
+        //  Here use of DocumentFile in android 10 not File is using anymore
+        expandableduplicatelistadapter = if (Build.VERSION.SDK_INT <= 28) {
             ExpandableDuplicateListAdapter(this@ShowDuplicate, scanDuplicateDataWithFile!!.listHeader, listHeaderChild, scanDuplicateDataWithFile!!.arrowImageResource
                     , scanDuplicateDataWithFile!!.checkBoxArray, scanDuplicateDataWithFile!!.storingSizeArray)
         } else {
@@ -148,8 +153,8 @@ class ShowDuplicate : AppCompatActivity() {
         // ListView Group click listener
         expandableListView!!.setOnGroupClickListener { _, _, _, _ -> false }
 
-        // Its supports till android 9 & api 28
-        if (Build.VERSION.SDK_INT <= getString(R.string.apiLevel).toInt()) {
+        //  Here use of DocumentFile in android 10 not File is using anymore
+        if (Build.VERSION.SDK_INT <= 28) {
             // ListView Group expanded listener
             expandableListView!!.setOnGroupExpandListener { groupPosition -> scanDuplicateDataWithFile!!.arrowImageResource[groupPosition] = R.drawable.arrow_down_icon }
             // ListView Group collapsed listener
@@ -166,8 +171,8 @@ class ShowDuplicate : AppCompatActivity() {
         expandableListView!!.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
             onClickPath = listHeaderChild[groupPosition]!![childPosition]
 
-//            Its supports till android 9 & api 28
-            if (Build.VERSION.SDK_INT <= getString(R.string.apiLevel).toInt()) {
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            if (Build.VERSION.SDK_INT <= 28) {
                 if (File(onClickPath.toString()).isDirectory) fragmentHistoryBottomSheetOpenFile!!.visibility = View.GONE
                 else fragmentHistoryBottomSheetOpenFile!!.visibility = View.VISIBLE
 
@@ -189,7 +194,6 @@ class ShowDuplicate : AppCompatActivity() {
 
     }
 
-    @SuppressLint("InflateParams")
     private fun reference() { // reference
         deleteDuplicateButton = findViewById(R.id.deleteDuplicateButton)
         nothingToShowConstraintsLayout = findViewById(R.id.nothingToShow_ConstraintsLayout)
@@ -203,8 +207,8 @@ class ShowDuplicate : AppCompatActivity() {
 
         mBottomSheetDialog = BottomSheetDialog(this@ShowDuplicate)
 
-
-        val sheetView = layoutInflater.inflate(R.layout.layout_dialog_moreoption, null)
+        val nullParent: ViewGroup? = null
+        val sheetView = layoutInflater.inflate(R.layout.layout_dialog_moreoption, nullParent)
         mBottomSheetDialog!!.setContentView(sheetView)
         fragmentHistoryBottomSheetOpenFile = sheetView.findViewById(R.id.fragment_history_bottom_sheet_openFile)
         fragmentHistoryBottomSheetOpenFile!!.setOnClickListener(Onclick())
@@ -220,10 +224,11 @@ class ShowDuplicate : AppCompatActivity() {
             R.id.shareImageView -> share()
             R.id.refreshImage_View -> if (refreshImageView != null && refreshImageView!!.rotation % 360 == 0f) {
                 refreshImageView!!.animate().rotationBy(360f).duration = 1000
-//                valueTransfer()
+                multiThreadingTask2!!.cancel(true)
+                refreshEverything()
             }
             R.id.deleteDuplicateButton, R.id.deleteDuplicateButton1 -> if (!notificationPermissionCheck!!.checkNotificationPermission()) {
-                notificationPermissionCheck!!.customAertDialog()
+                notificationPermissionCheck!!.customAlertDialog()
             } else {
                 callDeleteCustomDialog()
             }
@@ -235,7 +240,7 @@ class ShowDuplicate : AppCompatActivity() {
         val i = Intent(Intent.ACTION_SEND)
         i.type = "text/plain"
         i.putExtra(Intent.EXTRA_SUBJECT, "Link-Share")
-        i.putExtra(Intent.EXTRA_TEXT, R.string.share_info.toString() + ratingLink)
+        i.putExtra(Intent.EXTRA_TEXT, R.string.shareMessage.toString() + ratingLink)
         startActivity(Intent.createChooser(i, "Share via"))
     }
 
@@ -244,7 +249,7 @@ class ShowDuplicate : AppCompatActivity() {
         if (type == 1 && totalSize == 0L) {
             deleteDuplicateButton!!.text = "Delete ( Calc... )"
         } else {
-            deleteDuplicateButton!!.text = "Delete (" + convertIt(totalSize) + ")"
+            deleteDuplicateButton!!.text = "Delete (" + FileSize.convertIt(totalSize) + ")"
         }
         expandableListView!!.invalidate()
     }
@@ -260,8 +265,8 @@ class ShowDuplicate : AppCompatActivity() {
 
 
     fun valueTransfer() {
-        //            Its supports till android 9 & api 28
-        if (Build.VERSION.SDK_INT <= getString(R.string.apiLevel).toInt()) {
+        //  Here use of DocumentFile in android 10 not File is using anymore
+        if (Build.VERSION.SDK_INT <= 28) {
             listHeaderChild = scanDuplicateDataWithFile!!.listHeaderChild
             totalSize = scanDuplicateDataWithFile!!.totalSize
         } else {
@@ -294,16 +299,17 @@ class ShowDuplicate : AppCompatActivity() {
             if (file.isDirectory) file = file.listFiles()[0]
             val myMime = MimeTypeMap.getSingleton()
             val newIntent = Intent(Intent.ACTION_VIEW)
-            val mimeType = myMime.getMimeTypeFromExtension(fileExt
-            (FileUtils.replaceSdCardPath(applicationContext, FileUtils.getPath(applicationContext, file.uri)))!!.substring(1))
+            val mimeType = myMime.getMimeTypeFromExtension(FileUtils.replaceSdCardPath(applicationContext,
+                    FileUtils.getPath(applicationContext, file.uri).toString()))!!.substring(1)
             val uri = file.uri
             newIntent.setDataAndType(uri, mimeType)
             newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             this.startActivity(newIntent)
         } catch (e: Exception) {
-            CustomToast.toastIt(applicationContext, "No handler for this type of file_icon.")
+            CustomToast.toastIt(applicationContext, getString(R.string.noHandlerForType))
         }
     }
+
 
     private fun fileExt(u: String): String? {
         var url = u
@@ -320,12 +326,11 @@ class ShowDuplicate : AppCompatActivity() {
             if (ext.contains("/")) {
                 ext = ext.substring(0, ext.indexOf("/"))
             }
-            ext.toLowerCase()
+            ext.toLowerCase(Locale.getDefault())
         }
     }
 
     private fun callDeleteCustomDialog() {
-
         AlertDialog.Builder(this@ShowDuplicate)
 
                 .setIcon(R.drawable.alert_icon)
@@ -337,7 +342,6 @@ class ShowDuplicate : AppCompatActivity() {
                     CustomToast.toastIt(applicationContext, getString(R.string.ShowInNotification))
                     thread()
                 }
-
                 .setNegativeButton(R.string.custom_dialog_no) { _, _ ->
 
                 }
@@ -365,8 +369,8 @@ class ShowDuplicate : AppCompatActivity() {
                     showDuplicate.totalSize += long
                     longSize.add(long)
                 }
-                //            Its supports till android 9 & api 28
-                if (Build.VERSION.SDK_INT <= showDuplicate.getString(R.string.apiLevel).toInt()) {
+                //  Here use of DocumentFile in android 10 not File is using anymore
+                if (Build.VERSION.SDK_INT <= 28) {
                     showDuplicate.scanDuplicateDataWithFile!!.storingSizeArray[k] = ArrayList(longSize)
                 } else {
                     showDuplicate.scanDuplicateDataWithDoc!!.storingSizeArray[k] = ArrayList(longSize)
@@ -382,7 +386,6 @@ class ShowDuplicate : AppCompatActivity() {
             showDuplicate.expandableduplicatelistadapter!!.notifyDataSetChanged()
         }
 
-        @SuppressLint("SetTextI18n")
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             showDuplicate.setTotalSize(2)
@@ -407,6 +410,7 @@ class ShowDuplicate : AppCompatActivity() {
         private var contentView: RemoteViews? = null
         private var notification: Notification? = null
         private var deletedList: MutableList<String> = ArrayList()
+        private var notificationManager: NotificationManager? = null
 
         override fun run() {
 
@@ -421,8 +425,8 @@ class ShowDuplicate : AppCompatActivity() {
 
             }
             notification()
-            //             Its supports till android 9 & api 28
-            if (Build.VERSION.SDK_INT <= showDuplicate.getString(R.string.apiLevel).toInt()) {
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            if (Build.VERSION.SDK_INT <= 28) {
                 DeleteDataUsingFile(showDuplicate, deletedList)
             } else {
                 DeleteDataUsingDoc(showDuplicate, deletedList)
@@ -444,7 +448,7 @@ class ShowDuplicate : AppCompatActivity() {
             handler.postDelayed({
                 notificationManager!!.cancel(1)
                 val notifyNotification = NotifyNotification(showDuplicate.applicationContext)
-                notifyNotification.notify("You Have Saved " + convertIt(showDuplicate.totalSize) + " Of Data ", showDuplicate.getString(R.string.delete_Done_title))
+                notifyNotification.notify("You Have Saved " + FileSize.convertIt(showDuplicate.totalSize) + " Of Data ", showDuplicate.getString(R.string.delete_Done_title))
                 CustomToast.toastIt(showDuplicate.applicationContext, "Successfully Duplicate Data Deleted")
                 showDuplicate.sendBack()
             }, 2000)
@@ -481,6 +485,11 @@ class ShowDuplicate : AppCompatActivity() {
                     .setAutoCancel(false)
                     .setOngoing(true)
                     .setLights(Color.parseColor("#075e54"), 3000, 3000)
+
+            if (Build.VERSION.SDK_INT < 18) {
+                mBuilder.setSmallIcon(R.drawable.alert_icon).color = ContextCompat.getColor(showDuplicate, R.color.colorPrimary)
+
+            }
             mBuilder.setContentIntent(
                     PendingIntent.getActivity(
                             showDuplicate.applicationContext,
@@ -509,10 +518,11 @@ class ShowDuplicate : AppCompatActivity() {
         override fun onClick(view: View) {
             when (view.id) {
                 R.id.fragment_history_bottom_sheet_openFile ->
-                    if (Build.VERSION.SDK_INT <= getString(R.string.apiLevel).toInt()) {
+                    //  Here use of DocumentFile in android 10 not File is using anymore
+                    if (Build.VERSION.SDK_INT <= 28) {
                         openWithFile(File(onClickPath.toString()))
                     } else {
-                        openWithDoc(documentHelperClass!!.separatePath(FileUtils.replaceSdCardPath(applicationContext, FileUtils.getPath(applicationContext, Uri.parse(onClickPath)))))
+                        openWithDoc(documentHelperClass!!.separatePath(FileUtils.replaceSdCardPath(applicationContext, FileUtils.getPath(applicationContext, Uri.parse(onClickPath)).toString())))
                     }
                 R.id.fragment_history_bottom_sheet_viewFolder -> specificFolder(applicationContext, onClickPath.toString())
                 R.id.fragment_history_bottom_sheet_moreInfo -> {
@@ -532,9 +542,8 @@ class ShowDuplicate : AppCompatActivity() {
     companion object {
 
         fun specificFolder(context: Context, path: String) {
-
-            //            Its supports till android 9 & api 28
-            val getPath: String = if (Build.VERSION.SDK_INT <= context.getString(R.string.apiLevel).toInt()) {
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            val getPath: String = if (Build.VERSION.SDK_INT <= 28) {
                 path.replace("/" + File(path).name, "")
             } else {
                 path.replace("/" + DocumentFile.fromSingleUri(context, Uri.parse(path))!!.name, "")
@@ -550,33 +559,6 @@ class ShowDuplicate : AppCompatActivity() {
             }
         }
 
-        private var notificationManager: NotificationManager? = null
-        @JvmStatic
-        fun convertIt(size: Long): String {
-            return when {
-                size > 1024 * 1024 * 1024 -> { // GB
-                    convertToDecimal(size.toFloat() / (1024 * 1024 * 1024)) + " GB"
-                }
-                size > 1024 * 1024 -> { // MB
-                    convertToDecimal(size.toFloat() / (1024 * 1024)) + " MB"
-                }
-                else -> { // KB
-                    convertToDecimal(size.toFloat() / 1024) + " KB"
-                }
-            }
-        }
 
-        private fun convertToDecimal(value: Float): String {
-            val size = value.toString() + ""
-            return if (value >= 1000) {
-                size.substring(0, 4)
-            } else if (value >= 100) {
-                size.substring(0, 3)
-            } else {
-                if (size.length == 2 || size.length == 3) {
-                    size.substring(0, 1)
-                } else size.substring(0, 4)
-            }
-        }
     }
 }

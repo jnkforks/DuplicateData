@@ -7,11 +7,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.sudoajay.duplication_data.MainActivity
+import com.sudoajay.duplication_data.R
 import com.sudoajay.duplication_data.backgroundProcess.WorkMangerProcess1
 import com.sudoajay.duplication_data.backgroundProcess.WorkMangerProcess2
 import com.sudoajay.duplication_data.databaseClasses.BackgroundTimerDataBase
-import com.sudoajay.duplication_data.MainActivity
-import com.sudoajay.duplication_data.R
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService.Companion.nextDate
 import java.text.DateFormat
@@ -19,13 +19,12 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class Foreground : Service() {
     private var traceBackgroundService: TraceBackgroundService? = null
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int { // create object
         traceBackgroundService = TraceBackgroundService(applicationContext)
-        if (Objects.requireNonNull(intent.getStringExtra("com.sudoajay.whatapp_media_mover_to_sdcard.ForegroundDialog"))
+        if (intent.getStringExtra("com.sudoajay.whatapp_media_mover_to_sdcard.ForegroundDialog")
                         .equals("Start_Foreground", ignoreCase = true)) {
             createNotificationChannel()
             val url = "https://dontkillmyapp.com/problem"
@@ -91,7 +90,7 @@ class Foreground : Service() {
             // Second Process or Task B
             if (datesMatches(traceBackgroundService!!.taskB, 2)) WorkMangerProcess2.getWorkDone(applicationContext)
             task()
-        } else if (Objects.requireNonNull(intent.getStringExtra("com.sudoajay.whatapp_media_mover_to_sdcard.ForegroundDialog"))
+        } else if (intent.getStringExtra("com.sudoajay.whatapp_media_mover_to_sdcard.ForegroundDialog")
                         .equals("Stop_Foreground", ignoreCase = true)) { //your  service end here
             stopForeground(true)
             stopSelf()
@@ -107,7 +106,7 @@ class Foreground : Service() {
                     NotificationManager.IMPORTANCE_DEFAULT
             )
             val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(serviceChannel)
+            manager!!.createNotificationChannel(serviceChannel)
         }
     }
 
@@ -121,9 +120,9 @@ class Foreground : Service() {
             val todayDate = todayCalender.time
             // convert to Date
             val format: DateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
-            val curDate = format.parse(date)
+            val curDate = format.parse(date.toString())
             if (todayDate.after(curDate)) {
-                if (format.format(todayDate) != format.format(curDate)) {
+                if (format.format(todayDate) != format.format(curDate!!)) {
                     if (type == 1) {
                         traceBackgroundService!!.setTaskA()
                     } else {
@@ -131,7 +130,7 @@ class Foreground : Service() {
                     }
                 }
             }
-            format.format(todayDate) == format.format(curDate)
+            format.format(todayDate) == format.format(curDate!!)
         } catch (e: ParseException) {
             false
         }
@@ -141,18 +140,25 @@ class Foreground : Service() {
         val startIntent = Intent(applicationContext, Foreground::class.java)
         startIntent.putExtra("com.sudoajay.whatapp_media_mover_to_sdcard.ForegroundDialog"
                 , "Start_Foreground")
-        val pintent = PendingIntent.getService(applicationContext, 0, startIntent, 0)
+        val pendingIntent = PendingIntent.getService(applicationContext, 0, startIntent, 0)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        startAlarm(alarmManager, pintent)
+        startAlarm(alarmManager, pendingIntent)
     }
 
     private fun startAlarm(alarmManager: AlarmManager, pendingIntent: PendingIntent) {
         val setTime = 3600000 * 3.toLong() // 3 hours
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis() + setTime, pendingIntent)
-        } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setTime, pendingIntent)
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                        System.currentTimeMillis() + setTime, pendingIntent)
+            }
+            Build.VERSION.SDK_INT >= 19 -> {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setTime, pendingIntent)
+            }
+            else -> {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + setTime, pendingIntent)
+
+            }
         }
     }
 
@@ -166,7 +172,7 @@ class Foreground : Service() {
             // grab the data From Database
             if (!backgroundTimerDataBase.checkForEmpty()) {
                 val cursor = backgroundTimerDataBase.getTheRepeatedlyWeekdays()
-                if (cursor != null && cursor.moveToFirst()) {
+                if (cursor.moveToFirst()) {
                     cursor.moveToFirst()
                     try {
                         when (cursor.getInt(0)) {

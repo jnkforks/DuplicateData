@@ -23,6 +23,7 @@ import com.sudoajay.duplication_data.helperClass.FileSize.convertIt
 import com.sudoajay.duplication_data.helperClass.FileUtils
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.*
 
 class DialogInformationData(private val path: String, private val activity: Activity) : DialogFragment(), View.OnClickListener {
     private var rootview: View? = null
@@ -62,7 +63,7 @@ class DialogInformationData(private val path: String, private val activity: Acti
 
     @SuppressLint("SetTextI18n")
     private fun fillIt() {
-        @SuppressLint("SimpleDateFormat") val sdf = SimpleDateFormat("d MMM yyyy , h:mm a")
+        val sdf = SimpleDateFormat("d MMM yyyy , h:mm a", Locale.getDefault())
         if (!path.startsWith("content:")) {
             val filePath = File(this.path)
             infoNameTextView!!.text = filePath.name
@@ -84,7 +85,7 @@ class DialogInformationData(private val path: String, private val activity: Acti
         } else {
             val documentFile = DocumentFile.fromSingleUri(context!!, Uri.parse(path))
             infoNameTextView!!.text = documentFile!!.name
-            val exactPath = FileUtils.replaceSdCardPath(context, FileUtils.getPath(context, Uri.parse(path))).replace(documentFile.name!!, "")
+            val exactPath = FileUtils.replaceSdCardPath(context, FileUtils.getPath(context!!, Uri.parse(path)).toString()).replace(documentFile.name!!, "")
             infoLocationTextView!!.text = exactPath
             infoSizeTextView!!.text = convertIt(documentFile.length())
             if (documentFile.isDirectory) {

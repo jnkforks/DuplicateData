@@ -39,8 +39,8 @@
     <string name="activity_custom_dialog_permission_TextView1">App Permission</string>
     <string name="activity_custom_dialog_permission_TextView2">In Android 6+ Apps will ask for
         permission once you start using them.</string>
-    <string name="see_More_Button">See More</string>
-    <string name="continue_Button">Continue</string>
+    <string name="readMoreButton">Read More</string>
+    <string name="continueButton">Continue</string>
 
 
     <!--SharedPreference Heading-->
@@ -81,7 +81,7 @@
     <string name="shareText">Check This App WhatsApp Media Mover (Easy Way To Move Your WhatsApp Data To Sd Card</string>
     <string name="custom_dialog_no">No</string>
     <string name="custom_dialog_yes">Yes</string>
-    <string name="custom_notification_text">Please Allow Notification soo we can show your Transfer Status.</string>
+    <string name="custom_notification_text">Please allow notification soo we can show your progress Status.</string>
     <string name="custom_notification_permission_heading">Notification Permission</string>
 
 
@@ -112,7 +112,7 @@
     <string name="noDuplicateFoundText">There is no duplicate Found.</string>
 
     <!--share app-->
-    <string name="share_info">Hey, check This App which helps you to Delete Duplicate and Unnecessary Data from the phone -</string>
+    <string name="shareMessage">Hey, check This App which helps you to Delete Duplicate and Unnecessary Data from the phone -</string>
 
     <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/8691691433</string>
 
@@ -133,7 +133,7 @@
     <!--foreground service custom dialog-->
     <string name="custom_Foreground_Permission">Smart phone are more restrict about background Process from which our background task not working So if you want to us to run background task
         follow the steps which is given on that Website .</string>
-    <string name="custom_Foreground_Permission_Follow">Follow It</string>
+    <string name="custom_Foreground_Permission_Know">I know</string>
     <string name="see_more_text">See More</string>
     <string name="background_restriction_text">Background Restriction</string>
 
@@ -192,8 +192,10 @@
     <string name="selectStorageText">You Supposed To Select Storage</string>
 
     <string name="giveUsPermission">Give us permission for further process</string>
-    <string name="apiLevel">29</string>
     <string name="ShowInNotification">Open your notification bar for progress status</string>
+    <string name="supportAboveSdCard">Sorry , We don\'t support sd card at this android version </string>
+    <string name="noHandlerForType">No handler for this type of file_icon.</string>
+    <string name="backImageViewChange">back_Image_View_Change</string>
 
 
 </resources>

@@ -13,7 +13,6 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
-@SuppressLint("NewApi")
 public final class SdCardPath {
 
     private static final String PRIMARY_VOLUME_NAME = "primary";
@@ -49,7 +48,6 @@ public final class SdCardPath {
 
     }
 
-    @SuppressLint("ObsoleteSdkInt")
     private static String getVolumePath(final String volumeId, Context concontext) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return null;
@@ -61,6 +59,7 @@ public final class SdCardPath {
 
             Class<?> storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
 
+            assert mStorageManager != null;
             Method getVolumeList = mStorageManager.getClass().getMethod("getVolumeList");
             Method getUuid = storageVolumeClazz.getMethod("getUuid");
             Method getPath = storageVolumeClazz.getMethod("getPath");

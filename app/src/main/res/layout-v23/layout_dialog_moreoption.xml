@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/file_icon"
+            android:src="@drawable/file_icon"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -47,7 +47,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/folder_icon"
+            android:src="@drawable/folder_icon"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -73,7 +73,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:srcCompat="@drawable/moreinfo_icon"
+            android:src="@drawable/moreinfo_icon"
             tools:ignore="ContentDescription" />
 
         <TextView

@@ -1,12 +1,11 @@
 package com.sudoajay.duplication_data.sharedPreferences
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import com.sudoajay.duplication_data.R
 
-class ExternalPathSharedPreference @SuppressLint("CommitPrefEdits") constructor(context: Context) {
+class ExternalPathSharedPreference constructor(context: Context) {
     // global varibale
     private val editor: Editor
     private val context: Context
@@ -25,12 +24,10 @@ class ExternalPathSharedPreference @SuppressLint("CommitPrefEdits") constructor(
             editor.putString(context.getString(R.string.externalStringUri), stringURI)
             editor.apply()
         }
-    fun makeThemEmpty(){
-
-    }
     // constructor
     init {
         editor = pref.edit()
+        editor.apply()
         this.context = context
     }
 }

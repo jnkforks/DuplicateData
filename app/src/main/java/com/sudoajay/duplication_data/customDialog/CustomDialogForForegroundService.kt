@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -58,7 +57,7 @@ class CustomDialogForForegroundService  // blank constructor
                         val theme: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             R.style.AppTheme
                         } else {
-                            android.R.style.Theme_Holo_Dialog
+                            android.R.style.Theme_Dialog
                         }
                         AlertDialog.Builder(ContextThemeWrapper(activity, theme))
                                 .setTitle(resources.getString(R.string.custom_Dialog_Box_Heading))

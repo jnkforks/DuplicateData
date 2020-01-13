@@ -33,7 +33,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:drawableLeft="@drawable/multiple_data" />
 
 
     <ImageView
@@ -47,7 +48,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.485"
-        app:srcCompat="@drawable/internal_storage_icon" />
+        android:src="@drawable/internal_storage_icon"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/external_Image_View"
@@ -60,7 +62,8 @@
         app:layout_constraintStart_toEndOf="@+id/internal_Image_View"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.486"
-        app:srcCompat="@drawable/sd_card_icon" />
+        android:src="@drawable/sd_card_icon"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/internal_Text_View"
@@ -93,25 +96,29 @@
         android:id="@+id/internal_Check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/internal_Check_Margin_Left"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:onClick="onClick"
+        android:src="@drawable/tick_circle_icon"
         app:layout_constraintBottom_toTopOf="@+id/internal_Text_View"
         app:layout_constraintEnd_toEndOf="@+id/internal_Image_View"
         app:layout_constraintTop_toTopOf="@+id/internal_Image_View"
         app:layout_constraintVertical_bias="0.936"
-        app:srcCompat="@drawable/tick_icon" />
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/external_Check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/external_Check_Margin_left"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:onClick="onClick"
+        android:src="@drawable/tick_circle_icon"
         app:layout_constraintBottom_toTopOf="@+id/external_Text_View"
         app:layout_constraintEnd_toEndOf="@+id/external_Image_View"
         app:layout_constraintTop_toTopOf="@+id/external_Image_View"
         app:layout_constraintVertical_bias="0.933"
-        app:srcCompat="@drawable/tick_icon" />
+        tools:ignore="ContentDescription" />
 
     <View
         android:id="@+id/scan_Button1"
@@ -144,7 +151,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:drawableLeft="@drawable/scan_icon" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package com.sudoajay.duplication_data.permission
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -12,13 +13,12 @@ import android.os.Handler
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.documentfile.provider.DocumentFile
-import com.sudoajay.duplication_data.helperClass.CustomToast
 import com.sudoajay.duplication_data.R
+import com.sudoajay.duplication_data.helperClass.CustomToast
 import com.sudoajay.duplication_data.sharedPreferences.ExternalPathSharedPreference
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 
 
-@Suppress("ControlFlowWithEmptyBody", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS" , "ObsoleteSdkInt")
 class AndroidExternalStoragePermission(private var context: Context, private var activity: Activity?) {
     private var externalSharedPreferences: ExternalPathSharedPreference? = null
     private var sdCardPathSharedPreference: SdCardPathSharedPreference? = null
@@ -26,10 +26,10 @@ class AndroidExternalStoragePermission(private var context: Context, private var
 
     fun callThread() { // check if permission already given or not
         if (!isExternalStorageWritable) {
-//             Its supports till android 9 & api 28
-            if (Build.VERSION.SDK_INT <= context.getString(R.string.apiLevel).toInt() ) {
+            //  Here use of DocumentFile in android 10 not File is using anymore
+            if (Build.VERSION.SDK_INT <= 28) {
                 val handler = Handler()
-                handler.postDelayed({ callCustomPermissionDialog() }, 500)
+                handler.postDelayed({ callPermissionDialog() }, 500)
             } else {
                 val handler = Handler()
                 handler.postDelayed({
@@ -40,29 +40,27 @@ class AndroidExternalStoragePermission(private var context: Context, private var
             }
         }
     }
-
-    private fun callCustomPermissionDialog() {
-        val dialog = Dialog(context)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.activity_custom_dialog_permission)
-        val buttonLearnMore = dialog.findViewById<Button>(R.id.see_More_button)
-        val buttonContinue = dialog.findViewById<Button>(R.id.continue_Button)
-        // if button is clicked, close the custom dialog
-        buttonLearnMore.setOnClickListener {
-            try {
-                val url = "https://developer.android.com/training/permissions/requesting.html"
-                val i = Intent(Intent.ACTION_VIEW)
-                i.data = Uri.parse(url)
-                activity?.startActivity(i)
-            } catch (ignored: Exception) {
-            }
-        }
-        buttonContinue.setOnClickListener {
-            storagePermissionGranted()
-            dialog.dismiss()
-        }
-        dialog.show()
+    private fun callPermissionDialog() {
+        AlertDialog.Builder(context)
+                .setIcon(R.drawable.internal_storage_icon)
+                .setTitle(context.getString(R.string.activity_custom_dialog_permission_TextView1))
+                .setMessage(context.getString(R.string.activity_custom_dialog_permission_TextView2))
+                .setCancelable(true)
+                .setPositiveButton(R.string.continueButton) { _, _ ->
+                    storagePermissionGranted()
+                }
+                .setNegativeButton(R.string.readMoreButton) { _, _ ->
+                    try {
+                        val url = "https://developer.android.com/training/permissions/requesting.html"
+                        val i = Intent(Intent.ACTION_VIEW)
+                        i.data = Uri.parse(url)
+                        activity?.startActivity(i)
+                    } catch (ignored: Exception) {
+                    }
+                }
+                .show()
     }
+
     private fun storagePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             activity?.let {
@@ -91,8 +89,15 @@ class AndroidExternalStoragePermission(private var context: Context, private var
         get() {
             //
             return when {
-//             Its supports till android 9 & api 28
-                Build.VERSION.SDK_INT <= context.getString(R.string.apiLevel).toInt() -> {
+                //  Here use of DocumentFile in android 10 not File is using anymore
+                Build.VERSION.SDK_INT <= 28 -> {
+
+                    if(Build.VERSION.SDK_INT <= 23){
+                        val externalPathSharedPreference = ExternalPathSharedPreference(context)
+                        externalPathSharedPreference.externalPath = getExternalPath(context)
+
+                    }
+
                     val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
                     val res = activity?.checkCallingOrSelfPermission(permission)
                     res == PackageManager.PERMISSION_GRANTED
@@ -101,7 +106,6 @@ class AndroidExternalStoragePermission(private var context: Context, private var
                 else -> {
                     isSamePath ||
                             externalSharedPreferences!!.stringURI!!.isNotEmpty() && DocumentFile.fromTreeUri(context, Uri.parse(externalSharedPreferences!!.stringURI))!!.exists() && isSamePath
-
                 }
             }
 
