@@ -1,13 +1,12 @@
 package com.sudoajay.duplication_data.sharedPreferences
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import com.sudoajay.duplication_data.R
 
 class SdCardPathSharedPreference constructor(context: Context) {
-    // global varibale
+    // global variable
     private val editor: Editor
     private val context: Context
     private val pref: SharedPreferences = context.getSharedPreferences(context.getString(R.string.MY_PREFS_NAME), Context.MODE_PRIVATE)
@@ -19,8 +18,8 @@ class SdCardPathSharedPreference constructor(context: Context) {
             editor.apply()
         }
 
-    var stringURI: String?
-        get() = pref.getString(context.getString(R.string.sdCardStringUri), "")
+    var stringURI: String
+        get() = pref.getString(context.getString(R.string.sdCardStringUri), "").toString()
         set(stringURI) {
             editor.putString(context.getString(R.string.sdCardStringUri), stringURI)
             editor.apply()

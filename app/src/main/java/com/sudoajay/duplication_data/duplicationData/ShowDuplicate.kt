@@ -486,10 +486,9 @@ class ShowDuplicate : AppCompatActivity() {
                     .setOngoing(true)
                     .setLights(Color.parseColor("#075e54"), 3000, 3000)
 
-            if (Build.VERSION.SDK_INT < 18) {
-                mBuilder.setSmallIcon(R.drawable.alert_icon).color = ContextCompat.getColor(showDuplicate, R.color.colorPrimary)
+            if (Build.VERSION.SDK_INT < 18) mBuilder.setSmallIcon(R.drawable.internal_storage_icon).color = ContextCompat.getColor(showDuplicate, R.color.colorPrimary)
 
-            }
+
             mBuilder.setContentIntent(
                     PendingIntent.getActivity(
                             showDuplicate.applicationContext,

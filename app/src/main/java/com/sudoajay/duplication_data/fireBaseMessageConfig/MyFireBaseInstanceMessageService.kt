@@ -9,6 +9,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sudoajay.duplication_data.R
@@ -56,6 +57,12 @@ class MyFireBaseInstanceMessageService : FirebaseMessagingService() {
                 .setAutoCancel(true)
                 .setSound(notificationSound)
                 .setContentIntent(pendingIntent)
+
+        if (Build.VERSION.SDK_INT < 18)
+            builder.setSmallIcon(R.drawable.internal_storage_icon).color =
+                    ContextCompat.getColor(applicationContext, R.color.colorPrimary)
+
+
         notificationManager!!.notify(0 /*ID of notification*/, builder.build())
     }
 }

@@ -182,6 +182,7 @@ object FileUtils {
         } else fullPath
     }
 
+
     private fun getDriveFilePath(uri: Uri, context: Context): String {
         val returnCursor = context.contentResolver.query(uri, null, null, null, null)!!
         val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)

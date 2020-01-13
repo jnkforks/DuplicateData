@@ -3,14 +3,12 @@ package com.sudoajay.duplication_data.permission
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
-import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.documentfile.provider.DocumentFile
 import com.sudoajay.duplication_data.R
@@ -94,7 +92,7 @@ class AndroidExternalStoragePermission(private var context: Context, private var
 
                     if(Build.VERSION.SDK_INT <= 23){
                         val externalPathSharedPreference = ExternalPathSharedPreference(context)
-                        externalPathSharedPreference.externalPath = getExternalPath(context)
+                        externalPathSharedPreference.externalPath = getExternalPath(context).toString()
 
                     }
 
@@ -105,14 +103,14 @@ class AndroidExternalStoragePermission(private var context: Context, private var
 
                 else -> {
                     isSamePath ||
-                            externalSharedPreferences!!.stringURI!!.isNotEmpty() && DocumentFile.fromTreeUri(context, Uri.parse(externalSharedPreferences!!.stringURI))!!.exists() && isSamePath
+                            externalSharedPreferences!!.stringURI.isNotEmpty() && DocumentFile.fromTreeUri(context, Uri.parse(externalSharedPreferences!!.stringURI))!!.exists() && isSamePath
                 }
             }
 
         }
 
     private val isSamePath: Boolean
-        get() = externalSharedPreferences!!.stringURI!!.isNotEmpty() && getExternalPath(context).equals(externalSharedPreferences!!.externalPath)
+        get() = externalSharedPreferences!!.stringURI.isNotEmpty() && getExternalPath(context).equals(externalSharedPreferences!!.externalPath)
 
 
 
@@ -125,7 +123,7 @@ class AndroidExternalStoragePermission(private var context: Context, private var
         fun getExternalPath(context: Context?): String? {
             //  Its supports till android 9
             val splitWord = "Android/data/"
-            val cacheDir = (context!!.externalCacheDir?.absolutePath)?.split(splitWord)?.toTypedArray()
+            val cacheDir = (context!!.externalCacheDir?.absolutePath)?.split(splitWord)
             return cacheDir?.get(0)
 
         }

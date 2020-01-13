@@ -118,10 +118,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun onClick(v: View) {
         when (v.id) {
             R.id.duplicateDataImageView, R.id.duplicateDataTextView -> {
-                // default Home
-                title = "Home"
-                navigationView!!.menu.getItem(0).isChecked = true
-                onNavigationItemSelected(navigationView!!.menu.getItem(0))
+                // default Scan
+
+                navigationView!!.menu.getItem(1).isChecked = true
+                onNavigationItemSelected(navigationView!!.menu.getItem(1))
             }
         }
         if (visibleFragment == home) {
@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 CustomToast.toastIt(applicationContext, getString(R.string.giveUsPermission))
             } else {
                 val externalPathSharedPreference = ExternalPathSharedPreference(applicationContext)
-                externalPathSharedPreference.externalPath = AndroidExternalStoragePermission.getExternalPath(applicationContext)
+                externalPathSharedPreference.externalPath = AndroidExternalStoragePermission.getExternalPath(applicationContext)!!
             }
 
         }

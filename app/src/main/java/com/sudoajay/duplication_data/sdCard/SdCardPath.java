@@ -1,6 +1,5 @@
 package com.sudoajay.duplication_data.sdCard;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
@@ -8,7 +7,6 @@ import android.os.Build;
 import android.os.storage.StorageManager;
 import android.provider.DocumentsContract;
 import androidx.annotation.Nullable;
-
 import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -45,17 +43,16 @@ public final class SdCardPath {
             return volumePath;
         }
 
-
     }
 
-    private static String getVolumePath(final String volumeId, Context concontext) {
+    private static String getVolumePath(final String volumeId, Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return null;
         }
 
         try {
             StorageManager mStorageManager =
-                    (StorageManager) concontext.getSystemService(Context.STORAGE_SERVICE);
+                    (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
 
             Class<?> storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
 
@@ -66,6 +63,7 @@ public final class SdCardPath {
             Method isPrimary = storageVolumeClazz.getMethod("isPrimary");
             Object result = getVolumeList.invoke(mStorageManager);
 
+            assert result != null;
             final int length = Array.getLength(result);
             for (int i = 0; i < length; i++) {
                 Object storageVolumeElement = Array.get(result, i);
