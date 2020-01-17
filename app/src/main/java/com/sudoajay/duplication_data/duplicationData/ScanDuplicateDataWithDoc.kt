@@ -1,6 +1,5 @@
 package com.sudoajay.duplication_data.duplicationData
 
-import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri

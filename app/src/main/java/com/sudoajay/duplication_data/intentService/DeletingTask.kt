@@ -9,7 +9,6 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.sudoajay.duplication_data.MainActivity
 import com.sudoajay.duplication_data.R
 import com.sudoajay.duplication_data.delete.DeleteDataUsingDoc
 import com.sudoajay.duplication_data.delete.DeleteDataUsingFile
@@ -34,6 +33,7 @@ class DeletingTask : IntentService("Deleting Task") {
         deletedList = ShowDuplicate.DataHolder.instance.dataList
         totalCount = intent!!.getIntExtra("TotalCount", 0)
         totalSize = intent.getLongExtra("TotalSize", 0L)
+        intent.action = ShowDuplicate.actionKey
 
         notification()
         //  Here use of DocumentFile in android 10 not File is using anymore
@@ -61,9 +61,6 @@ class DeletingTask : IntentService("Deleting Task") {
         notificationManager!!.cancel(1)
         val notifyNotification = NotifyNotification(applicationContext)
         notifyNotification.notify("You Have Saved " + FileSize.convertIt(totalSize) + " Of Data ", getString(R.string.delete_Done_title))
-        CustomToast.toastIt(applicationContext.applicationContext, "Successfully Duplicate Data Deleted")
-
-        sendBack()
     }
 
     fun notification() {
@@ -124,11 +121,6 @@ class DeletingTask : IntentService("Deleting Task") {
         }
     }
 
-    private fun sendBack() {
-        val intent = Intent(applicationContext, MainActivity::class.java)
-        intent.putExtra("passing", "Duplication")
-        startActivity(intent)
-    }
 
 }
 

@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.FileProvider
 import androidx.documentfile.provider.DocumentFile
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.sudoajay.duplication_data.BuildConfig
 import com.sudoajay.duplication_data.MainActivity
@@ -428,25 +429,35 @@ class ShowDuplicate : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        setReceiver()
+        super.onStart()
+    }
     private fun setReceiver() {
+
         myReceiver = MyReceiver(this@ShowDuplicate)
         val intentFilter = IntentFilter()
-        registerReceiver(myReceiver!!, intentFilter)
+        intentFilter.addAction(actionKey)
+        LocalBroadcastManager.getInstance(this@ShowDuplicate).registerReceiver(myReceiver!!, intentFilter)
     }
 
     override fun onStop() {
-        unregisterReceiver(myReceiver)
+        LocalBroadcastManager.getInstance(this@ShowDuplicate).unregisterReceiver(myReceiver!!)
         super.onStop()
     }
 
-    override fun onResume() {
-        setReceiver()
-        super.onResume()
-    }
 
-    private class MyReceiver(private val showDuplicate: ShowDuplicate) : BroadcastReceiver() {
+    class MyReceiver(private val showDuplicate: ShowDuplicate) : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            CustomToast.toastIt(context, "Successfully Duplicate Data Deleted")
             showDuplicate.progressDone = intent.getBooleanExtra("broadcastMessage", true)
+            sendBack()
+        }
+
+        private fun sendBack() {
+            val intent = Intent(showDuplicate, MainActivity::class.java)
+            intent.putExtra("passing", "Duplication")
+            showDuplicate.startActivity(intent)
         }
     }
 
@@ -478,6 +489,8 @@ class ShowDuplicate : AppCompatActivity() {
     }
 
     companion object {
+
+        const val actionKey = "any_key"
 
         fun specificFolder(context: Context, path: String) {
             //  Here use of DocumentFile in android 10 not File is using anymore

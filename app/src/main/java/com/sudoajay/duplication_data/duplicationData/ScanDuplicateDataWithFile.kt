@@ -1,10 +1,8 @@
 package com.sudoajay.duplication_data.duplicationData
 
-import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.View
 import android.webkit.MimeTypeMap
 import com.sudoajay.duplication_data.R
@@ -53,8 +51,8 @@ class ScanDuplicateDataWithFile(var context: Context?) {
         val duplicateList: MutableMap<String, MutableList<String>> = HashMap()
 
         if (internal_Visible == View.VISIBLE) {
-            externalPath = externalPathSharedPreference.externalPath.toString()
-            Log.e("GotSomething", externalPath)
+            externalPath = externalPathSharedPreference.externalPath
+
 
             whatsAppUnnecessaryData(externalPath)
             rejectedFolder.add(externalPath + "Android/data")

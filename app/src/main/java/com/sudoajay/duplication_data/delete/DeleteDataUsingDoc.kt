@@ -19,6 +19,7 @@ class DeleteDataUsingDoc {
     private var mContext: Context? = null
     private var deletedList: MutableList<String> = ArrayList()
 
+
     constructor(deletingTask: DeletingTask, deletedList: MutableList<String>
     ) {
         this.deletedList = deletedList
@@ -41,11 +42,17 @@ class DeleteDataUsingDoc {
         val sdCardPathSharedPreference = SdCardPathSharedPreference(mContext!!)
         val externalPathSharedPreference = ExternalPathSharedPreference(mContext!!)
 
-        sdCardPath = sdCardPathSharedPreference.sdCardPath
-        sdCardDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(sdCardPathSharedPreference.stringURI))
-
         externalPath = externalPathSharedPreference.externalPath
-        externalDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(externalPathSharedPreference.stringURI))
+
+        if (externalPathSharedPreference.stringURI.isNotEmpty())
+            externalDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(externalPathSharedPreference.stringURI))
+
+
+        sdCardPath = sdCardPathSharedPreference.sdCardPath
+
+        if (sdCardPathSharedPreference.stringURI.isNotEmpty())
+            sdCardDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(sdCardPathSharedPreference.stringURI))
+
 
 
         for (deletedPath in deletedList) {
@@ -56,11 +63,9 @@ class DeleteDataUsingDoc {
 
     private fun separateTheData(uriPath: String) {
         val path = FileUtils.replaceSdCardPath(mContext, FileUtils.getPath(mContext!!, Uri.parse(uriPath)).toString())
-        if (path.contains(externalPath)) {
-            deleteTheData(path, 1)
-        } else {
-            deleteTheData(path, 2)
-        }
+        if (path.contains(externalPath)) deleteTheData(path, 1)
+        else if (sdCardDocumentFile != null) deleteTheData(path, 2)
+
     }
 
 

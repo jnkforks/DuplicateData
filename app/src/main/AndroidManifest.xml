@@ -76,6 +76,7 @@
         <service android:enabled="true" android:name=".intentService.DeletingTask"
             tools:ignore="InnerclassSeparator" />
 
+
         <service android:name=".receiveBootCompleted.ForegroundServiceBoot"
             tools:ignore="InnerclassSeparator" />
 
@@ -85,6 +86,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+
+        <receiver android:name=".duplicationData.ShowDuplicate$MyReceiver" />
     </application>
 
 </manifest>

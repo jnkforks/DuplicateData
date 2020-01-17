@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.sudoajay.duplication_data.intentService.DeletingTask
 import com.sudoajay.duplication_data.permission.AndroidExternalStoragePermission
+import com.sudoajay.duplication_data.permission.AndroidSdCardPermission
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import java.io.File
 import java.io.IOException
@@ -40,7 +41,9 @@ class DeleteDataUsingFile {
 
         val sdCardPathSharedPreference = SdCardPathSharedPreference(mContext!!)
         sdCardPath = sdCardPathSharedPreference.sdCardPath
-        sdCardDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(sdCardPathSharedPreference.stringURI))
+
+        if (sdCardPathSharedPreference.stringURI.isNotEmpty())
+            sdCardDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(sdCardPathSharedPreference.stringURI))
 
         externalPath = AndroidExternalStoragePermission.getExternalPath(deletingTask!!.applicationContext)!!
 
@@ -53,14 +56,9 @@ class DeleteDataUsingFile {
     }
 
     private fun separateTheData(path: String) {
-        when {
-            path.contains(externalPath) -> {
-                deleteTheDataFromInternalStorage(path)
-            }
-            else -> {
-                deleteTheDataFromExternal(path)
-            }
-        }
+        if (path.contains(externalPath)) deleteTheDataFromInternalStorage(path)
+        else if (sdCardDocumentFile != null) deleteTheDataFromExternal(path)
+        
     }
 
 
