@@ -73,6 +73,8 @@
 
         <service android:enabled="true" android:name=".foregroundService.Foreground"
         tools:ignore="InnerclassSeparator" />
+        <service android:enabled="true" android:name=".intentService.DeletingTask"
+            tools:ignore="InnerclassSeparator" />
 
         <service android:name=".receiveBootCompleted.ForegroundServiceBoot"
             tools:ignore="InnerclassSeparator" />

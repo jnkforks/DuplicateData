@@ -1,25 +1,26 @@
 package com.sudoajay.duplication_data.duplicationData
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.AlertDialog
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.*
 import android.widget.AdapterView.OnItemLongClickListener
+import android.widget.Button
+import android.widget.ExpandableListView
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.documentfile.provider.DocumentFile
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -27,13 +28,11 @@ import com.sudoajay.duplication_data.BuildConfig
 import com.sudoajay.duplication_data.MainActivity
 import com.sudoajay.duplication_data.R
 import com.sudoajay.duplication_data.customDialog.DialogInformationData
-import com.sudoajay.duplication_data.delete.DeleteDataUsingDoc
-import com.sudoajay.duplication_data.delete.DeleteDataUsingFile
 import com.sudoajay.duplication_data.helperClass.CustomToast
 import com.sudoajay.duplication_data.helperClass.DocumentHelperClass
 import com.sudoajay.duplication_data.helperClass.FileSize
 import com.sudoajay.duplication_data.helperClass.FileUtils
-import com.sudoajay.duplication_data.notification.NotifyNotification
+import com.sudoajay.duplication_data.intentService.DeletingTask
 import com.sudoajay.duplication_data.permission.NotificationPermissionCheck
 import com.sudoajay.lodinganimation.LoadingAnimation
 import java.io.File
@@ -59,7 +58,8 @@ class ShowDuplicate : AppCompatActivity() {
     var loadingAnimation: LoadingAnimation? = null
     var scanDuplicateDataWithFile: ScanDuplicateDataWithFile? = null
     var scanDuplicateDataWithDoc: ScanDuplicateDataWithDoc? = null
-    var javaThreading: JavaThreading? = null
+    private var myReceiver: MyReceiver? = null
+    private var progressDone = true
     private var multiThreadingTask2: MultiThreadingTask2? = null
 
 
@@ -230,7 +230,11 @@ class ShowDuplicate : AppCompatActivity() {
             R.id.deleteDuplicateButton, R.id.deleteDuplicateButton1 -> if (!notificationPermissionCheck!!.checkNotificationPermission()) {
                 notificationPermissionCheck!!.customAlertDialog()
             } else {
-                callDeleteCustomDialog()
+                if (progressDone)
+                    callDeleteCustomDialog()
+                else {
+                    CustomToast.toastIt(applicationContext, getString(R.string.alreadyProgress))
+                }
             }
         }
     }
@@ -340,22 +344,13 @@ class ShowDuplicate : AppCompatActivity() {
                 .setPositiveButton(R.string.custom_dialog_yes) { _, _ ->
                     multiThreadingTask2!!.cancel(true)
                     CustomToast.toastIt(applicationContext, getString(R.string.ShowInNotification))
-                    thread()
+                    callIntentService()
                 }
                 .setNegativeButton(R.string.custom_dialog_no) { _, _ ->
 
                 }
                 .show()
     }
-
-
-    private fun sendBack() {
-        val intent = Intent(applicationContext, MainActivity::class.java)
-        intent.putExtra("passing", "Duplication")
-        startActivity(intent)
-    }
-
-
     private class MultiThreadingTask2
     internal constructor(private val showDuplicate: ShowDuplicate) : AsyncTask<String?, String?, String?>() {
 
@@ -392,126 +387,70 @@ class ShowDuplicate : AppCompatActivity() {
         }
     }
 
-    private fun thread() {
-        Handler().postDelayed({
-            run {
-                javaThreading = JavaThreading(this@ShowDuplicate)
-                javaThreading!!.run()
+    private fun callIntentService() {
+
+        progressDone = false
+
+        val deletedList: MutableList<String> = java.util.ArrayList()
+        var totalCount = 0
+
+        for ((i, value) in listHeaderChild) {
+            for (k in value.indices) {
+                if (expandableduplicatelistadapter!!.checkBoxArray[i]!![k]) {
+                    totalCount++
+                    deletedList.add(listHeaderChild[i]!![k])
+                }
 
             }
-        }, 200)
+
+        }
+
+        val intent = Intent(applicationContext, DeletingTask::class.java)
+        DataHolder.instance.dataList = deletedList
+        intent.putExtra("TotalCount", totalCount)
+        intent.putExtra("TotalSize", totalSize)
+        startService(intent)
 
     }
 
-    class JavaThreading
-    internal constructor(private val showDuplicate: ShowDuplicate) : Runnable {
-        private var progress = 0
-        private var totalCount = 0
-        private var contentView: RemoteViews? = null
-        private var notification: Notification? = null
-        private var deletedList: MutableList<String> = ArrayList()
-        private var notificationManager: NotificationManager? = null
+    class DataHolder {
+        var dataList: MutableList<String> = java.util.ArrayList()
 
-        override fun run() {
-
-            for ((i, value) in showDuplicate.listHeaderChild) {
-                for (k in value.indices) {
-                    if (showDuplicate.expandableduplicatelistadapter!!.checkBoxArray[i]!![k]) {
-                        totalCount++
-                        deletedList.add(showDuplicate.listHeaderChild[i]!![k])
+        companion object {
+            private var dataHolder: DataHolder? = null
+            val instance: DataHolder
+                @Synchronized get() {
+                    if (dataHolder == null) {
+                        dataHolder = DataHolder()
                     }
-
+                    return dataHolder!!
                 }
-
-            }
-            notification()
-            //  Here use of DocumentFile in android 10 not File is using anymore
-            if (Build.VERSION.SDK_INT <= 28) {
-                DeleteDataUsingFile(showDuplicate, deletedList)
-            } else {
-                DeleteDataUsingDoc(showDuplicate, deletedList)
-            }
-            callThread()
         }
-
-        fun updateProgress() {
-            progress++
-            contentView!!.setTextViewText(R.id.size_Title, "$progress/$totalCount")
-            contentView!!.setTextViewText(R.id.percent_Text, (progress * 100 / totalCount).toString() + "%")
-            contentView!!.setTextViewText(R.id.time_Tittle, getCurrentTime())
-            contentView!!.setProgressBar(R.id.progressBar, totalCount, progress, false)
-            notificationManager!!.notify(1, notification)
-        }
-
-        private fun callThread() {
-            val handler = Handler()
-            handler.postDelayed({
-                notificationManager!!.cancel(1)
-                val notifyNotification = NotifyNotification(showDuplicate.applicationContext)
-                notifyNotification.notify("You Have Saved " + FileSize.convertIt(showDuplicate.totalSize) + " Of Data ", showDuplicate.getString(R.string.delete_Done_title))
-                CustomToast.toastIt(showDuplicate.applicationContext, "Successfully Duplicate Data Deleted")
-                showDuplicate.sendBack()
-            }, 2000)
-        }
-
-        fun notification() {
-            val id = showDuplicate.getString(R.string.duplicate_Id) // default_channel_id
-            val title = showDuplicate.getString(R.string.duplicate_title) // Default Channel
-            val mBuilder: NotificationCompat.Builder
-            val closeButton = Intent()
-            closeButton.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            contentView = RemoteViews(showDuplicate.packageName, R.layout.activity_custom_notification)
-            contentView!!.setImageViewResource(R.id.image, R.mipmap.ic_launcher)
-            contentView!!.setTextViewText(R.id.title, "Deletion...")
-            contentView!!.setTextViewText(R.id.time_Tittle, getCurrentTime())
-            contentView!!.setProgressBar(R.id.progressBar, 100, 0, false)
-            contentView!!.setTextViewText(R.id.size_Title, "0/$totalCount")
-            contentView!!.setTextViewText(R.id.percent_Text, "00%")
-            if (notificationManager == null) {
-                notificationManager = showDuplicate.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val importance = NotificationManager.IMPORTANCE_LOW
-                assert(notificationManager != null)
-                var mChannel = notificationManager!!.getNotificationChannel(id)
-                if (mChannel == null) {
-                    mChannel = NotificationChannel(id, title, importance)
-                    notificationManager!!.createNotificationChannel(mChannel)
-                }
-            }
-            mBuilder = NotificationCompat.Builder(showDuplicate.applicationContext, id)
-                    .setSmallIcon(R.mipmap.ic_launcher) // required
-                    .setContent(contentView)
-                    .setAutoCancel(false)
-                    .setOngoing(true)
-                    .setLights(Color.parseColor("#075e54"), 3000, 3000)
-
-            if (Build.VERSION.SDK_INT < 18) mBuilder.setSmallIcon(R.drawable.internal_storage_icon).color = ContextCompat.getColor(showDuplicate, R.color.colorPrimary)
-
-
-            mBuilder.setContentIntent(
-                    PendingIntent.getActivity(
-                            showDuplicate.applicationContext,
-                            0,
-                            closeButton,
-                            PendingIntent.FLAG_UPDATE_CURRENT))
-            notification = mBuilder.build()
-            notification!!.flags = notification!!.flags or Notification.FLAG_AUTO_CANCEL
-            notificationManager!!.notify(1, notification)
-        }
-
-        private fun getCurrentTime(): String {
-            val calendar = Calendar.getInstance()
-            val hours = calendar[Calendar.HOUR_OF_DAY]
-            val minutes = calendar[Calendar.MINUTE]
-            return if (hours < 12) {
-                "$hours:$minutes AM"
-            } else {
-                (hours - 12).toString() + ":" + minutes + " PM"
-            }
-        }
-
     }
+
+    private fun setReceiver() {
+        myReceiver = MyReceiver(this@ShowDuplicate)
+        val intentFilter = IntentFilter()
+        registerReceiver(myReceiver!!, intentFilter)
+    }
+
+    override fun onStop() {
+        unregisterReceiver(myReceiver)
+        super.onStop()
+    }
+
+    override fun onResume() {
+        setReceiver()
+        super.onResume()
+    }
+
+    private class MyReceiver(private val showDuplicate: ShowDuplicate) : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            showDuplicate.progressDone = intent.getBooleanExtra("broadcastMessage", true)
+        }
+    }
+
+
 
     inner class Onclick : View.OnClickListener {
         override fun onClick(view: View) {

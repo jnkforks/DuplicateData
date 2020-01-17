@@ -377,7 +377,7 @@ class ScanDuplicateDataWithDoc(private var context: Context?) {
         try {
             messageDigest = MessageDigest.getInstance("SHA-512")
         } catch (e: NoSuchAlgorithmException) {
-            CustomToast.toastIt(context, "cannot initialize SHA-512 hash function")
+            CustomToast.toastIt(context!!, "cannot initialize SHA-512 hash function")
         }
     }
 

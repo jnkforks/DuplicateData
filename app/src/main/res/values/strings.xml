@@ -193,6 +193,7 @@
 
     <string name="giveUsPermission">Give us permission for further process</string>
     <string name="ShowInNotification">Open your notification bar for progress status</string>
+    <string name="alreadyProgress">There is already progress in your notification bar</string>
     <string name="supportAboveSdCard">Sorry , We don\'t support sd card at this android version </string>
     <string name="noHandlerForType">No handler for this type of file_icon.</string>
     <string name="backImageViewChange">back_Image_View_Change</string>

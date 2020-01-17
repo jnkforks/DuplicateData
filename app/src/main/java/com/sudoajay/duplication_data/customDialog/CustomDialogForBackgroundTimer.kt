@@ -57,7 +57,7 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
                     endlesslyEditText!!.setText(cursor.getString(3))
                 }
             } catch (e: Exception) {
-                CustomToast.toastIt(context, "Something Wrong")
+                CustomToast.toastIt(context!!, "Something Wrong")
             }
         }
         // setup choose_ImageView
@@ -76,7 +76,7 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
         // local variable
         val backImageViewChange = view.findViewById<ImageView>(R.id.back_Image_View_Change)
         val repeatOffImageView = view.findViewById<ImageView>(R.id.repeat_Off_Image_View)
-        backgroundTimerDataBase = BackgroundTimerDataBase(context)
+        backgroundTimerDataBase = BackgroundTimerDataBase(context!!)
         // default weekdays
         val c = Calendar.getInstance()
         weekdaysPicker!!.selectDay(c[Calendar.DAY_OF_WEEK])
@@ -159,16 +159,16 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
                             endlesslyEditText!!.setText(getSelectedEndlesslyDate)
                         }
                     } catch (e: Exception) {
-                        CustomToast.toastIt(context, "Something Wrong")
+                        CustomToast.toastIt(context!!, "Something Wrong")
                     }
                     // if date already done then show the user
                     val splitDate = getSelectedEndlesslyDate!!.split("-").toTypedArray()
                     if (splitDate[2].toInt() < c[Calendar.YEAR] ||
                             splitDate[2].toInt() <= c[Calendar.YEAR] && splitDate[1].toInt() < c[Calendar.MONTH]
                             || splitDate[2].toInt() <= c[Calendar.YEAR] && splitDate[1].toInt() <= c[Calendar.MONTH] && splitDate[0].toInt() < c[Calendar.DAY_OF_MONTH])
-                        CustomToast.toastIt(context, "Oops... The Date You selected is Already gone")
+                        CustomToast.toastIt(context!!, "Oops... The Date You selected is Already gone")
                     else { // print the endlessly_Edit_Text text
-                        CustomToast.toastIt(context, endlesslyEditText!!.text.toString())
+                        CustomToast.toastIt(context!!, endlesslyEditText!!.text.toString())
                     }
                 }, cYear, cMonth, cDay)
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
@@ -200,7 +200,7 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
             4 -> hour = 24 * 30
         }
         // send the data to Trace Background Service
-        val traceBackgroundService = TraceBackgroundService(this.context!!)
+        val traceBackgroundService = TraceBackgroundService(context!!)
         traceBackgroundService.taskB = nextDate(hour)
     }
 
@@ -211,7 +211,7 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
         } else {
             backgroundTimerDataBase!!.updateTheTable("1", repeatedlySpinner!!.selectedIndex, getRepeat(), getSelectedEndlesslyDate)
         }
-        CustomToast.toastIt(context, resources.getText(R.string.setting_Updated).toString())
+        CustomToast.toastIt(context!!, resources.getText(R.string.setting_Updated).toString())
     }
 
     // week days selected
@@ -282,7 +282,7 @@ class CustomDialogForBackgroundTimer : DialogFragment(), OnItemSelectedListener,
     }
 
     private fun clearAll() { // delete from DataBase
-        val backgroundTimerDataBase = BackgroundTimerDataBase(context)
+        val backgroundTimerDataBase = BackgroundTimerDataBase(context!!)
         if (!backgroundTimerDataBase.checkForEmpty()) {
             backgroundTimerDataBase.deleteData()
         }

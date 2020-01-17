@@ -2,14 +2,12 @@ package com.sudoajay.duplication_data.delete
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.documentfile.provider.DocumentFile
-import com.sudoajay.duplication_data.duplicationData.ShowDuplicate
+import com.sudoajay.duplication_data.intentService.DeletingTask
 import com.sudoajay.duplication_data.permission.AndroidExternalStoragePermission
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import java.io.File
 import java.io.IOException
-import java.lang.Exception
 import java.util.*
 
 class DeleteDataUsingFile {
@@ -17,14 +15,14 @@ class DeleteDataUsingFile {
     private var sdCardPath: String = ""
     private var externalPath = ""
     private var throughForegroundService: Boolean
-    private var showDuplicate: ShowDuplicate? = null
+    private var deletingTask: DeletingTask? = null
     private var mContext: Context? = null
     private var deletedList: MutableList<String> = ArrayList()
 
-    constructor(showDuplicate: ShowDuplicate?, deletedList: MutableList<String>) {
+    constructor(deletingTask: DeletingTask, deletedList: MutableList<String>) {
 
-        this.showDuplicate = showDuplicate
-        this.mContext = showDuplicate!!.applicationContext
+        this.deletingTask = deletingTask
+        this.mContext = deletingTask.applicationContext
         this.deletedList = deletedList
         throughForegroundService = false
         getThePath()
@@ -44,12 +42,12 @@ class DeleteDataUsingFile {
         sdCardPath = sdCardPathSharedPreference.sdCardPath
         sdCardDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(sdCardPathSharedPreference.stringURI))
 
-        externalPath = AndroidExternalStoragePermission.getExternalPath(showDuplicate!!.applicationContext)!!
+        externalPath = AndroidExternalStoragePermission.getExternalPath(deletingTask!!.applicationContext)!!
 
 
         for (deletedPath in deletedList) {
             separateTheData(deletedPath)
-            if (!throughForegroundService) showDuplicate!!.javaThreading!!.updateProgress()
+            if (!throughForegroundService) deletingTask!!.updateProgress()
         }
 
     }

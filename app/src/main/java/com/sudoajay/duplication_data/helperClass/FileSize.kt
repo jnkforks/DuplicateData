@@ -5,16 +5,20 @@ import java.text.DecimalFormat
 object FileSize {
     @JvmStatic
     fun convertIt(size: Long): String {
-        return when {
-            size > 1024 * 1024 * 1024 -> { // GB
-                getDecimal2Round(size.toDouble() / (1024 * 1024 * 1024)) + " GB"
+        return try {
+            when {
+                size > 1024 * 1024 * 1024 -> { // GB
+                    getDecimal2Round(size.toDouble() / (1024 * 1024 * 1024).toDouble()) + " GB"
+                }
+                size > 1024 * 1024 -> { // MB
+                    getDecimal2Round(size.toDouble() / (1024 * 1024).toDouble()) + " MB"
+                }
+                else -> { // KB
+                    getDecimal2Round(size.toDouble() / 1024.toDouble()) + " KB"
+                }
             }
-            size > 1024 * 1024 -> { // MB
-                getDecimal2Round(size.toDouble() / (1024 * 1024)) + " MB"
-            }
-            else -> { // KB
-                getDecimal2Round(size.toDouble() / 1024) + " KB"
-            }
+        }catch (ignored :Exception){
+            "00 GB "
         }
     }
 

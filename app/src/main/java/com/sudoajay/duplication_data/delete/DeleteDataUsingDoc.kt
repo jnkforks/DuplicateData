@@ -3,8 +3,8 @@ package com.sudoajay.duplication_data.delete
 import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import com.sudoajay.duplication_data.duplicationData.ShowDuplicate
 import com.sudoajay.duplication_data.helperClass.FileUtils
+import com.sudoajay.duplication_data.intentService.DeletingTask
 import com.sudoajay.duplication_data.sharedPreferences.ExternalPathSharedPreference
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
 import java.util.*
@@ -15,15 +15,15 @@ class DeleteDataUsingDoc {
     private var sdCardPath: String = ""
     private var externalPath: String = ""
     private var throughForegroundService: Boolean
-    private var showDuplicate: ShowDuplicate? = null
+    private var deletingTask: DeletingTask? = null
     private var mContext: Context? = null
     private var deletedList: MutableList<String> = ArrayList()
 
-    constructor(showDuplicate: ShowDuplicate?, deletedList: MutableList<String>
+    constructor(deletingTask: DeletingTask, deletedList: MutableList<String>
     ) {
         this.deletedList = deletedList
-        this.showDuplicate = showDuplicate
-        this.mContext = showDuplicate!!.applicationContext
+        this.deletingTask = deletingTask
+        this.mContext = deletingTask.applicationContext
 
         throughForegroundService = false
         getThePath()
@@ -44,13 +44,13 @@ class DeleteDataUsingDoc {
         sdCardPath = sdCardPathSharedPreference.sdCardPath
         sdCardDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(sdCardPathSharedPreference.stringURI))
 
-        externalPath = externalPathSharedPreference.externalPath!!
+        externalPath = externalPathSharedPreference.externalPath
         externalDocumentFile = DocumentFile.fromTreeUri(mContext!!, Uri.parse(externalPathSharedPreference.stringURI))
 
 
         for (deletedPath in deletedList) {
             separateTheData(deletedPath)
-            if (!throughForegroundService) showDuplicate!!.javaThreading!!.updateProgress()
+            if (!throughForegroundService) deletingTask!!.updateProgress()
         }
     }
 

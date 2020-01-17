@@ -76,7 +76,7 @@ class StorageInfo(val context: Context) {
         get() {
             if (externalMemoryExist()) {
                 try {
-                    sdCardPath = sdCardPathSharedPreference.sdCardPath.toString()
+                    sdCardPath = sdCardPathSharedPreference.sdCardPath
                     externalAvailableSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                         val stat = StatFs(sdCardPath)
                         val blockSize = stat.blockSizeLong
@@ -106,7 +106,7 @@ class StorageInfo(val context: Context) {
     val totalExternalMemorySize: String
         get() = if (externalMemoryExist()) {
             try {
-                sdCardPath = sdCardPathSharedPreference.sdCardPath.toString()
+                sdCardPath = sdCardPathSharedPreference.sdCardPath
                 externalTotalSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     val stat = StatFs(sdCardPath)
                     val blockSize = stat.blockSizeLong
@@ -134,8 +134,7 @@ class StorageInfo(val context: Context) {
 
     // get sd card path url constructor
     init {
-        sdCardPath = sdCardPathSharedPreference.sdCardPath.toString()
-
+        sdCardPath = sdCardPathSharedPreference.sdCardPath
         availableInternalMemorySize
         availableExternalMemorySize
 
