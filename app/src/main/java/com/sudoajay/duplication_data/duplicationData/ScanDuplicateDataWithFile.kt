@@ -53,7 +53,6 @@ class ScanDuplicateDataWithFile(var context: Context?) {
         if (internal_Visible == View.VISIBLE) {
             externalPath = externalPathSharedPreference.externalPath
 
-
             whatsAppUnnecessaryData(externalPath)
             rejectedFolder.add(externalPath + "Android/data")
 
@@ -145,7 +144,7 @@ class ScanDuplicateDataWithFile(var context: Context?) {
                     if (j != 5) {
                         saveToArray(file)
                     } else {
-                        if (file.listFiles()!!.size > 1) {
+                        if (file.listFiles()!!.isNotEmpty() && file.listFiles()!!.size > 1) {
                             var files: MutableList<File> = ArrayList(listOf(*file.listFiles()!!))
                             files = convertIntoLastModified(files)
                             if (files.size > 1) {

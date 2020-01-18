@@ -7,7 +7,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.sudoajay.duplication_data.sharedPreferences.TraceBackgroundService
 import java.text.DateFormat
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -36,17 +35,18 @@ class WorkMangerTaskManager(context: Context, workerParams: WorkerParameters) : 
             e.printStackTrace()
         }
         // Check for Date B Task
-        try {
+        return try {
             date = dateFormat.parse(traceBackgroundService.taskB.toString())!!
             if (dateFormat.format(todayDate) == dateFormat.format(date) || date.before(todayDate)) {
                 list.add(onceAWeekWork)
             }
-        } catch (e: ParseException) {
-            e.printStackTrace()
+
+            WorkManager.getInstance(applicationContext)
+                    .beginWith(list)
+                    .enqueue()
+            Result.success()
+        } catch (ignored: java.lang.Exception) {
+            Result.retry()
         }
-        WorkManager.getInstance(applicationContext)
-                .beginWith(list)
-                .enqueue()
-        return Result.success()
     }
 }

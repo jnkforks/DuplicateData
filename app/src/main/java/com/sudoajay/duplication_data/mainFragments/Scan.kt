@@ -1,6 +1,7 @@
 package com.sudoajay.duplication_data.mainFragments
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -85,7 +86,7 @@ class Scan : Fragment() {
                 }
             R.id.internal_Image_View, R.id.internal_Text_View, R.id.internal_Check -> {
                 // call this method to get size of data
-                storageInfo!!.totalInternalMemorySize
+
                 if (internalCheck!!.visibility == View.GONE) {
                     if (androidExternalStoragePermission!!.isExternalStorageWritable) {
                         internalCheck!!.visibility = View.VISIBLE
@@ -94,22 +95,26 @@ class Scan : Fragment() {
                         androidExternalStoragePermission!!.callThread()
                     }
                 } else {
+                    storageInfo!!.totalInternalMemorySize
                     internalCheck!!.visibility = View.GONE
                     totalSizeLong -= storageInfo!!.internalTotalSize - storageInfo!!.internalAvailableSize
                 }
             }
             R.id.external_Image_View, R.id.external_Text_View, R.id.external_Check -> {
                 // call this method to get size of data
-                storageInfo!!.totalExternalMemorySize
                 androidSdCardPermission = AndroidSdCardPermission(context!!, activity)
                 if (externalCheck!!.visibility == View.GONE) {
-                    if (androidSdCardPermission!!.isSdStorageWritable) {
+                    if ((androidExternalStoragePermission!!.isExternalStorageWritable || Build.VERSION.SDK_INT >= 29) && androidSdCardPermission!!.isSdStorageWritable) {
                         externalCheck!!.visibility = View.VISIBLE
                         totalSizeLong += storageInfo!!.externalTotalSize - storageInfo!!.externalAvailableSize
+                    } else if (!androidExternalStoragePermission!!.isExternalStorageWritable && Build.VERSION.SDK_INT <= 28) {
+                        androidExternalStoragePermission!!.callThread()
                     } else {
                         androidSdCardPermission!!.callThread()
                     }
+
                 } else {
+                    storageInfo!!.totalExternalMemorySize
                     externalCheck!!.visibility = View.GONE
                     totalSizeLong -= storageInfo!!.externalTotalSize - storageInfo!!.externalAvailableSize
                 }
