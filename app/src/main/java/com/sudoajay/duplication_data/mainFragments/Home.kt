@@ -1,6 +1,7 @@
 package com.sudoajay.duplication_data.mainFragments
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -106,7 +107,10 @@ class Home : Fragment() {
             } else {
                 externalStoragePermission!!.callThread()
             }
-            R.id.cardViewExternal3 -> if (sdCardPermission!!.isSdStorageWritable) {
+            R.id.cardViewExternal3 ->
+                if ((externalStoragePermission!!.isExternalStorageWritable || Build.VERSION.SDK_INT >= 29)
+                        && sdCardPermission!!.isSdStorageWritable) {
+
                 if (circularProgressBarExternal!!.color == ContextCompat.getColor(mainActivity!!, R.color.used_progressBarColor)) {
                     circularProgressBarExternal!!.backgroundColor = ContextCompat.getColor(mainActivity!!, R.color.used_progressBarColor)
                     circularProgressBarExternal!!.color = ContextCompat.getColor(mainActivity!!, R.color.free_progressBarColor)
@@ -123,6 +127,8 @@ class Home : Fragment() {
                             storageInfo!!.externalAvailableSize)
                     textViewExternal3!!.text = resources.getString(R.string.text_Used)
                 }
+            } else if (!externalStoragePermission!!.isExternalStorageWritable && Build.VERSION.SDK_INT <= 28) {
+                externalStoragePermission!!.callThread()
             } else {
                 sdCardPermission!!.callThread()
             }

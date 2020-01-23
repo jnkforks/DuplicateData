@@ -15,6 +15,7 @@ import com.sudoajay.duplication_data.R
 import com.sudoajay.duplication_data.helperClass.CustomToast
 import com.sudoajay.duplication_data.sharedPreferences.ExternalPathSharedPreference
 import com.sudoajay.duplication_data.sharedPreferences.SdCardPathSharedPreference
+import java.io.File
 
 
 class AndroidExternalStoragePermission(private var context: Context, private var activity: Activity?) {
@@ -98,7 +99,10 @@ class AndroidExternalStoragePermission(private var context: Context, private var
 
                     val permission = Manifest.permission.WRITE_EXTERNAL_STORAGE
                     val res = activity?.checkCallingOrSelfPermission(permission)
-                    res == PackageManager.PERMISSION_GRANTED
+                    if (res == PackageManager.PERMISSION_GRANTED || File(getExternalPath(context).toString()).exists()) {
+                        return true
+                    }
+                    return false
                 }
 
                 else -> {
